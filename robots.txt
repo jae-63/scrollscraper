@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /buildmp3.cgi
+Disallow: /scrollscraper.cgi
+Disallow: /sedrot.cgi
