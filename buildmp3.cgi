@@ -15,6 +15,7 @@ my $qDir = "/home/ec2-user/scrollscraperWorkingDir";
 # my $festivalSpeechSynthesis = "/home/jepstein/festival/festival/bin/text2wave";
 # my $festivalOptions = "-scale 3 -o";
 my $gttsCli = "/usr/local/bin/gtts-cli";
+my $ffmpeg = "/home/ec2-user/ffmpeg-3.4-64bit-static/ffmpeg";
 # my $mplayer = "/home/jepstein/mplayerExperiments/MPlayer-1.0rc1/mplayer"; # use for RealAudio->Wav conversion
 my $mp3wrap = "/usr/local/bin/mp3wrap";
 # my $raUrlFormat = "http://bible.ort.org/webmedia/t%d/%s.ra";
@@ -145,23 +146,26 @@ foreach my $raFile (@raFiles) {
 	my $url = sprintf $mp3UrlFormat,$book,$raFile;
 	print THESCRIPT "wget $url -O $tmpdir/$raFile.mp3 2>/dev/null\n";
 # 	print THESCRIPT "$sox $tmpdir/$raFile.wav -r 44100 -c 2 -s -w $tmpdir/$raFile.raw >/dev/null\n";
-	$catList .= " $tmpdir/$raFile.mp3";
+        if ($catList) {
+            $catList .= "|";
+        }
+	$catList .= "$tmpdir/$raFile.mp3";
 }
-print THESCRIPT "(cd $tmpdir; $mp3wrap reading $catList)\n";
+print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:$catList\" reading.mp3)\n";
 my $catList2 = "";
 for (my $i = 0; $i < $audioRepeatCount; $i++) {
-	$catList2 .= " $thisDir/$spacerLongMp3" unless ($i == 0);
-	$catList2 .= " $tmpdir/reading_MP3WRAP.mp3";
+	$catList2 .= "|$thisDir/$spacerLongMp3" unless ($i == 0);
+	$catList2 .= "|$tmpdir/reading.mp3";
 }
 
-print THESCRIPT "(cd $tmpdir; $mp3wrap aggregate";
-print THESCRIPT " $ttsFileName $thisDir/$spacerShortMp3";
-print THESCRIPT "$catList2)\n";
+print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:";
+print THESCRIPT "$ttsFileName|$thisDir/$spacerShortMp3";
+print THESCRIPT "$catList2\" aggregate.mp3)\n";
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated raw->wav'\n";
 # print THESCRIPT "$sox -r 44100 -c 2 -s -w $tmpdir/aggregate.raw $tmpdir/aggregate.wav >/dev/null\n";
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated wav->mp3'\n";
 # print THESCRIPT "nice $lame -h --silent --scale 2 $tmpdir/aggregate.wav $audioFileName >/dev/null\n";
-print THESCRIPT "cp -p $tmpdir/aggregate_MP3WRAP.mp3 $audioFileName\n";
+print THESCRIPT "cp -p $tmpdir/aggregate.mp3 $audioFileName\n";
 print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Processing complete!'\n";
 print THESCRIPT "/bin/touch $audioFileName.COMPLETED\n";
 print THESCRIPT "/bin/rm -f $audioFileName.STARTED\n";
@@ -218,7 +222,7 @@ sub accessPermitted {
 	my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
 	my $dayStamp = $year * 1000 + $yday;
 
-	return (0,"MP3 creation temporarily unavailable as of 7 April 2009; sorry for the inconvenience");
+#	return (0,"MP3 creation temporarily unavailable as of 7 April 2009; sorry for the inconvenience");
 	return (0,"(# verses) * (audio repeat count) = $numVerses * $repeatCount > $maxVerses") if(($numVerses * $repeatCount) > $maxVerses);
 
 	if (-f $ipDatabase) {
@@ -292,4 +296,3 @@ sub recordFileSize {
 	flock (DAYSTAMPFILE,LOCK_UN);
 	close (DAYSTAMPFILE);
 }
-
