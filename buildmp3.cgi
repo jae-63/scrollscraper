@@ -2,9 +2,9 @@
 use Fcntl ':flock'; # import LOCK_* constants
 use CGI;
 
-my $qDir = "/home/jepstein/mp3Creation/queue";
-my $lame = "/home/jepstein/lame-3.97/frontend/lame"; # use "lame" for WAV->MP3 conversion
-my $sox = "/home/jepstein/mplayerExperiments/sox-13.0.0/src/sox";
+my $qDir = "/home/ec2-user/scrollscraperWorkingDir";
+# my $lame = "/home/jepstein/lame-3.97/frontend/lame"; # use "lame" for WAV->MP3 conversion
+# my $sox = "/home/jepstein/mplayerExperiments/sox-13.0.0/src/sox";
 # public-domain sox-based concatenation From: http://www.boutell.com/scripts/catwav.html
 ## #!/bin/sh
 ## sox $1 -r 44100 -c 2 -s -w /tmp/$$-1.raw
@@ -12,12 +12,17 @@ my $sox = "/home/jepstein/mplayerExperiments/sox-13.0.0/src/sox";
 ## cat /tmp/$$-1.raw /tmp/$$-2.raw > /tmp/$$.raw
 ## sox -r 44100 -c 2 -s -w /tmp/$$.raw $3
 ## rm /tmp/$$*.raw
-my $festivalSpeechSynthesis = "/home/jepstein/festival/festival/bin/text2wave";
-my $festivalOptions = "-scale 3 -o";
-my $mplayer = "/home/jepstein/mplayerExperiments/MPlayer-1.0rc1/mplayer"; # use for RealAudio->Wav conversion
-my $raUrlFormat = "http://bible.ort.org/webmedia/t%d/%s.ra";
-my $spacerShortRaw = "/home/jepstein/mplayerExperiments/spacershort.raw";
-my $spacerLongRaw = "/home/jepstein/mplayerExperiments/spacerlong.raw";
+# my $festivalSpeechSynthesis = "/home/jepstein/festival/festival/bin/text2wave";
+# my $festivalOptions = "-scale 3 -o";
+my $gttsCli = "/usr/local/bin/gtts-cli";
+# my $mplayer = "/home/jepstein/mplayerExperiments/MPlayer-1.0rc1/mplayer"; # use for RealAudio->Wav conversion
+my $mp3wrap = "/usr/local/bin/mp3wrap";
+# my $raUrlFormat = "http://bible.ort.org/webmedia/t%d/%s.ra";
+my $mp3UrlFormat = "http://bible.ort.org/webmedia/t%d/%s.mp3";
+# my $spacerShortRaw = "/home/jepstein/mplayerExperiments/spacershort.raw";
+# my $spacerLongRaw = "/home/jepstein/mplayerExperiments/spacerlong.raw";
+my $spacerShortMp3 = "./spacershort.mp3";
+my $spacerLongMp3 = "./spacerlong.mp3";
 my $smilbase = "./smil/";
 my $mainURL = "http://scrollscraper.adatshalom.net";
 
@@ -110,43 +115,53 @@ if ($startc != $endc) {
 }
 
 $tts .= "  The following recorded materials are copyright world-ORT, 1997, all rights reserved.";
-my $wavFileName = "$tmpdir/synthesizedSpeech.wav";
+my $ttsFileName = "$tmpdir/synthesizedSpeech.mp3";
+
+# Sample gtts-cli usage:
+#   gtts-cli "hello" -o /tmp/hello.mp3
 
 print THESCRIPT "#!/bin/sh\n\nonint ()\n{\n\trm -rf $tmpdir\n\texit 1\n}\n\n";
 print THESCRIPT "trap onint SIGINT\ntrap onint SIGQUIT\ntrap onint SIGTERM\ntrap onint SIGPIPE\n\n";
 print THESCRIPT "/bin/touch $audioFileName.STARTED\n";
 print THESCRIPT "queuedTime=" . `/bin/date +%s` . "\n";
-print THESCRIPT "queuedTimeFmted=" . `/bin/date` . "\n";
+my $fmtedTime = `/bin/date`;
+chomp $fmtedTime;
+print THESCRIPT "queuedTimeFmted=\"$fmtedTime\"\n";
 print THESCRIPT "startTime=`/bin/date +%s`\n";
 print THESCRIPT "startTimeFmted=`/bin/date`\n";
 print THESCRIPT "mkdir $tmpdir\n";
 print THESCRIPT "/bin/echo \"<br>\" `/bin/date` \"Beginning processing of $scriptfname\"\n";
 
-print THESCRIPT "/bin/echo \"$tts\" | $festivalSpeechSynthesis $festivalOptions $wavFileName\n";
-print THESCRIPT "$sox $wavFileName -r 44100 -c 2 -s -w $tmpdir/synthesizedSpeech.raw >/dev/null\n";
+print THESCRIPT "$gttsCli \"$tts\" -o $ttsFileName\n";
+# print THESCRIPT "$sox $ttsFileName -r 44100 -c 2 -s -w $tmpdir/synthesizedSpeech.raw >/dev/null\n";
+
+my $thisDir=`pwd`;
+chomp $thisDir;
 
 
 my $catList = "";
+# Historically these were RealAudio ("ra") files, so for backwards compatability let's retain the older parameter name
 foreach my $raFile (@raFiles) {
-	my $url = sprintf $raUrlFormat,$book,$raFile;
-	print THESCRIPT "$mplayer $url -ao pcm:file=$tmpdir/$raFile.wav >/dev/null\n";
-	print THESCRIPT "$sox $tmpdir/$raFile.wav -r 44100 -c 2 -s -w $tmpdir/$raFile.raw >/dev/null\n";
-	$catList .= " $tmpdir/$raFile.raw";
+	my $url = sprintf $mp3UrlFormat,$book,$raFile;
+	print THESCRIPT "wget $url -O $tmpdir/$raFile.mp3 2>/dev/null\n";
+# 	print THESCRIPT "$sox $tmpdir/$raFile.wav -r 44100 -c 2 -s -w $tmpdir/$raFile.raw >/dev/null\n";
+	$catList .= " $tmpdir/$raFile.mp3";
 }
-print THESCRIPT "cat$catList >$tmpdir/reading.raw\n";
+print THESCRIPT "(cd $tmpdir; $mp3wrap reading $catList)\n";
 my $catList2 = "";
 for (my $i = 0; $i < $audioRepeatCount; $i++) {
-	$catList2 .= " $spacerLongRaw" unless ($i == 0);
-	$catList2 .= " $tmpdir/reading.raw";
+	$catList2 .= " $thisDir/$spacerLongMp3" unless ($i == 0);
+	$catList2 .= " $tmpdir/reading_MP3WRAP.mp3";
 }
 
-print THESCRIPT "cat";
-print THESCRIPT " $tmpdir/synthesizedSpeech.raw $spacerShortRaw";
-print THESCRIPT "$catList2 >$tmpdir/aggregate.raw\n";
-print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated raw->wav'\n";
-print THESCRIPT "$sox -r 44100 -c 2 -s -w $tmpdir/aggregate.raw $tmpdir/aggregate.wav >/dev/null\n";
-print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated wav->mp3'\n";
-print THESCRIPT "nice $lame -h --silent --scale 2 $tmpdir/aggregate.wav $audioFileName >/dev/null\n";
+print THESCRIPT "(cd $tmpdir; $mp3wrap aggregate";
+print THESCRIPT " $ttsFileName $thisDir/$spacerShortMp3";
+print THESCRIPT "$catList2)\n";
+# print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated raw->wav'\n";
+# print THESCRIPT "$sox -r 44100 -c 2 -s -w $tmpdir/aggregate.raw $tmpdir/aggregate.wav >/dev/null\n";
+# print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated wav->mp3'\n";
+# print THESCRIPT "nice $lame -h --silent --scale 2 $tmpdir/aggregate.wav $audioFileName >/dev/null\n";
+print THESCRIPT "cp -p $tmpdir/aggregate_MP3WRAP.mp3 $audioFileName\n";
 print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Processing complete!'\n";
 print THESCRIPT "/bin/touch $audioFileName.COMPLETED\n";
 print THESCRIPT "/bin/rm -f $audioFileName.STARTED\n";
@@ -208,7 +223,7 @@ sub accessPermitted {
 
 	if (-f $ipDatabase) {
 		my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size, $atime,$lastMtime,$ctime,$blksize,$blocks) = stat(_);
-		
+
 		my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($lastMtime);
 		$lastMtimeStamp = $year * 1000 + $yday;
 	}
@@ -277,6 +292,4 @@ sub recordFileSize {
 	flock (DAYSTAMPFILE,LOCK_UN);
 	close (DAYSTAMPFILE);
 }
-
-
 
