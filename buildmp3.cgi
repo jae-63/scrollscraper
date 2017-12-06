@@ -29,11 +29,23 @@ my $mainURL = "http://scrollscraper.adatshalom.net";
 
 my @englishBookNames = ("Genesis","Exodus","Leviticus","Numbers","Deuteronomy");
 
+my $maxFetches = 200; # safety valve;
+
+# TODO: Remember to check cases where Jewish&Christian traditions differ
+my @versesPerChapter = (
+[31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,33,38,18,34,24,20,67,34,35,46,22,35,43,55,32,20,31,29,43,36,30,23,23,57,38,34,34,28,34,31,22,33,26],
+[22,25,22,31,23,30,25,32,35,29,10,51,22,31,27,36,16,27,25,26,36,31,33,18,40,37,21,43,46,38,18,35,23,35,38,29,31,43,38],
+[17,16,17,35,19,30,38,36,24,20,47,8,59,57,33,34,16,30,37,27,24,33,44,23,55,46,34],
+[54,34,51,49,31,27,89,26,23,36,35,16,33,45,41,50,13,32,22,29,35,41,30,25,18,65,23,31,40,16,54,42,56,29,34,13],
+[46,37,29,49,33,25,26,20,29,22,32,32,18,29,23,22,20,22,21,20,23,30,25,22,19,19,26,68,29,20,30,52,29,12],
+);
+
+
 my $dayStampFile = "./smil/daystampAndLock.txt";
 my $ipDatabase = "./smil/ipdatabase";
 
 # parameters to be obtained via CGI; @raFiles should be split// from a text string
-my ($book,@raFiles,$audioRepeatCount,$startc,$startv,$endc,$endv,$flags);
+my ($book,@raFiles,$audioRepeatCount,$startc,$startv,$endc,$endv,$flags,$httpStyle);
 #  $book=1;
 #  @raFiles = ( "0101","0102","0103","0104" );
 #  $audioRepeatCount = 3;
@@ -47,10 +59,10 @@ my ($book,@raFiles,$audioRepeatCount,$startc,$startv,$endc,$endv,$flags);
 
 my $q = new CGI;
 if ($q->param('book')) {
-	print "Content-type: text/html\n\n";
+	print "Content-type: text/html\n\n" unless $q->param('httpStyle');
 
 	foreach my $key ($q->param) {
-		if ($q->param($key) !~ /^[0-9,]+$/ && $q->param($key) !~ /^(on|off)$/) {
+		if ($q->param($key) && $q->param($key) !~ /^[0-9,]+$/ && $q->param($key) !~ /^(on|off)$/) {
 			my $str = "Invalid parameter: $key=" . $q->param($key);
 			print "$str\n";
 			die "$str";
@@ -63,6 +75,7 @@ if ($q->param('book')) {
 	$startv = $q->param('startv');
 	$endc = $q->param('endc');
 	$endv = $q->param('endv');
+	$httpStyle = $q->param('httpStyle');
 	$audioRepeatCount = $q->param('audioRepeatCount') if $q->param('audioRepeatCount');
 	@raFiles = split /,/,$raFiles;
 }
@@ -70,10 +83,31 @@ if ($q->param('book')) {
 $audioRepeatCount = 1 unless $audioRepeatCount;
 $audioRepeatCount = 9 unless $audioRepeatCount < 9;
 
+# Compute the list of audio verses rather than obtaining it explicitly from the command line
+unless (@raFiles) {
+        my $chaptersInBook = $versesPerChapter[$book-1] + 1;
+        my $v = $startv;
+        my $c = $startc;
+        my $count = 0;
+        $audioList = "";
+
+        while ($count++ < $maxFetches) {
+                $audioList .= "," if ($count > 1);
+                $audioList .= sprintf "%02d%02d",$c,$v;
+                last if ($c >= $endc && $v >= $endv);
+                $v++;
+                if ($v > $versesPerChapter[$book-1][$c-1]) {
+                        $v = 1;
+                        $c++;
+                        last if $c >= $chaptersInBook;
+                }
+        }
+	@raFiles = split /,/,$audioList;
+#        print STDERR "Audiolist: $audioList\n";
+}
+
 my $audioFileName = rangeToFileName($smilbase, $book,$startc,$startv,$endc,$endv,$flags,$audioRepeatCount) . "REC.mp3";
 if ( -f $audioFileName && ! -z $audioFileName && -f "$audioFileName.COMPLETED") {
-	print "Your MP3 file was previously created, and appears at:<BR>\n";
-
 	#
 	# update the actual MP3 file's timestamp to show this access attempt, but leave the
 	# timestamp of $audioFileName.COMPLETED unchanged.  This way we can keep track of
@@ -84,14 +118,40 @@ if ( -f $audioFileName && ! -z $audioFileName && -f "$audioFileName.COMPLETED") 
 	$_ = $audioFileName;
 	s/^\.//;
 	my $link = "$mainURL$_";
-	print "<a href=\"$link\">$link</a>\n";
+        if ($httpStyle) {
+                print "HTTP/1.1 302 Found\n";
+		print "Location: $link\n";
+        } else {
+		print "Your MP3 file was previously created, and appears at:<BR>\n";
+		print "<a href=\"$link\">$link</a>\n";
+        }
+
 	exit 0;
 }
 
 my ($retval,$info) = accessPermitted($ENV{'REMOTE_ADDR'},$dayStampFile,$ipDatabase,($#raFiles+1),$audioRepeatCount);
 if ($retval == 0) {
-	print STDERR "MP3 creation access denied: $info\n";
-	print "MP3 creation access denied: $info\n";
+        if ($httpStyle) {
+                print "HTTP/1.1 429 Too Many Requests\n";
+		print <<EOF
+Content-Type: text/html
+Retry-After: 43200
+
+<html>
+  <head>
+    <title>Too Many Requests</title>
+  </head>
+  <body>
+    <h1>Too Many Requests</h1>
+    <p>There are daily limits on this Web site</p>
+    <p>$info</p>
+  </body>
+</html>
+EOF
+	} else {
+		print STDERR "MP3 creation access denied: $info\n";
+		print "MP3 creation access denied: $info\n";
+	}
 	exit 1;
 }
 
@@ -100,11 +160,15 @@ my $tmpdir = "/tmp/$$.mp3.scrollscraper";
 my $effortRequired = ($#raFiles+1) * $audioRepeatCount;
 my $scriptfname = $ENV{"REMOTE_ADDR"} . "_" . $effortRequired . "_" . "$$.sh";
 open THESCRIPT,">$qDir/$scriptfname" or die "Unable to open output file $qDir/$scriptfname";
-print "Your output MP3 file will appear at:<BR>\n";
-$_ = $audioFileName;
-s/^\.//;
-my $link = "$mainURL$_";
-print "<a href=\"$link\">$link</a>\n";
+if ($httpStyle) {
+        print "HTTP/1.1 202 Accepted\n";
+} else {
+	print "Your output MP3 file will appear at:<BR>\n";
+	$_ = $audioFileName;
+	s/^\.//;
+	my $link = "$mainURL$_";
+	print "<a href=\"$link\">$link</a>\n";
+}
 
 
 # generate speech synthesis
@@ -227,7 +291,7 @@ sub accessPermitted {
 
 	if (-f $ipDatabase) {
 		my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size, $atime,$lastMtime,$ctime,$blksize,$blocks) = stat(_);
-
+		
 		my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($lastMtime);
 		$lastMtimeStamp = $year * 1000 + $yday;
 	}
@@ -296,3 +360,6 @@ sub recordFileSize {
 	flock (DAYSTAMPFILE,LOCK_UN);
 	close (DAYSTAMPFILE);
 }
+
+
+
