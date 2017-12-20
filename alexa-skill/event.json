@@ -16,23 +16,23 @@
       "slots": {
         "TorahBooks" : {
           "name": "TorahBooks",
-          "value": "Exodus"
+          "value": "Deuteronomy"
         },
         "StartChapter" : {
           "name": "StartChapter",
-          "value": "4"
+          "value": 34
         },
         "StartVerse" : {
           "name": "StartVerse",
-          "value": "6"
+          "value": 9
         },
         "EndChapter" : {
           "name": "EndChapter",
-          "value": "4"
+          "value": 34
         },
         "EndVerse" : {
           "name": "EndVerse",
-          "value": "9"
+          "value": 12
         }
       },
       "name": "ChantIntent"

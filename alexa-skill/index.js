@@ -187,7 +187,7 @@ function chaptersAndVerses2AudioString(book,startc,startv,endc,endv) {
 
   // <audio src="https://carfu.com/audio/carfu-welcome.mp3" /> 
   while (count++ <  maxFetches) {
-    if ((c < chaptersInBook && c < endc) || v <= endv) {
+    if ((c < chaptersInBook && c < endc) || ((c == chaptersInBook || c == endc) && v <= endv)) {
       retval += '<audio src="' + tomp3url(book,c,v) + '" />\n';
       v++;
       if (v > versesPerChapter[book-1][c-1]) {
