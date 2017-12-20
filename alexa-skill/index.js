@@ -52,7 +52,7 @@ exports.handler = function(event,context) {
 
     } else if (request.type === "IntentRequest") {
 
-      if (request.intent.name === "ChantIntent") {
+      if (request.intent.name === "ChantIntent" || request.intent.name === "ScrollScraper") {
 
         handleChantIntent(request,context);
 
