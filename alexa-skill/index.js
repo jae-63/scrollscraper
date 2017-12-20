@@ -173,7 +173,9 @@ function handleChantIntent(request,context) {
 
 // all parameters are 1-based below
 function tomp3url(book,chapter,verse) {
-   return "https://scrollscraper.adatshalom.net/ORT_MP3s.recoded/t" + book + "/" + chapter.toString().padStart(2,'0') + verse.toString().padStart(2,'0') + ".mp3";
+//   return "https://scrollscraper.adatshalom.net/ORT_MP3s.recoded/t" + book + "/" + chapter.toString().padStart(2,'0') + verse.toString().padStart(2,'0') + ".mp3";
+//   n.toLocaleString('en', {minimumIntegerDigits:4
+   return "https://scrollscraper.adatshalom.net/ORT_MP3s.recoded/t" + book + "/" + chapter.toLocaleString('en', {minimumIntegerDigits:2}) + verse.toLocaleString('en', {minimumIntegerDigits:2}) + ".mp3";
 }
 
 // TODO: check for off-by-one errors
