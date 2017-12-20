@@ -7,7 +7,7 @@
       "userId": "usr123"
     },
     "application": {
-      "applicationId": "amzn1.echo-sdk-ams.app.5acba9b5-6d09-4444-aaa8-618c56eb0335"
+      "applicationId": "amzn1.ask.skill.6cf9a72d-a2bb-47c4-a878-d59dc830363c"
     }
   },
   "version": "1.0",
@@ -16,7 +16,7 @@
       "slots": {
         "TorahBooks" : {
           "name": "TorahBooks",
-          "value": "Deuteronomy"
+          "value": "deuteronomy"
         },
         "StartChapter" : {
           "name": "StartChapter",
@@ -27,8 +27,7 @@
           "value": 9
         },
         "EndChapter" : {
-          "name": "EndChapter",
-          "value": 34
+          "name": "EndChapter"
         },
         "EndVerse" : {
           "name": "EndVerse",

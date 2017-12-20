@@ -13,11 +13,11 @@ var versesPerChapter = [
 
 var englishBookNames = ["Genesis","Exodus","Leviticus","Numbers","Deuteronomy"];
 
-var engBookName = {'Genesis' : 0, 
-                   'Exodus' : 1,
-                   'Leviticus' : 2,
-                   'Numbers' : 3,
-                   'Deuteronomy' : 4};
+var engBookName = {'genesis' : 0, 
+                   'exodus' : 1,
+                   'leviticus' : 2,
+                   'numbers' : 3,
+                   'deuteronomy' : 4};
 
 // sample ORT MP3: https://scrollscraper.adatshalom.net/ORT_MP3s.recoded/t1/2219.mp3
 
@@ -146,12 +146,17 @@ function handleLaunchRequest(context) {
 
 function handleChantIntent(request,context) {
   let options = {};
-  let bookName = request.intent.slots.TorahBooks.value;
+  let bookName = request.intent.slots.TorahBooks.value.toLowerCase();
   let bookValue = engBookName[bookName] + 1;
   let startc = request.intent.slots.StartChapter.value;
   let startv = request.intent.slots.StartVerse.value;
   let endc = request.intent.slots.EndChapter.value;
   let endv = request.intent.slots.EndVerse.value;
+
+  if (typeof(endc) === 'undefined') {
+      endc = startc;
+  }
+
   let scrollscraperURL = "https://scrollscraper.adatshalom.net/scrollscraper.cgi?book=" + bookValue + "&doShading=on&startc=" + startc + "&startv=" + startv + "&endc=" + endc + "&endv=" + endv;
   options.cardTitle = bookName + " " + startc + ":" + startv + " - " + endc + ":" + endv;
   
