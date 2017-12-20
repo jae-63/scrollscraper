@@ -156,7 +156,7 @@ function handleChantIntent(request,context) {
   options.cardTitle = bookName + " " + startc + ":" + startv + " - " + endc + ":" + endv;
   
 
-  options.speechText = "This is an excerpt from " + bookName +  ", Chapter " + startc
+  options.speechText = "This is an excerpt from " + bookName +  ", Chapter " + startc;
   if (startc === endc) {
       options.speechText += " verses " + startv + " through " + endv;
   } else {
@@ -165,7 +165,7 @@ function handleChantIntent(request,context) {
   options.speechText += ". The following recorded materials are copyright world-ORT, 1997, all rights reserved.";
   options.cardContent = scrollscraperURL;
 
-  options.audioString = chaptersAndVerses2AudioString(bookValue,startc,startv,endc,endv)
+  options.audioString = chaptersAndVerses2AudioString(bookValue,startc,startv,endc,endv);
 
   context.succeed(buildResponse(options));
 }
