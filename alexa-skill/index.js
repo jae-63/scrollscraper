@@ -118,11 +118,19 @@ function buildResponse(options) {
       type: "Simple",
       title: options.cardTitle
     }
-    response.response.card.content = options.cardContent;
 
+    if(options.imageUrl) {
+      response.response.card.type = "Standard";
+      response.response.card.text = options.cardContent;
+      response.response.card.image = {
+        smallImageUrl: options.imageUrl,
+        largeImageUrl: options.imageUrl
+      };
+
+    } else {
+      response.response.card.content = options.cardContent;
+    }
   }
-
-
 
 
   if(options.session && options.session.attributes) {
@@ -152,25 +160,46 @@ function handleChantIntent(request,context) {
   let startv = request.intent.slots.StartVerse.value;
   let endc = request.intent.slots.EndChapter.value;
   let endv = request.intent.slots.EndVerse.value;
+  let undefinedStuff = "";
 
-  if (typeof(endc) === 'undefined') {
-      endc = startc;
+  if (typeof(bookName) === 'undefined') {
+      undefinedStuff += "Book name was not heard. ";
+  }
+  if (typeof(startc) === 'undefined') {
+      undefinedStuff += "Starting chapter was not heard. ";
+  }
+  if (typeof(startv) === 'undefined') {
+      undefinedStuff += "Starting verse was not heard. ";
+  }
+  if (typeof(endv) === 'undefined') {
+      undefinedStuff += "Ending verse was not heard. ";
   }
 
-  let scrollscraperURL = "https://scrollscraper.adatshalom.net/scrollscraper.cgi?book=" + bookValue + "&doShading=on&startc=" + startc + "&startv=" + startv + "&endc=" + endc + "&endv=" + endv;
-  options.cardTitle = bookName + " " + startc + ":" + startv + " - " + endc + ":" + endv;
-  
-
-  options.speechText = "This is an excerpt from " + bookName +  ", Chapter " + startc;
-  if (startc === endc) {
-      options.speechText += " verses " + startv + " through " + endv;
+  if (undefinedStuff) {
+     options.speechText = undefinedStuff;
   } else {
-      options.speechText += " verse " + startv + " through chapter " + endc + " verse " + endv;
-  }
-  options.speechText += ". The following recorded materials are copyright world-ORT, 1997, all rights reserved.";
-  options.cardContent = scrollscraperURL;
+      if (typeof(endc) === 'undefined') {
+          endc = startc;
+      }
+    
+      let scrollscraperURL = "https://scrollscraper.adatshalom.net/scrollscraper.cgi?book=" + bookValue + "&doShading=on&startc=" + startc + "&startv=" + startv + "&endc=" + endc + "&endv=" + endv;
+      options.cardTitle = bookName + " " + startc + ":" + startv + " - " + endc + ":" + endv;
+      
+    
+      options.speechText = "This is an excerpt from " + bookName +  ", Chapter " + startc;
+      if (startc === endc) {
+          options.speechText += " verses " + startv + " through " + endv;
+      } else {
+          options.speechText += " verse " + startv + " through chapter " + endc + " verse " + endv;
+      }
+      options.speechText += ". The following recorded materials are copyright world-ORT, 1997, all rights reserved.";
+      options.cardContent = scrollscraperURL;
+    
+      options.audioString = chaptersAndVerses2AudioString(bookValue,startc,startv,endc,endv);
 
-  options.audioString = chaptersAndVerses2AudioString(bookValue,startc,startv,endc,endv);
+      // test value for now
+      options.imageUrl = "https://scrollscraper.adatshalom.net/colorImage.cgi?thegif=/webmedia/t1/0103C111.gif&coloring=0,0,0,0,0,0";
+  }
 
   context.succeed(buildResponse(options));
 }
