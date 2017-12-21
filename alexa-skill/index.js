@@ -154,8 +154,7 @@ function handleLaunchRequest(context) {
 
 function handleChantIntent(request,context) {
   let options = {};
-  let bookName = request.intent.slots.TorahBooks.value.toLowerCase();
-  let bookValue = engBookName[bookName] + 1;
+  let bookName = request.intent.slots.TorahBooks.value;
   let startc = request.intent.slots.StartChapter.value;
   let startv = request.intent.slots.StartVerse.value;
   let endc = request.intent.slots.EndChapter.value;
@@ -178,6 +177,9 @@ function handleChantIntent(request,context) {
   if (undefinedStuff) {
      options.speechText = undefinedStuff;
   } else {
+      let bookName = request.intent.slots.TorahBooks.value.toLowerCase();
+      let bookValue = engBookName[bookName] + 1;
+
       if (typeof(endc) === 'undefined') {
           endc = startc;
       }
