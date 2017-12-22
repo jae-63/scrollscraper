@@ -785,6 +785,7 @@ function tomp3url(book,chapter,verse,maxVerses) {
 // TODO: check for off-by-one errors
 function chaptersAndVerses2AudioString(book,startc,startv,endc,endv) {
   let count = 0;
+  let count2 = 0;
   let maxFetches = 100;
   let c = startc;
   let v = startv;
@@ -797,15 +798,18 @@ function chaptersAndVerses2AudioString(book,startc,startv,endc,endv) {
   // <audio src="https://carfu.com/audio/carfu-welcome.mp3" /> 
 
   // On the first pass compute how many total verses are requested in the reading
-  while (count++ <  maxFetches) {
+  while (count2++ <  maxFetches) {
     if ((c < chaptersInBook && c < endc) || ((c == chaptersInBook || c == endc) && v <= endv)) {
+      count++;
       v++;
       if (v > versesPerChapter[book-1][c-1]) {
+console.log("Switching to next chapter, book="+book+",chapter="+c+",verse="+v+"\n");
          v = 1;
          c++;
       }
     }
   }
+console.log("completed first loop, book="+book+",chapter="+c+",verse="+v+"\n");
 
   c = startc;
   v = startv;
@@ -825,6 +829,7 @@ function chaptersAndVerses2AudioString(book,startc,startv,endc,endv) {
       while (versesUsed-- > 0) {
           v++;
           if (v > versesPerChapter[book-1][c-1]) {
+console.log("Switching to next chapter in 2nd loop, book="+book+",chapter="+c+",verse="+v+"\n");
              v = 1;
              c++;
           }
