@@ -1,7 +1,5 @@
 'use strict';
 
-var http = require('http');
-
 
 var versesPerChapter = [
 [31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,17,27,33,38,18,34,24,20,67,34,35,46,22,35,43,54,33,20,31,29,43,36,30,23,23,57,38,34,34,28,34,31,22,33,26],
@@ -769,7 +767,9 @@ function tomp3url(book,chapter,verse,maxVerses) {
    if (maxVerses > mostVersesPerMp3) {
        maxVerses = mostVersesPerMp3;
    }
-   let baseString = book + "/" + chapter.toLocaleString('en', {minimumIntegerDigits:2}) + verse.toLocaleString('en', {minimumIntegerDigits:2});
+   let formattedChapter = ("0" + chapter).slice(-2);
+   let formattedVerse = ("0" + verse).slice(-2);
+   let baseString = book + "/" + formattedChapter + formattedVerse;
    let prefix = "https://scrollscraper.adatshalom.net/ORT_MP3s.recoded/t";
 
    while (maxVerses > 1) {
@@ -803,13 +803,11 @@ function chaptersAndVerses2AudioString(book,startc,startv,endc,endv) {
       count++;
       v++;
       if (v > versesPerChapter[book-1][c-1]) {
-console.log("Switching to next chapter, book="+book+",chapter="+c+",verse="+v+"\n");
          v = 1;
          c++;
       }
     }
   }
-console.log("completed first loop, book="+book+",chapter="+c+",verse="+v+"\n");
 
   c = startc;
   v = startv;
@@ -829,7 +827,6 @@ console.log("completed first loop, book="+book+",chapter="+c+",verse="+v+"\n");
       while (versesUsed-- > 0) {
           v++;
           if (v > versesPerChapter[book-1][c-1]) {
-console.log("Switching to next chapter in 2nd loop, book="+book+",chapter="+c+",verse="+v+"\n");
              v = 1;
              c++;
           }
