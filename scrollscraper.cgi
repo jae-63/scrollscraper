@@ -682,7 +682,7 @@ if ($showStartAndEndButtons) {
 
 if ($doAudio) {
 #	print $cacheOutRef "<br><br><hr><img src=./new.gif> <a href=\"$mainURL/$smilFileName\">Experimental audio</a>, requires <a href=\"http://www.real.com/player\">Real Player</a> <a href=\"./buildmp3.cgi?flags=$flags&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv&audioRepeatCount=$audioRepeatCount&raFiles=$audioList\">*</a>\n";
-	print $cacheOutRef "<br><br><hr><a href=\"./buildmp3.cgi?flags=$flags&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv&audioRepeatCount=$audioRepeatCount&raFiles=$audioList\">Create MP3 audio file</a>\n";
+	print $cacheOutRef "<br><br><hr><a href=\"./buildmp3.cgi?flags=$flags&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv&audioRepeatCount=$audioRepeatCount&raFiles=\">Create MP3 audio file</a>\n";
 
 }
 
