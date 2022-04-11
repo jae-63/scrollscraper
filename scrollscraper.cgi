@@ -23,7 +23,7 @@ use HTML::TokeParser;
 use GD;
 use CGI;
  
-# sample: http://bible.ort.org/books/torahd5.asp?action=displaypage&book=2&chapter=27&verse=1&portion=19
+# sample: https://bible.ort.org/books/torahd5.asp?action=displaypage&book=2&chapter=27&verse=1&portion=19
 
 # 
 # $outputVersion should be incremented each time the format is changed in
@@ -31,12 +31,14 @@ use CGI;
 # 
 my $outputVersion = 6;
 
-my $site = "http://bible.ort.org";
+my $site = "https://bible.ort.org";
+my $outputSite = $site;
+my $outputSite = "https://scrollscraper.adatshalom.net";
 my $base = "$site/books/torahd5.asp?action=displaypage&book=%d&chapter=%d&verse=%d&portion=%d";
 my $gifWidth = 445;
 my $shadingDir = "ScrollScraperalphaPNGs";
 my $forbiddenFile = "forbidden-referers.txt";
-my $smilFormat = "<audio src=\"http://bible.ort.org/webmedia/t%d/%02d%02d.ra\" title=\"%s %d:%d\" %s/>";
+my $smilFormat = "<audio src=\"https://bible.ort.org/webmedia/t%d/%02d%02d.ra\" title=\"%s %d:%d\" %s/>";
 my $mainURL = "http://scrollscraper.adatshalom.net";
 my $fliteOptions = "--setf duration_stretch=1.2"; # slow down the audio by 20%
 my $fliteSpeechSynthesis = "/home/jepstein/flite/flite-1.3-release/bin/flite";
@@ -64,6 +66,11 @@ my $coloring;
 my $generateCache = 1;
 my $doShading = 0;
 my $blankImage = "alpha_TOP1_0.png"; # used for padding on LHS of table, when $doShading is used
+
+my $agent = LWP::UserAgent->new;
+
+$agent->ssl_opts(verify_hostname => 0,
+              SSL_verify_mode => 0x00);
 
 
 my $q = new CGI;
@@ -330,7 +337,11 @@ if ($generateCache && open CACHEOUT,">$cacheFileName") {
 my $endPortion = calcPortion($book,$endc,$endv);
 $url = sprintf($base,$book,$endc,$endv,$endPortion);
 $lastURL = $url;
-$content = get($url) or die "Unable to fetch $url";
+
+my $response = $agent->get($url) or die "Unable to fetch $url";
+
+$content = $response->decoded_content;
+
 my $lastTranslit = fetchTransliteration($content,$endc,$endv,1, $endTranslit1Color, $endTranslit2Color) if $translit;
 my $firstTranslit;
 
@@ -383,7 +394,10 @@ while ($maxFetches-- && !$done) {
 	#
 	my $newstuffseen = 0;
 	$done = 1 if $almostdone < 1; # two-step done detection lets us reprocess "end" page
-	$content = get($url) or die "Unable to fetch $url";
+        my $response = $agent->get($url) or die "Unable to fetch $url";
+
+        $content = $response->decoded_content;
+
         $firstTranslit = fetchTransliteration($content,$startc,$startv,0,$startTranslit1Color,$startTranslit2Color) if ($url eq $firstURL && $translit);
 	$p = HTML::TokeParser->new(\$content);
 	my $seenForward = 0;
@@ -533,7 +547,7 @@ if (defined $rightOutputs[-2] && ! defined $verseInfo{$rightOutputs[-1]}{"$endc:
 		my $firstVerse = $sortedVerses[0];
 		my ($shade,$row) = split /,/,$verseInfo{$rightOutputs[-1]}{$firstVerse};
 
-		@endtags = tagTikkunRegionsByColorFromURL("$site" . $rightOutputs[-1]);
+		@endtags = tagTikkunRegionsByColorFromURL("$outputSite" . $rightOutputs[-1]);
 		my($observedShade, $row1, $x1, $row2, $x2) = @{$endtags[0]};
 #		if ($shade eq $observedShade && $row <= $row2) {
 		if ($shade eq $observedShade && $row <= $row2 && ($row2 >= 2 || $x2 >= 10)) {
@@ -553,9 +567,9 @@ if (defined $rightOutputs[-2] && ! defined $verseInfo{$rightOutputs[-1]}{"$endc:
 my ($begLabel, $endLabel);
 if ($doShading) {
 	my $dbg;
-	my @begintags = tagTikkunRegionsByColorFromURL("$site" . $rightOutputs[0]);
+	my @begintags = tagTikkunRegionsByColorFromURL("$outputSite" . $rightOutputs[0]);
 	# note that we re-use the @endtags result from above, if it's already been computed, since it's an expensive calculation
-	@endtags = tagTikkunRegionsByColorFromURL("$site" . $rightOutputs[-1]) unless @endtags;
+	@endtags = tagTikkunRegionsByColorFromURL("$outputSite" . $rightOutputs[-1]) unless @endtags;
 
 	# my @sortedVerses = sort compareChapterAndVerse keys %{$verseInfo{$rightOutputs[0]}};
 	if ($verseInfo{$rightOutputs[0]}{"$startc:$startv"}) {
@@ -631,7 +645,7 @@ print $cacheOutRef "<table><tr><td>\n" if $sbs;
 
 print $cacheOutRef "<span style=\"position: relative; top: 0px\">\n" if ($doShading);
 foreach (@leftOutputs) {
-	print $cacheOutRef "<img alt=\"\" src=\"$site$_\"><br>\n";
+	print $cacheOutRef "<img alt=\"\" src=\"$outputSite$_\"><br>\n";
 	$gifCount++;
 }
 
@@ -655,7 +669,7 @@ foreach (@rightOutputs) {
 	if ($coloring) {
 		print $cacheOutRef "<img alt=\"\" src=\"./colorImage.cgi?thegif=$_&coloring=$coloring\"><br>\n";
 	} else {
-		print $cacheOutRef "<img alt=\"\" src=\"$site$_\"><br>\n";
+		print $cacheOutRef "<img alt=\"\" src=\"$outputSite$_\"><br>\n";
 	}
 	$gifCount++;
 }
@@ -681,7 +695,7 @@ if ($showStartAndEndButtons) {
 }
 
 if ($doAudio) {
-#	print $cacheOutRef "<br><br><hr><img src=./new.gif> <a href=\"$mainURL/$smilFileName\">Experimental audio</a>, requires <a href=\"http://www.real.com/player\">Real Player</a> <a href=\"./buildmp3.cgi?flags=$flags&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv&audioRepeatCount=$audioRepeatCount&raFiles=$audioList\">*</a>\n";
+#	print $cacheOutRef "<br><br><hr><img src=./new.gif> <a href=\"$mainURL/$smilFileName\">Experimental audio</a>, requires <a href=\"http://www.real.com/player\">Real Player</a> <a href=\"./buildmp3.cgi?flags=$flags&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv&audioRepeatCount=$audioRepeatCount&raFiles=\">*</a>\n";
 	print $cacheOutRef "<br><br><hr><a href=\"./buildmp3.cgi?flags=$flags&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv&audioRepeatCount=$audioRepeatCount&raFiles=\">Create MP3 audio file</a>\n";
 
 }
@@ -851,7 +865,9 @@ sub notClose {
 sub tagTikkunRegionsByColorFromURL {
     my ($theurl) = @_;
 
-    my $gifdata = get($theurl) or die "Unable to download $theurl";
+    my $response = $agent->get($theurl) or die "Unable to download $theurl";
+
+    my $gifdata = $response->decoded_content;
 
     return tagTikkunRegionsByColor($gifdata);
 }
