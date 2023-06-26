@@ -872,15 +872,17 @@ sub goBack {
 sub isDark {
      my($book,$chapter,$verse) = @_;
 
-     my $retval = 1;
+     my $chaptersInBook = @{$versesPerChapter[$book-1]};
 
-     while ($chapter > 1 || $verse > 1) {
-         my @results = goBack($book,$chapter,$verse,1);
-         ($book,$chapter,$verse) = @results;
-         $retval = 1 - $retval;
+     my $verseCount = 0;
+     for (my $ch = 1; $ch < $chapter; $ch++) {
+             my $versesInThisChapter = $versesPerChapter[$book-1][$ch-1];
+             $verseCount += $versesInThisChapter;
      }
 
-     return $retval;
+     $verseCount += $verse;
+
+     return $verseCount % 2;
 }
 
 
