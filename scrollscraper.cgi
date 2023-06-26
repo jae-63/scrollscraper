@@ -29,7 +29,7 @@ use CGI;
 # $outputVersion should be incremented each time the format is changed in
 # a manner which affects previously cached output files
 # 
-my $outputVersion = 7;
+my $outputVersion = 8;
 
 my $site = "https://bible.ort.org";
 my $outputSite = $site;
@@ -100,7 +100,6 @@ if ($q->param('book')) {
 	$audioRepeatCount = $q->param('audioRepeatCount') if $q->param('audioRepeatCount');
 	$coloring = $q->param('coloring') if $q->param('coloring');
 	$doShading = $q->param('doShading') if $q->param('doShading');
-	$doShading = 0;
 	
 	if (-f $forbiddenFile && defined $ENV{"HTTP_REFERER"}) {
 		open FORB, "<$forbiddenFile";
@@ -213,6 +212,7 @@ my @versesPerChapter = (
 
 my @chapterAndVerse2Info;
 my @filenames;
+my %verseInfo;
 
 my @leftOutputs;
 my @rightOutputs;
@@ -233,9 +233,12 @@ while (<DATA>) {
 		$fileName2Number{$filename} = $fileNameNumber++;
 	} else {
 		my @fields = split /,/;
-		my($book,$chapter,$verse) = ($fields[0],$fields[1],$fields[2]);
-		$chapterAndVerse2Info[$book][$chapter][$verse]{'firstGIF'} = $fields[3];
-		$chapterAndVerse2Info[$book][$chapter][$verse]{'finalGIF'} = $fields[4];
+		my($book,$chapter,$verse,$firstGIF,$finalGIF) = ($fields[0],$fields[1],$fields[2],$fields[3],$fields[4]);
+
+		$chapterAndVerse2Info[$book][$chapter][$verse]{'firstGIF'} = $firstGIF;
+		$chapterAndVerse2Info[$book][$chapter][$verse]{'finalGIF'} = $finalGIF;
+                my $begShade = isDark($book,$chapter,$verse) ? "dark" : "light";
+                $verseInfo{"/webmedia/$firstGIF"}{"$chapter:$verse"} = "$begShade," .  $fields[5];
 		$chapterAndVerse2Info[$book][$chapter][$verse]{'lineNumberOnWhichThisVerseBegins'} = $fields[5];
 		$chapterAndVerse2Info[$book][$chapter][$verse]{'indexOfVerseStartPositionOnThatLine'} = $fields[6];
 	}
@@ -374,8 +377,6 @@ $portion = $beginPortion;
 my $tableDepth = 0;
 my @trCount;
 my $lastRight;
-my %verseInfo;
-my %verseShades;
 
 my $firstTranslit;
 my $lastTranslit;
@@ -388,7 +389,6 @@ my $lastTranslit;
 # following the same convention, and have a vertical row position which corresponds to the starting line
 # of that verse in the image.
 #
-# Above, we harvested the shades, verse number and row number into the %verseInfo and %verseShades data structures.
 # Now we're ready to prepare 'maps' of the shading info for the first few and last few images, and correlate
 # these maps with the above-mentioned data structures to figure out where (horizontally and vertically) the reading
 # begins and ends.
@@ -451,7 +451,7 @@ if ($doShading) {
 		}
 	} else { # we are finishing our verse which was started in the previous GIF (or perhaps even earlier)
 		my $tag = $endtags[0];
-		my $endshade = $verseShades{"$endc:$endv"};
+                my $endshade = isDark($book,$endc,$endv) ? "dark" : "light";
 		my($observedShade, $row1, $x1, $row2, $x2) = @{$tag};
 		for my $tag (@endtags) {
 			my($observedShade, $row1, $x1, $row2, $x2) = @{$tag};
@@ -854,6 +854,35 @@ sub determineColor {
     $retval = 'NONE' unless defined($retval);
     return $retval;
 }
+
+sub goBack {
+     my($book,$chapter,$verse,$go_back_count) = @_;
+     while ($go_back_count-- > 0) {
+             if ($verse-- <= 1) {
+                     $chapter--;
+                     my $versesInThisChapter = $versesPerChapter[$book-1][$chapter-1];
+                     $verse = $versesInThisChapter;
+             }
+     }
+
+     return $book,$chapter,$verse;
+}
+
+# Note that each of the five books begin with a dark-blue verse, and then light-blue verses are alternated thereafter
+sub isDark {
+     my($book,$chapter,$verse) = @_;
+
+     my $retval = 1;
+
+     while ($chapter > 1 || $verse > 1) {
+         my @results = goBack($book,$chapter,$verse,1);
+         ($book,$chapter,$verse) = @results;
+         $retval = 1 - $retval;
+     }
+
+     return $retval;
+}
+
 
 
 __DATA__
