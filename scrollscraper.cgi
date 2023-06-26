@@ -29,7 +29,7 @@ use CGI;
 # $outputVersion should be incremented each time the format is changed in
 # a manner which affects previously cached output files
 # 
-my $outputVersion = 8;
+my $outputVersion = 9;
 
 my $site = "https://bible.ort.org";
 my $outputSite = $site;
@@ -238,6 +238,8 @@ while (<DATA>) {
 		$chapterAndVerse2Info[$book][$chapter][$verse]{'firstGIF'} = $firstGIF;
 		$chapterAndVerse2Info[$book][$chapter][$verse]{'finalGIF'} = $finalGIF;
                 my $begShade = isDark($book,$chapter,$verse) ? "dark" : "light";
+		# our ETL'd rows are zero-based but all the ScrollScraper logic is one-based
+                $fields[5] += 1;
                 $verseInfo{"/webmedia/$firstGIF"}{"$chapter:$verse"} = "$begShade," .  $fields[5];
 		$chapterAndVerse2Info[$book][$chapter][$verse]{'lineNumberOnWhichThisVerseBegins'} = $fields[5];
 		$chapterAndVerse2Info[$book][$chapter][$verse]{'indexOfVerseStartPositionOnThatLine'} = $fields[6];
