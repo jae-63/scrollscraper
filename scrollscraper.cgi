@@ -732,6 +732,7 @@ sub tagTikkunRegionsByColor {
 
     my @rgb;    # define it out here for debugging ease
     my %none;
+    my %notNone;
 
     for ( my $row = 0, my $y = $samplingRow ; $row <= 2 ; $row++, $y += 30 ) {
 
@@ -761,6 +762,7 @@ sub tagTikkunRegionsByColor {
                     }
                 }
 		$none{$row}{$x}++ unless $theColor ne 'NONE';
+		$notNone{$row}{$x}++ unless $theColor eq 'NONE';
             }
 
             if ( $lastColor eq 'NONE' && !$lastIteration ) {
@@ -819,6 +821,10 @@ sub tagTikkunRegionsByColor {
 			$startx = $startx2;
 			$lastColor = $lastColor2;
 		    } else {
+			# skip rows which contain no colored text
+                        while ($startrow < $row && scalar(keys %{$notNone{$startrow}}) <= 0) {
+                                $startrow++;
+                        }
                         my @res =
                           ( $lastColor, $startrow+1, $startx, $recentrow+1, $recentx );
                         push @retval, [@res];
