@@ -208,7 +208,8 @@ my $catList = "";
 # Historically these were RealAudio ("ra") files, so for backwards compatability let's retain the older parameter name
 foreach my $raFile (@raFiles) {
 	my $url = sprintf $mp3UrlFormat,$book,$raFile;
-	print THESCRIPT "wget $url -O $tmpdir/$raFile.mp3 2>/dev/null\n";
+	print THESCRIPT "cp /srv/www/scrollscraper.adatshalom.net/public_html/ORT_MP3s.recoded/t$book/$raFile.mp3 $tmpdir/$raFile.mp3 2>/dev/null\n";
+#	print THESCRIPT "wget $url -O $tmpdir/$raFile.mp3 2>/dev/null\n";
 # 	print THESCRIPT "$sox $tmpdir/$raFile.wav -r 44100 -c 2 -s -w $tmpdir/$raFile.raw >/dev/null\n";
         if ($catList) {
             $catList .= "|";
@@ -278,7 +279,7 @@ sub accessPermitted {
 
 	my $perIpPerDayLimit = 8;
 	my $perIpPerDayDiskLimit = 30 * 1024 * 1024;
-	my $globalLimit = 100;
+	my $globalLimit = 1000;
 	my $globalDiskLimit =  300 * 1024 * 1024;
 	my $maxVerses = 72;
 	my $retString = "";
@@ -291,7 +292,7 @@ sub accessPermitted {
 
 	if (-f $ipDatabase) {
 		my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size, $atime,$lastMtime,$ctime,$blksize,$blocks) = stat(_);
-		
+
 		my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($lastMtime);
 		$lastMtimeStamp = $year * 1000 + $yday;
 	}
@@ -319,8 +320,8 @@ sub accessPermitted {
 	if ($newval >= $perIpPerDayLimit) {
 		$retString .= "Daily limit ($perIpPerDayLimit) exceeded for IP $ip\n";
 	}
-	if ($globalDiskUsed >= $globalDiskLimit) {
-		$retString .= "Daily global disk space quota $globalDiskLimit exceeded\n";
+	if (defined($globalDiskUsed) && $globalDiskUsed >= $globalDiskLimit) {
+		$retString .= "Daily global disk space quota $globalDiskLimit exceeded, current usage $globalDiskUsed\n";
 	}
 	if ($myDiskUsed >= $perIpPerDayDiskLimit) {
 		$retString .= "Daily disk quota ($perIpPerDayDiskLimit) exceeded for IP $ip\n";
@@ -360,6 +361,5 @@ sub recordFileSize {
 	flock (DAYSTAMPFILE,LOCK_UN);
 	close (DAYSTAMPFILE);
 }
-
 
 
