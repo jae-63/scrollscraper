@@ -1,85 +1,364 @@
-scroll-scraper FAQ
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>scrollscraper FAQ</title>
+  <meta content="Jonathan Epstein" name="author">
+</head>
+<body>
+<h2>scroll-scraper FAQ</h2>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+      </span>What's the purpose of this website?</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+It's a "virtual <span style="font-style: italic;">tikkun</span>" which
+lets a Torah reader extract a section of Torah which they're
+planning to study and read in a service.&nbsp; This extracted section
+can either be printed, saved on the computer for review, or transferred
+to a handheld device for future study.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+	      </span>Why was ScrollScraper down from late 2022 until early 2023?<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+The website which contained the source of this data, <a href="http://bible.ort.org/">bible.ort.org</a> went offline in late 2022.
+Fortunately it was possible to resurrect ScrollScraper from stored GIF images captures from bible.ort.org.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+	      </span>I hate that ScrollScraper was down so long!   Please explain the bible.ort.org image naming convention, in case you get a hit by a bus or something. :-)<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+In the original version of Scrollscraper, the software traversed the bible.ort.org website and figured out which verses it needed to include on-the-fly.    It wasn't too important to precisely understand the ORT convention for naming the underlying GIF images which contain the Torah readings.     Each of these GIF files contains three lines of Hebrew text.
+<br><br>
+In light of the demise of bible.ort.org in late 2022, it became much more important to understand the ORT convention.    What follows is a reverse-engineered interpretation of the filenames, which I believe to be correct:
 
-Q: What's the purpose of this website?
-A: It's a "virtual tikkun" which lets a Torah reader extract a section of Torah which they're planning to study and read in a service.  This extracted section can either be printed, saved on the computer for review, or transferred to a handheld device for future study.
-
-
-Q: Why was ScrollScraper down from late 2022 until early 2023?
-A: The website which contained the source of this data, bible.ort.org went offline in late 2022. Fortunately it was possible to resurrect ScrollScraper from stored GIF images captures from bible.ort.org.
-
-
-Q: I hate that ScrollScraper was down so long! Please explain the bible.ort.org image naming convention, in case you get a hit by a bus or something. :-)
-A: In the original version of Scrollscraper, the software traversed the bible.ort.org website and figured out which verses it needed to include on-the-fly. It wasn't too important to precisely understand the ORT convention for naming the underlying GIF images which contain the Torah readings. Each of these GIF files contains three lines of Hebrew text. 
-
-In light of the demise of bible.ort.org in late 2022, it became much more important to understand the ORT convention. What follows is a reverse-engineered interpretation of the filenames, which I believe to be correct: ccvvqxyz.gif where:
-	•	cc = the chapter
-	•	vv = the verse. But specifically, it's the LAST verse for which some content is included within this GIF file
-	•	q = one of 'C', 'F', or 'D'. A 'C' file continues the text of the 'ccvv' verse mentioned above, in the following file. An 'F' file ends cleanly and does not continue. The rare 'D' files are in the middle of a long verse which began in a previous image and ends in a later image.
-	•	x = how many verses start on the first of the three lines in this GIF?
-	•	y = how many verses start on the second of the three lines in this GIF?
-	•	z = how many verses start on the third of the three lines in this GIF?
+<b><tt>ccvvqxyz.gif</tt></b> where:
+<ul>
+	<li><b><tt>cc</tt></b> = the chapter</li>
+	<li><b><tt>vv</tt></b> = the verse.   But specifically, it's the LAST verse for which some content is included within this GIF file</li>
+	<li><b><tt>q</tt></b> = one of 'C', 'F', or 'D'.    A 'C' file continues the text of the 'ccvv' verse mentioned above, in the following file.   An 'F' file ends cleanly and does not continue.   The rare 'D' files are in the middle of a long verse which began in a previous image and ends in a later image.</li>
+	<li><b><tt>x</tt></b> = how many verses start on the first of the three lines in this GIF?</li>
+	<li><b><tt>y</tt></b> = how many verses start on the second of the three lines in this GIF?</li>
+	<li><b><tt>z</tt></b> = how many verses start on the third of the three lines in this GIF?</li>
+</ul>
 Examples:
-	•	t1/1721F010.gif - Genesis 17. Verse 21 is entirely contained within this file, but it begins with a section of verse 20. Verse 21 begins somewhere on this second line (of the three lines) of this image.
-	•	t2/0203C201.gif - Exodus 2. Verse 3 is the last verse which starts in this file. Verse 1&2 begin in this file, both on the first of the three lines. Verse 3 begins on the final of the three lines.
+<ul>
+	<li> <a href=webmedia/t1/1721F010.gif>t1/1721F010.gif</a> - Genesis 17.    Verse 21 is entirely contained within this file, but it begins with a section of verse 20.    Verse 21 begins somewhere on this second line (of the three lines) of this image.</li>
+	<li><a href=webmedia/t2/0203C201.gif>t2/0203C201.gif</a> - Exodus 2.     Verse 3 is the last verse which starts in this file.    Verse 1&2 begin in this file, both on the first of the three lines.    Verse 3 begins on the final of the three lines.</li>
+</ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+      </span>May/can I link to a Torah selection on your website?<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+You bet ... that's part of the idea. For example the person who assigns
+some Torah readings by email can mail instructions to the readers,
+including these links.&nbsp; For example, to link to Exodus 15:27
+through 16:9, use the link:<br>
+      <br>
+&nbsp; &nbsp; <a
+ href="http://scrollscraper.adatshalom.net/scrollscraper.cgi?book=2&amp;startc=15&amp;startv=27&amp;endc=16&amp;endv=9"><code>http://scrollscraper.adatshalom.net/scrollscraper.cgi?<span
+ style="color: rgb(204, 51, 204);">book=<span
+ style="color: rgb(51, 204, 0);">2</span>&amp;startc=<span
+ style="color: rgb(51, 204, 0);">15</span>&amp;startv=<span
+ style="color: rgb(51, 204, 0);">27</span>&amp;endc=<span
+ style="color: rgb(51, 204, 0);">16</span>&amp;endv=<span
+ style="color: rgb(51, 204, 0);">9</span></span></code></a><br>
+      <br>
+Note that you should be able to cut-and-paste the URLs from your web
+browser into your email program, so you shouldn't need to compose these
+URLs manually in most cases.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
 
 
-Q: May/can I link to a Torah selection on your website?
-A: You bet ... that's part of the idea. For example the person who assigns some Torah readings by email can mail instructions to the readers, including these links.  For example, to link to Exodus 15:27 through 16:9, use the link:
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+      </span>I have trouble printing the <font color="#8484ff">light blue</font>/<font color="#642ec9">dark blue</font> colors on the right side of the tikkun display.
+</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+	      Try selecting the <font color=black>solid-black</font> training-text coloring radio button (it should be the second radio button).  If you have other color schemes that you'd like to see, please let me know.  Note that selecting a color scheme other than the default <font color="#8484ff">light blue</font>/<font color="#642ec9">dark blue</font> will result in slower display times, and may be slightly fuzzier than the original images.
+<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:</span>
+Why is the word "scraper" part of the program's title?</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+It's a member of a class of programs called "screen scrapers", because
+they electronically scan web pages and "scrape out" the desired
+portions.&nbsp; By the way, these programs are prone to break when/if
+the target website
+changes or goes offline.</td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:</span>
+Which features will you consider adding in the future?</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+In no particular order, prioritized based upon request-frequency and
+effort required:<br>
+      <ul>
+        <li>Add excerpts from <a
+ href="http://www.mechon-mamre.org/p/pt/readingp.htm">Mechon Mamre</a>'s
+website, which has crystal-clear fonts<br>
+        </li>
+	<li>Try to apply AI to improve the quality of the gleaned ORT images.<br>
+        </li>
+        <li>A fancy Javascript input form which dynamically restricts
+input to valid chapter and verse numbers<br>
+        </li>
+        <li>Alternate user inputs based upon reading # and assignment
+style:</li>
+      </ul>
+      <ol style="margin-left: 40px;">
+        <li>traditional (full <span style="font-style: italic;">sedrah</span>),
+        </li>
+        <li><a
+ href="http://learn.jtsa.edu/topics/diduknow/responsa/trichart.pdf">triennial
+cycle</a>,</li>
+        <li>or abbreviated triennial cycle from the <a
+ href="http://www.jrf.org/pub/cat-kh.html">Reconstructionist&nbsp; Kol
+Haneshamah siddur</a></li>
+      </ol>
+      <ul>
+        <li>Other requests<br>
+        </li>
+      </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+      </span>Why are there restrictions on MP3 creation?</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+Unlike the RealPlayer recordings, the MP3 recordings require
+ significant scrollscraper system resources (processing, disk and bandwidth).
+  While no abuse of this capability is anticipated, some reasonable
+ constraints have been established.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<span style="font-weight: bold;"></span><br>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+      </span><i>What</i> are the restrictions on MP3 creation?</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+These are subject to change.  Currently a single IP address may
+  generate a maximum of 8 MP3 recordings per calendar  day, totalling no more
+ than 30MB.  All ScrollScraper users combined may generate no more than 100
+ recordings per day totaling no more than 300MB.  No single recording may exceed the formula <code>(audio repeat count) * (verse count) &gt; 72</code>.
 
-    http://scrollscraper.adatshalom.net/scrollscraper.cgi?book=2&startc=15&startv=27&endc=16&endv=9
+      </td>
+    </tr>
+  </tbody>
+</table>
+<span style="font-weight: bold;"></span><br>
 
-Note that you should be able to cut-and-paste the URLs from your web browser into your email program, so you shouldn't need to compose these URLs manually in most cases.
-
-
-Q: I have trouble printing the light blue/dark blue colors on the right side of the tikkun display. 
-A: Try selecting the solid-black training-text coloring radio button (it should be the second radio button). If you have other color schemes that you'd like to see, please let me know. Note that selecting a color scheme other than the default light blue/dark blue will result in slower display times, and may be slightly fuzzier than the original images. 
-
-
-Q: Why is the word "scraper" part of the program's title?
-A: It's a member of a class of programs called "screen scrapers", because they electronically scan web pages and "scrape out" the desired portions.  By the way, these programs are prone to break when/if the target website changes or goes offline.
-
-
-Q: Which features will you consider adding in the future?
-A: In no particular order, prioritized based upon request-frequency and effort required:
-	•	Add excerpts from Mechon Mamre's website, which has crystal-clear fonts 
-	•	Try to apply AI to improve the quality of the gleaned ORT images. 
-	•	A fancy Javascript input form which dynamically restricts input to valid chapter and verse numbers 
-	•	Alternate user inputs based upon reading # and assignment style:
-	1.	traditional (full sedrah), 
-	2.	triennial cycle,
-	3.	or abbreviated triennial cycle from the Reconstructionist  Kol Haneshamah siddur
-	•	Other requests 
-
-
-Q: Why are there restrictions on MP3 creation?
-A: Unlike the RealPlayer recordings, the MP3 recordings require significant scrollscraper system resources (processing, disk and bandwidth). While no abuse of this capability is anticipated, some reasonable constraints have been established.
-
-
-Q: What are the restrictions on MP3 creation?
-A: These are subject to change. Currently a single IP address may generate a maximum of 8 MP3 recordings per calendar day, totalling no more than 30MB. All ScrollScraper users combined may generate no more than 100 recordings per day totaling no more than 300MB. No single recording may exceed the formula (audio repeat count) * (verse count) > 72. 
-
-
-Q: The recordings don't properly represent sof-aliyah for the reading that I'm preparing. 
-A: The ORT recordings follow the canonical full-kriyah sof-pasuk and sof-aliyah conventions.  For many of us who prepare non-standard reading excerpts, there's no solution for this.  You must make the mental correction while practicing for your Torah reading.
-
-
-Q: Is this really the only online virtual tikkun? 
-A: I'm not sure.  I've heard rumors of others but haven't been able to locate them.  The only exception to date is the experimental and ambitious Tanach on Demand website which I found in Wikipedia, but this is much harder to use and definitely in an experimental state.  Then there's the excellent Mechon Mamre, which has much clearer fonts than what ScrollScraper is able to provide, but is not very tikkun-like.   Also, here's a nice clearinghouse with multiple sources of Torah texts, including ScrollScraper itself.
-
-
-Q: What about proper disposal of printouts?
-A: The paper-free electronic versions don't require disposal, and seem to be permitted by most halachic authorities.  In any case, these same issues exist with the ORT website itself.   If you make a printout, it might need to be disposed of in a genizah; consult your rabbi.
-
-
-Q: Is the source code available?
-A: Absolutely.  Here it is.  Don't forget to obey the license restrictions stated near the top of the main scrollscraper.cgi file.
-
-
-
-Q: I love ScrollScraper and don't know how I ever managed without it!  What can I do to show my appreciation? 
-A: Drop me an email (ScrollScraper is "thank-you-ware").  Also if you feel moved to make a contribution to the organization which provided the underlying technical resources, WorldORT, that would be very nice.
-
-
-
-Contact: Jonathan Epstein (jonathan.epstein@adatshalom.net).   Comments, requests and bug reports welcome.
-Last modified 26 June 2023
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+      </span>The recordings don't properly represent <span
+ style="font-style: italic;">sof-aliyah</span> for the reading that I'm
+preparing. </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+The ORT recordings follow the canonical full-<span
+ style="font-style: italic;">kriyah <span style="font-style: italic;"><span
+ style="font-style: italic;"><span style="font-style: italic;"><span
+ style="font-style: italic;"></span></span></span></span>sof-pasuk </span>and
+      <span style="font-style: italic;">sof-aliyah</span>
+conventions.&nbsp; For many of us who prepare non-standard reading
+excerpts, there's no solution for this.&nbsp; You must make the mental
+correction while practicing for your Torah reading.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<span style="font-weight: bold;"></span><br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+      </span>Is this really the only online virtual <span
+ style="font-style: italic;">tikkun</span>? </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+I'm not sure.&nbsp; I've heard rumors of others but haven't been able
+to
+locate them.&nbsp; The only exception to date is the experimental and
+ambitious <a href="http://liturgy.exc.com/">Tanach on Demand</a>
+website which I found in <a
+ href="http://en.wikipedia.org/wiki/Tikkun_%28book%29">Wikipedia</a>,
+but this is much harder to use and definitely in an experimental
+state.&nbsp; Then there's the excellent <a
+ href="http://www.mechon-mamre.org/p/pt/readingp.htm">Mechon Mamre</a>,
+which has much clearer fonts than what ScrollScraper is able to
+provide, but is not very <span style="font-style: italic;">tikkun</span>-like.&nbsp;&nbsp;
+Also, <a href="http://bibref.joelnothman.com/bibref.php">here's</a> a
+nice clearinghouse with multiple sources of Torah texts, including
+ScrollScraper itself.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+      </span>What about proper disposal of printouts?<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+The paper-free electronic versions don't require disposal, and seem to
+be permitted by most <span style="font-style: italic;">halachic</span>
+authorities.&nbsp; In any case, these same issues exist with the ORT
+website itself.&nbsp;&nbsp; If you make a printout, it might need to be
+disposed of in a <span style="font-style: italic;">genizah</span>;
+consult your rabbi.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+      </span>Is the source code available?<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+Absolutely.&nbsp; <a href="https://github.com/jae-63/scrollscraper">Here</a> it is.&nbsp;
+Don't forget to obey the license restrictions stated near the top of
+the main scrollscraper.cgi file.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+      </span>I love ScrollScraper and don't know how I ever managed
+without it!&nbsp; What can I do to show my appreciation? </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+Drop me an email (ScrollScraper is "thank-you-ware").&nbsp; Also if you
+feel moved to make a contribution to the organization which provided
+the underlying technical resources, <a
+ href="http://bible.ort.org/books/donors.asp">WorldORT</a>, that would
+be very nice.<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<br>
+Contact: Jonathan Epstein (<a
+ href="mailto:jonathanepstein9@gmail.com">jonathanepstein9@gmail.com</a>).&nbsp;&nbsp;
+Comments, requests and bug reports welcome.<br>
+Last modified 3 July 2023<br>
+</body>
+</html>
