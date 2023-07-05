@@ -98,8 +98,9 @@ ADD data/webmedia.tgz /var/opt/scrollscraper/webmedia
 COPY data/entire_torah.json /var/opt/scrollscraper/data
 COPY ScrollScraperalphaPNGs/* /var/opt/scrollscraper/ScrollScraperalphaPNGs
 COPY fonts/* /var/opt/scrollscraper/fonts
-ADD utilities/gifETL.pl /var/opt/scrollscraper/utilities
+COPY utilities/gifETL.pl /var/opt/scrollscraper/utilities/
 ADD *.cgi /var/opt/scrollscraper
+ADD *.pm /var/opt/scrollscraper
 ADD *.html /var/opt/scrollscraper
 ADD *.txt /var/opt/scrollscraper
 ADD *.gif /var/opt/scrollscraper
