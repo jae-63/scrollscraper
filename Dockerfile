@@ -26,7 +26,8 @@ RUN cpanm CPAN::Meta \
  Digest::SHA \
  Module::Build \
  ExtUtils::MakeMaker \
- LWP::Simple
+ LWP::Simple \
+ LWP::Protocol::https
 
 RUN apt-get install --yes \
  libarchive-zip-perl
