@@ -1,4 +1,5 @@
-{
+[
+    {
     "_id" : "5497026bfbfba238003b8c14",
     "language" : "he",
     "title" : "Genesis",
@@ -1645,7 +1646,7 @@
     "versionTitleInHebrew" : "תנ״ך מלווה בטעמי מקרא",
     "actualLanguage" : "he",
     "isBaseText" : true
-}
+},
 {
     "_id" : "5497bef6fbfba238003ba402",
     "language" : "he",
@@ -2950,7 +2951,7 @@
     "versionTitleInHebrew" : "תנ״ך מלווה בטעמי מקרא",
     "actualLanguage" : "he",
     "isBaseText" : true
-}
+},
 {
     "_id" : "5497bf02fbfba238003ba75e",
     "language" : "he",
@@ -3878,7 +3879,7 @@
     "versionTitleInHebrew" : "תנ״ך מלווה בטעמי מקרא",
     "actualLanguage" : "he",
     "isBaseText" : true
-}
+},
 {
     "_id" : "5497bf14fbfba238003bac68",
     "language" : "he",
@@ -5253,7 +5254,7 @@
     "versionTitleInHebrew" : "תנ״ך מלווה בטעמי מקרא",
     "actualLanguage" : "he",
     "isBaseText" : true
-}
+},
 {
     "_id" : "5497bf2afbfba238003bb028",
     "language" : "he",
@@ -6293,3 +6294,4 @@
     "actualLanguage" : "he",
     "isBaseText" : true
 }
+]
