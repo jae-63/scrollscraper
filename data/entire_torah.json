@@ -1,5 +1,5 @@
 {
-    "_id" : ObjectId("5497026bfbfba238003b8c14"),
+    "_id" : "5497026bfbfba238003b8c14",
     "language" : "he",
     "title" : "Genesis",
     "versionSource" : "http://www.tanach.us/Tanach.xml",
@@ -1647,7 +1647,7 @@
     "isBaseText" : true
 }
 {
-    "_id" : ObjectId("5497bef6fbfba238003ba402"),
+    "_id" : "5497bef6fbfba238003ba402",
     "language" : "he",
     "title" : "Exodus",
     "versionSource" : "http://www.tanach.us/Tanach.xml",
@@ -2952,7 +2952,7 @@
     "isBaseText" : true
 }
 {
-    "_id" : ObjectId("5497bf02fbfba238003ba75e"),
+    "_id" : "5497bf02fbfba238003ba75e",
     "language" : "he",
     "title" : "Leviticus",
     "versionSource" : "http://www.tanach.us/Tanach.xml",
@@ -3880,7 +3880,7 @@
     "isBaseText" : true
 }
 {
-    "_id" : ObjectId("5497bf14fbfba238003bac68"),
+    "_id" : "5497bf14fbfba238003bac68",
     "language" : "he",
     "title" : "Numbers",
     "versionSource" : "http://www.tanach.us/Tanach.xml",
@@ -5255,7 +5255,7 @@
     "isBaseText" : true
 }
 {
-    "_id" : ObjectId("5497bf2afbfba238003bb028"),
+    "_id" : "5497bf2afbfba238003bb028",
     "language" : "he",
     "title" : "Deuteronomy",
     "versionSource" : "http://www.tanach.us/Tanach.xml",
