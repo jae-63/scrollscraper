@@ -26,7 +26,16 @@ RUN cpanm CPAN::Meta \
  Digest::SHA \
  Module::Build \
  ExtUtils::MakeMaker \
- LWP::Simple \
+ LWP::Simple
+
+
+RUN apt-get install --yes \
+ libssl-dev \
+ zlib1g-dev
+
+# for some reason we can't install this at the same time as the other modules
+RUN cpanm Net::SSLeay \
+ IO::Socket::SSL \
  LWP::Protocol::https
 
 RUN apt-get install --yes \
