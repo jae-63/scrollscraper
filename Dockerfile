@@ -47,7 +47,8 @@ RUN apt-get remove --yes libgd-gd2-perl
 RUN apt-get install --yes \
  libgd2-noxpm-dev
 
-RUN cpanm GD
+RUN cpanm GD \
+ GD::Text
 
 
 # Copy-hacked from tomersha/docker-ubuntu-14.04-python-3.6.2
@@ -89,10 +90,14 @@ RUN pip install gdown
 
 WORKDIR /var/opt
 RUN mkdir scrollscraper
-RUN mkdir scrollscraper/webmedia
+RUN mkdir scrollscraper/data
+RUN mkdir scrollscraper/fonts
 RUN mkdir scrollscraper/ScrollScraperalphaPNGs
+RUN mkdir scrollscraper/webmedia
 ADD data/webmedia.tgz /var/opt/scrollscraper/webmedia
+COPY data/entire_torah.json /var/opt/scrollscraper/data
 COPY ScrollScraperalphaPNGs/* /var/opt/scrollscraper/ScrollScraperalphaPNGs
+COPY fonts/* /var/opt/scrollscraper/fonts
 ADD utilities/gifETL.pl /var/opt/scrollscraper/utilities
 ADD *.cgi /var/opt/scrollscraper
 ADD *.html /var/opt/scrollscraper
