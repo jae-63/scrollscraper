@@ -25,7 +25,8 @@ RUN cpanm CPAN::Meta \
  YAML \
  Digest::SHA \
  Module::Build \
- ExtUtils::MakeMaker
+ ExtUtils::MakeMaker \
+ LWP::Simple
 
 RUN apt-get install --yes \
  libarchive-zip-perl
@@ -75,3 +76,16 @@ RUN pip install gTTS
 
 # Google Drive downloader for some large files which don't fit in free Github
 RUN pip install gdown
+
+WORKDIR /var/opt
+RUN mkdir scrollscraper
+RUN mkdir scrollscraper/webmedia
+RUN mkdir scrollscraper/ScrollScraperalphaPNGs
+ADD data/webmedia.tgz /var/opt/scrollscraper/webmedia
+COPY ScrollScraperalphaPNGs/* /var/opt/scrollscraper/ScrollScraperalphaPNGs
+ADD utilities/gifETL.pl /var/opt/scrollscraper/utilities
+ADD *.cgi /var/opt/scrollscraper
+ADD *.html /var/opt/scrollscraper
+ADD *.txt /var/opt/scrollscraper
+ADD *.gif /var/opt/scrollscraper
+ADD *.GIF /var/opt/scrollscraper
