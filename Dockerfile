@@ -48,7 +48,8 @@ RUN apt-get install --yes \
  libgd2-noxpm-dev
 
 RUN cpanm GD \
- GD::Text
+ GD::Text \
+ JSON::Parse
 
 
 # Copy-hacked from tomersha/docker-ubuntu-14.04-python-3.6.2
