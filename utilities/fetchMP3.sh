@@ -10,4 +10,5 @@ newmap[t5]="1rQPS8hbDz3cvFprSaqY7sX10vA79EskM"
 for tname in t1 t2 t3 t4 t4; do
   outname="ORT_MP3s.recoded.${tname}.tar"
   echo gdown --id ${newmap[t5]} -O data/${outname}
+  (cd data; mkdir -p ORT_MP3s.recoded/$tname; cd ORT_MP3s.recoded/$tname; tar xf ../../${outname})
 done
