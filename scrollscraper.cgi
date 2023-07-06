@@ -68,6 +68,7 @@ my $audioRepeatCount = 1;
 my $coloring;
 my $generateCache = 1;
 my $doShading = 0;
+my $trueTypeFonts = 0;
 my $blankImage = "alpha_TOP1_0.png"; # used for padding on LHS of table, when $doShading is used
 
 my $agent = LWP::UserAgent->new;
@@ -103,6 +104,7 @@ if ($q->param('book')) {
 	$audioRepeatCount = $q->param('audioRepeatCount') if $q->param('audioRepeatCount');
 	$coloring = $q->param('coloring') if $q->param('coloring');
 	$doShading = $q->param('doShading') if $q->param('doShading');
+	$trueTypeFonts = $q->param('trueTypeFonts') if $q->param('trueTypeFonts');
 	
 	if (-f $forbiddenFile && defined $ENV{"HTTP_REFERER"}) {
 		open FORB, "<$forbiddenFile";
@@ -131,7 +133,7 @@ if ($q->param('book')) {
 	$doShading = 1; # more debugging code
 }
 
-my $flags = $sbs | ($translit << 1) | ($showStartAndEndButtons << 2) | ($doAudio << 3) | ($doShading << 4);
+my $flags = $sbs | ($translit << 1) | ($showStartAndEndButtons << 2) | ($doAudio << 3) | ($doShading << 4) | ($trueTypeFonts << 5);
 #$coloring = "25,25,112,25,25,112" if ($ENV{"HTTP_USER_AGENT"} =~ /NetFront.*Kindle/ && ! $coloring);
 $coloring = "25,25,112,0,139,139" if ($ENV{"HTTP_USER_AGENT"} =~ /NetFront.*Kindle/ && ! $coloring); # modest shading for traditional greyscale Kindles
 $useCache = 0 if $coloring;
@@ -387,6 +389,10 @@ my $firstTranslit;
 my $lastTranslit;
 
 
+if ($trueTypeFonts) {
+  $doShading = 0;
+}
+
 #
 # Some remarks are in order regarding how "doShading" is implemented.  Each ORT GIF is 90 pixels high, 445 pixels wide,
 # and consists of three vertical lines of Torah text.  For the training text, the verses are alternately shaded
@@ -479,6 +485,31 @@ my @title = (getBookName($book,0), getPortionName($beginPortion)," $startc:$star
 print $cacheOutRef "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n";
 print $cacheOutRef "<html>\n<head>\n";
 print $cacheOutRef "<title>".join(" ",@title)."</title>\n";
+if ($trueTypeFonts) {
+    print $cacheOutRef "<style type=\"text/css\">\n";
+    print $cacheOutRef "\@font-face {\n";
+    print $cacheOutRef "     font-family: \"hebrewFont\"\;";
+    print $cacheOutRef "     src: url(\"$fontFile\")\;\n";
+    print $cacheOutRef "}\n";
+
+    my @colors = ( "132/132/255", "100/46/201" );
+    my $shade = "light";
+
+    print $cacheOutRef ":root {\n";
+
+    foreach my $color (@colors) {    # for each of our two colors
+        my @arr = split /\//, $color;
+        my $hex = sprintf("%02x%02x%02x",$arr[0],$arr[1],$arr[2]);
+        print $cacheOutRef "  --our${shade}text: #${hex}\;\n";
+        print $cacheOutRef "  --ourobscured${shade}text: #${hex}40\;\n";
+        $shade = "dark";
+    }
+    print $cacheOutRef "}\n";
+    
+# TODO: add a ton of CSS Styles here for verse-specific configuration
+    print $cacheOutRef "</style>\n";
+}
+
 print $cacheOutRef "</head>\n<body>\n";
 
 print $cacheOutRef "<center><h1>".shift(@title)."</h1>\n";
@@ -953,6 +984,7 @@ sub partitionHebrewVerse {
 
    # There must be a better way to use regex's correctly to include the matched separators, but
    # using this hack for now
+   my @positions;
    foreach my $pos (@original_positions) {
      my $position;
      my $str = substr($verse,$pos);
