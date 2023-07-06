@@ -8,6 +8,7 @@ my $gifWidth = 445;
 my $gifHeight = 90;
 
 my $outputSite = "https://scrollscraper.adatshalom.net/webmedia/";
+$outputSite = "file://var/opt/scrollscraper/webmedia/" if $ENV{"IS_DOCKER"};
 
 # Derived from bible.ort.org.   Note that both the King James bible and Machon Mamre differ from this!
 my @versesPerChapter = (
