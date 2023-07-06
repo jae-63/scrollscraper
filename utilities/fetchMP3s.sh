@@ -13,4 +13,3 @@ for tname in t1 t2 t3 t4 t5; do
   (cd data; mkdir -p ORT_MP3s.recoded/$tname; cd ORT_MP3s.recoded/$tname; tar xf ../../${outname})
 done
 
-
