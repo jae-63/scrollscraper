@@ -5,7 +5,7 @@ use GD;
 use LWP::Simple;
 
 my $gifWidth = 445;
-my $gifHeight = 90;
+my $gifHeight = 3;
 
 my $outputSite = "https://scrollscraper.adatshalom.net/webmedia/";
 $outputSite = "file://var/opt/scrollscraper/webmedia/" if $ENV{"IS_DOCKER"};
@@ -426,6 +426,8 @@ foreach my $book (1,2,3,4,5) {
 
 	          my @begintags = tagTikkunRegionsByColorFromURL("$outputSite" . $firstGIF);
 	          my @endtags = tagTikkunRegionsByColorFromURL("$outputSite" . $finalGIF);
+	          my $firstGIFindex = $fileName2Number{$firstGIF};
+	          my $finalGIFindex = $fileName2Number{$finalGIF};
                   my($startx,$endx,$starty,$endy);
           
 	          if ($verseInfo{$firstGIF}{"$chapter:$verse"}) {
@@ -441,7 +443,7 @@ foreach my $book (1,2,3,4,5) {
 				          }
           #				$begLabel = "$shadingDir/alpha_TOP" . "$row1" . "_" . "$x1" . ".png";
 				          $startx = $x1;
-				          $starty = (($row1 - 1) + $verseInBook) * $gifHeight;
+				          $starty = ($row1 - 1) + $firstGIFindex * $gifHeight;
 				          last;
 			          }
 		          }
@@ -458,8 +460,8 @@ foreach my $book (1,2,3,4,5) {
 				          $x2 = $gifWidth if $x2 > ($gifWidth - 12);
 				          if ($observedShade eq $endshade && $row1 eq $endrow) {
           #					$endLabel = "$shadingDir/alpha_BOT" . "$row2" . "_" . ($gifWidth-$x2) . ".png";
-				                  $endx = ($gifWidth-$x2);
-				                  $endy = (($row2 - 1) + $verseInBook) * $gifHeight;
+				                  $endx = $x2;
+				                  $endy = ($row2 - 1) + $finalGIFindex * $gifHeight;
 					          last;
 				          }
 			          } else {
@@ -480,8 +482,8 @@ foreach my $book (1,2,3,4,5) {
 			          $x2 = $gifWidth if $x2 > ($gifWidth - 12);
 			          if ($observedShade eq $endshade) {
           #				$endLabel = "$shadingDir/alpha_BOT" . "$row2" . "_" . ($gifWidth-$x2) . ".png";
-			                  $endx = ($gifWidth-$x2);
-			                  $endy = (($row2 - 1) + $verseInBook) * $gifHeight;
+			                  $endx = $x2;
+			                  $endy = ($row2 - 1) + $finalGIFindex * $gifHeight;
 				          last;
 			          }
 		          }
