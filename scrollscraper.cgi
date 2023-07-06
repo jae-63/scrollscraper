@@ -22,6 +22,9 @@ use LWP::Simple;
 use HTML::TokeParser;
 use GD;
 use CGI;
+use GD::Text;
+
+my $fontFile = "fonts/SILEOTSR.ttf";
  
 # sample: https://bible.ort.org/books/torahd5.asp?action=displaypage&book=2&chapter=27&verse=1&portion=19
 
@@ -893,6 +896,119 @@ sub isDark {
      return $verseCount % 2;
 }
 
+
+sub abs {
+    my ($x) = @_;
+    return ($x > 0) ? $x : -$x;
+}
+
+
+sub match_all_positions {
+    my ($regex, $string) = @_;
+    my @ret;
+    while ($string =~ /$regex/g) { push @ret, $-[0] }
+    return @ret
+}
+
+
+# partition a single Hebrew verse over one or more lines of output which each
+# have a prescribed width.   It doesn't matter for purposes of the calculation, but
+# in general if there are 3 or more output lines than the intermediate lines will
+# all of the maximum length, $gifWidth
+#
+# returns an array of Hebrew strings, one per output line.   The number of output line
+# winds up being ($yend-$ystart+1).
+sub partitionHebrewVerse {
+   my ($verse,$fontFile,$xstart,$ystart,$xend,$yend) = @_;
+
+   return [] if $yend < $ystart;
+
+# ptSize doesn't matter much because we wind up calculating everything in
+# proportion to the @verseCoordinates dimensions which are passed to the
+# function partitionHebrewVerse().   ptSize is used, but its influence
+# "washes out" over the course of the calculations
+   my $ptSize = 24;
+
+   my @retval;
+
+   my @prefixPixelWidths;
+   push @prefixPixelWidths,($gifWidth-$xstart);
+   for (my $i = $ystart+1; $i < $yend; $i++) {
+     push @prefixPixelWidths,$gifWidth;
+   }
+   push @prefixPixelWidths,$xend;
+
+   my $totalPixelWidth = 0;
+   foreach my $prefixPixelWidth (@prefixPixelWidths) {
+       $totalPixelWidth += $prefixPixelWidth;
+   }
+
+   my @fractionOfTotalWidth;
+   foreach my $prefixPixelWidth (@prefixPixelWidths) {
+       my $fraction = $prefixPixelWidth / $totalPixelWidth;
+       push @fractionOfTotalWidth,$fraction;
+   }
+
+   my @original_positions = match_all_positions('[\p{Separator}\p{Dash_Punctuation}]+', $verse);
+
+   # There must be a better way to use regex's correctly to include the matched separators, but
+   # using this hack for now
+   foreach my $pos (@original_positions) {
+     my $position;
+     my $str = substr($verse,$pos);
+     if ($str =~ /^[\p{Separator}\p{Dash_Punctuation}]+/) {
+       push @positions,($pos+length($&));
+     } else {
+       push @positions,$pos;
+     }
+   }
+
+
+   # append another position for the end of the string
+   if ($verse =~ /$/) { push @positions, $-[0] }
+
+   my @fragmentFontWidths;
+   foreach my $position (@positions) {
+     my $str = substr($verse,0,$position);
+     my $gd_text = GD::Text->new(
+       text => $str,
+       font => $fontFile,
+       ptsize => $ptSize
+     );
+
+     my ($w, $h) = $gd_text->get('width', 'height');
+     push @fragmentFontWidths,$w;
+   }
+
+   my $totalFragmentFontWidth = $fragmentFontWidths[-1];
+
+   my $lastPosition = 0;
+   my $localFractionOfTotalWidth = 0;
+
+   # select the prefix word string whose length best matches the target proportion of the
+   # "fraction of total width" of the entire verse, for the target output line in-question
+   foreach my $fractionOfTotalWidth (@fractionOfTotalWidth) {
+     $localFractionOfTotalWidth += $fractionOfTotalWidth;
+     my $index = 0;
+     my $bestPositionMatch = -1;
+     my $minVal = 9999999;
+
+     foreach my $fragmentFontWidth (@fragmentFontWidths) {
+       my $val = abs(($fragmentFontWidth / $totalFragmentFontWidth) - $localFractionOfTotalWidth);
+       if ($val < $minVal) {
+           $minVal = $val;
+           $bestPositionMatch = $index;
+       }
+       $index++;
+     }
+     my $str = substr($verse,$lastPosition,$positions[$bestPositionMatch]-$lastPosition);
+     $lastPosition = $positions[$bestPositionMatch];
+     push @retval,$str;
+  }
+
+  return @retval;
+
+}
 
 
 __DATA__
