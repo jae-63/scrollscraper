@@ -1,5 +1,5 @@
 etl: build
-	docker run -t scrollscraper utilities/runETL.pl -v ../bigdata:bigdata
+	docker run -t scrollscraper -e "perl utilities/runETL.pl"
 
 dataprep: build
 

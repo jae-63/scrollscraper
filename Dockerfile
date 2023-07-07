@@ -100,6 +100,8 @@ COPY data/entire_torah.json /var/opt/scrollscraper/data
 COPY ScrollScraperalphaPNGs/* /var/opt/scrollscraper/ScrollScraperalphaPNGs
 COPY fonts/* /var/opt/scrollscraper/fonts
 COPY utilities/gifETL.pl /var/opt/scrollscraper/utilities/
+COPY utilities/gif_names_from_cache_old.txt /var/opt/scrollscraper/utilities/
+COPY utilities/handCuration.sed /var/opt/scrollscraper/utilities/
 COPY utilities/fetchMP3s.sh /var/opt/scrollscraper/utilities/
 ADD *.cgi /var/opt/scrollscraper
 ADD *.pm /var/opt/scrollscraper
