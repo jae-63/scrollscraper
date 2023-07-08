@@ -184,7 +184,8 @@ sub processTikkunRowsByColorFromURL {
 
     for ( my $row = 0 ; $row < 3 ; $row++ ) {
         my @val = tagTikkunRowByColor( $gifdata, $row );
-        print "$theurl,$row: " . join( ',', flat(@val) ) . "\n";
+        $theurl =~ s/^.*webmedia\///;
+        print "$theurl,$row," . join( ',', flat(@val) ) . "\n";
         push @retval, [@val];
     }
 }
