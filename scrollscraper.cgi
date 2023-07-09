@@ -256,8 +256,6 @@ while (<DATA>) {
 		$chapterAndVerse2Info[$book][$chapter][$verse]{'firstGIF'} = $firstGIF;
 		$chapterAndVerse2Info[$book][$chapter][$verse]{'finalGIF'} = $finalGIF;
                 my $begShade = isDark($book,$chapter,$verse) ? "dark" : "light";
-		# our ETL'd rows are zero-based but all the ScrollScraper logic is one-based
-                $fields[5] += 1;
                 $verseInfo{"/webmedia/$firstGIF"}{"$chapter:$verse"} = "$begShade," .  $fields[5];
 		$chapterAndVerse2Info[$book][$chapter][$verse]{'lineNumberOnWhichThisVerseBegins'} = $fields[5];
 		$chapterAndVerse2Info[$book][$chapter][$verse]{'indexOfVerseStartPositionOnThatLine'} = $fields[6];
@@ -424,70 +422,45 @@ if ($trueTypeFonts) {
 
 
 my $doEndShading = 1;
-my @endtags;
 
 #
 #
 my ($begLabel, $endLabel);
+
 if ($doShading) {
 	my $dbg;
-	my @begintags = tagTikkunRegionsByColorFromURL("$outputSite" . $rightOutputs[0]);
-	@endtags = tagTikkunRegionsByColorFromURL("$outputSite" . $rightOutputs[-1]);
+	my ($row2,$x2);
 
-	# my @sortedVerses = sort compareChapterAndVerse keys %{$verseInfo{$rightOutputs[0]}};
-	if ($verseInfo{$rightOutputs[0]}{"$startc:$startv"}) {
-		my ($begshade,$begrow) = split /,/,$verseInfo{$rightOutputs[0]}{"$startc:$startv"};
-		for my $tag (@begintags) {
-			my($observedShade, $row1, $x1, $row2, $x2) = @{$tag};
-			if ($observedShade eq $begshade && $row1 eq $begrow) {
-				$x1 -= 5;
-				$x1 = 0 if $x1 < 0;
-				if ($row1 > 1 && $tag eq $begintags[0]) { # the first tag, but doesn't appear in the first row
-					$row1 = 1;
-					$x1 = 0;
-				}
-				$begLabel = "$shadingDir/alpha_TOP" . "$row1" . "_" . "$x1" . ".png";
-				last;
-			}
-		}
-	}
+        my($row1,$x1) = startRowAndXPosition($book,$startc,$startv);
 
-	if ($verseInfo{$rightOutputs[-1]}{"$endc:$endv"}) {
-		my @sortedVerses = sort { compareChapterAndVerse($a,$b) }  keys %{$verseInfo{$rightOutputs[-1]}};
+        $row1++; # off-by-one use of 0-based vs 1-based
 
-		my ($endshade,$endrow) = split /,/,$verseInfo{$rightOutputs[-1]}{"$endc:$endv"};
-		for my $tag (@endtags) {
-			my($observedShade, $row1, $x1, $row2, $x2) = @{$tag};
-			if ($sortedVerses[0] eq "$endc:$endv") {
-				$x2 -= 0;
-				$x2 = 0 if $x2 < 0;
-				$x2 = $gifWidth if $x2 > ($gifWidth - 12);
-				if ($observedShade eq $endshade && $row1 eq $endrow) {
-					$endLabel = "$shadingDir/alpha_BOT" . "$row2" . "_" . ($gifWidth-$x2) . ".png";
-					last;
-				}
-			} else {
-				my ($theshade,$therow) = split /,/,$verseInfo{$rightOutputs[-1]}{$sortedVerses[0]};
-				if ($observedShade eq $theshade && $row1 eq $therow) { # we've accounted for a verse with this shade
-					shift @sortedVerses;
-				}
-			}
-		}
-	} else { # we are finishing our verse which was started in the previous GIF (or perhaps even earlier)
-		my $tag = $endtags[0];
-                my $endshade = isDark($book,$endc,$endv) ? "dark" : "light";
-		my($observedShade, $row1, $x1, $row2, $x2) = @{$tag};
-		for my $tag (@endtags) {
-			my($observedShade, $row1, $x1, $row2, $x2) = @{$tag};
-			$x2 -= 0;
-			$x2 = 0 if $x2 < 0;
-			$x2 = $gifWidth if $x2 > ($gifWidth - 12);
-			if ($observedShade eq $endshade) {
-				$endLabel = "$shadingDir/alpha_BOT" . "$row2" . "_" . ($gifWidth-$x2) . ".png";
-				last;
-			}
-		}
-	}
+        if (defined($row1) && defined($x1)) {
+            $x1 -= 5;
+            $x1 = 0 if $x1 < 0;
+            $begLabel = "$shadingDir/alpha_TOP" . "$row1" . "_" . "$x1" . ".png";
+        }
+
+	my($discardBook,$followingChapterAfterThisReading,$followingVerseAfterThisReading) = goForward($book,$endc,$endv,1);
+	my $firstGIFForTheVerseAfterThisReading = $chapterAndVerse2Info[$book][$followingChapterAfterThisReading][$followingVerseAfterThisReading]{'firstGIF'};
+        my $GIFindexForTheVerseAfterThisReading = $fileName2Number{$firstGIFForTheVerseAfterThisReading};
+# finalGIFIndex
+
+        if ($finalGIFIndex == $GIFindexForTheVerseAfterThisReading) {
+           ($row2,$x2) = startRowAndXPosition($book,$followingChapterAfterThisReading,$followingVerseAfterThisReading);
+        } else {
+           # the final verse of our reading was the end of the GIF, so the end-shading has a fixed-value
+           $row2 = 2;
+           $x2 = $gifWidth;
+        }
+
+        if (defined($row2) && defined($x2)) {
+	    $x2 -= 0;
+	    $x2 = 0 if $x2 < 0;
+	    $x2 = $gifWidth if $x2 > ($gifWidth - 12);
+            $row2++; # off-by-one use of 0-based vs 1-based
+	    $endLabel = "$shadingDir/alpha_BOT" . "$row2" . "_" . ($gifWidth-$x2) . ".png";
+        }
 
 	$doShading = 0 unless $begLabel && $endLabel; # if we can't the shading job completely, then let's forget the whole thing
 	my $dbg;
@@ -733,181 +706,18 @@ sub compareChapterAndVerse {
 	return $c1 <=> $c2;
 }
 
+sub goForward {
+     my($book,$chapter,$verse,$go_forward_count) = @_;
+     while ($go_forward_count-- > 0) {
+	     my $versesInThisChapter = $versesPerChapter[$book-1][$chapter-1];
+             $verse++;
+	     if ($verse >= $versesInThisChapter) {
+		     $chapter++;
+		     $verse = 1;
+	     }
+     }
 
-# measure color proximity in terms of Euclidean-distance in the three-dimensional RGB space
-sub notClose {
-    my ( $thresh, $aR1, $aR2 ) = @_;
-    my @a1 = @{$aR1};
-    my @a2 = @{$aR2};
-    my $dist =
-      ( $a1[0] - $a2[0] )**2 + ( $a1[1] - $a2[1] )**2 + ( $a1[2] - $a2[2] )**2;
-    return $dist >
-      $thresh;    # 5000 corresponds to a distance of ~70, since 70*70 = 4900
-}
-
-sub tagTikkunRegionsByColorFromURL {
-    my ($theurl) = @_;
-
-    my $response = $agent->get($theurl) or die "Unable to download $theurl";
-
-    my $gifdata = $response->decoded_content;
-
-    return tagTikkunRegionsByColor($gifdata);
-}
-
-sub tagTikkunRegionsByColor {
-    my ($gifdata) = @_;
-
-    # bible.ort.org images (used in ScrollScraper) have RGB colors:
-    #    light blue = 132/132/255
-    #    dark blue  = 100/46/201
-
-    my @retval;
-    my %colorHash;
-
-    my @colors = ( "132/132/255", "100/46/201" );
-
-    my $width = $gifWidth;
-    my $image = GD::Image->newFromGifData($gifdata);
-
-    my $lastColor = 'NONE';
-    my ( $startrow,  $startx )  = ( 0, 0 );
-    my ( $recentrow, $recentx ) = ( 0, 0 );
-    my $lastIteration;
-
-    my $samplingRow = 9;
-
-    my @rgb;    # define it out here for debugging ease
-    my %none;
-    my %notNone;
-
-    for ( my $row = 0, my $y = $samplingRow ; $row <= 2 ; $row++, $y += 30 ) {
-
-        for ( my $x = 0 ; $x < $width ; $x++ ) {
-            $lastIteration = 1 if $row == 2 && $x == ( $width - 1 );
-
-            my $index =
-              $image->getPixel( $width - $x, $y );    # TODO: off-by-one errors?
-            unless ( defined( $colorHash{$index} ) ) {
-                $colorHash{$index} = determineColor( $image, $index, \@colors );
-                my $dbg;
-            }
-            my $theColor = $colorHash{$index};
-
-            if ( $theColor eq 'NONE' ) {
-
-                #search vertically
-                for ( my $y2 = $row*30 ; $y2 < $row*30+30 ; $y2++ ) {
-                    my $index = $image->getPixel( $width - $x, $y2 )
-                      ;                               # TODO: off-by-one errors?
-                    unless ( defined( $colorHash{$index} ) ) {
-                        $colorHash{$index} = determineColor( $image, $index, \@colors );
-                    }
-                    if ( $colorHash{$index} ne 'NONE' ) {
-                        $theColor = $colorHash{$index};
-                        last;
-                    }
-                }
-		$none{$row}{$x}++ unless $theColor ne 'NONE';
-		$notNone{$row}{$x}++ unless $theColor eq 'NONE';
-            }
-
-            if ( $lastColor eq 'NONE' && !$lastIteration ) {
-                $lastColor = $theColor;
-            }
-            elsif (
-                $lastIteration
-                || (   $lastColor ne 'NONE'
-                    && $lastColor ne $theColor
-                    && $theColor  ne 'NONE' )
-              )
-            {
-                my %votes;
-                for ( my $y2 = $row*30 ; $y2 < $row*30+30 ; $y2++ ) {
-                    my $index = $image->getPixel( $width - $x, $y2 )
-                      ;    # TODO: off-by-one errors?
-                    unless ( defined( $colorHash{$index} ) ) {
-                        $colorHash{$index} = determineColor( $image, $index, \@colors );
-                    }
-                    $votes{ $colorHash{$index} }++;
-                }
-		$votes{$theColor} = 0 unless defined $votes{$theColor};
-		$votes{$lastColor} = 0 unless defined $votes{$lastColor};
-                if ( $votes{$theColor} > 3 && $votes{$theColor} > 1.2 * $votes{$lastColor} ) {
-		    unless (@retval) {
-			my $done = 0;
-			for (my $row = 2; $row >= 0 && ! $done; $row--) {
-		            for (my $x = $width - 1; $x >= 0; $x--) {
-			        if (defined $none{$row} && defined($none{$row}{$x})) {
-				    $startrow = $row;
-				    $startx = $x;
-			        } else {
-				    $done = 1;
-				    last;
-			        }
-			    }
-			}
-		    }
-		    if ($theColor eq 'NONE' && $lastIteration) { # trim last item backwards as appropriate
-			my $done = 0;
-			for (my $row = 2; $row >= 0 && ! $done; $row--) {
-		            for (my $x = $width - 1; $x >= 0; $x--) {
-			        if (defined $none{$row} && defined($none{$row}{$x})) {
-				    $recentrow = $row;
-				    $recentx = $x;
-			        } else {
-				    $done = 1;
-				    last;
-			        }
-			    }
-			}
-		    }
-		    if (@retval && $startrow == $recentrow && ($recentx - $startx) < 5) { # region is too small
-                        my($lastColor2, $startrow2, $startx2, $recentrow2, $recentx2) = @{pop @retval};
-			$startrow = $startrow2-1; # must subtract 1, since 1 was added when pushing it into @retval
-			$startx = $startx2;
-			$lastColor = $lastColor2;
-		    } else {
-			# skip rows which contain no colored text
-                        while ($startrow < $row && scalar(keys %{$notNone{$startrow}}) <= 0) {
-                                $startrow++;
-                        }
-                        my @res =
-                          ( $lastColor, $startrow+1, $startx, $recentrow+1, $recentx );
-                        push @retval, [@res];
-                        $lastColor = $theColor;
-                        $startrow  = $row;
-                        $startx    = $x;
-	    	    }
-
-                }
-            }
-            $recentrow = $row;
-            $recentx   = $x;
-        }
-    }
-
-    return @retval;
-
-}
-
-sub determineColor {
-    my ( $image, $index, $aRefColors ) = @_;
-    my @colors = @{$aRefColors};
-    my $retval;
-
-    my @rgb   = $image->rgb($index);
-    my $shade = 'light';
-    foreach my $color (@colors) {    # for each of our two colors
-        my @arr = split /\//, $color;
-        unless ( notClose( 5000, \@arr, \@rgb ) ) {
-            $retval = $shade;
-            last;
-        }
-        $shade = 'dark';             # for 2nd time through this two-color loop
-    }
-    $retval = 'NONE' unless defined($retval);
-    return $retval;
+     return $book,$chapter,$verse;
 }
 
 sub goBack {
@@ -1055,6 +865,33 @@ sub partitionHebrewVerse {
 
 }
 
+sub startRowAndXPosition {
+   # returns (startRow,startX)
+
+   my($book, $chapter, $verse) = @_;
+   my $theGIF = $chapterAndVerse2Info[$book][$chapter][$verse]{'firstGIF'};
+   my $startRow =$chapterAndVerse2Info[$book][$chapter][$verse]{'lineNumberOnWhichThisVerseBegins'};
+   my $indexOfVerseStartPositionOnThatLine = $chapterAndVerse2Info[$book][$chapter][$verse]{'indexOfVerseStartPositionOnThatLine'};
+
+   my @localMapInfo = @{$mapInfo{$theGIF}{$startRow}};
+   my $beginshade = isDark($book,$chapter,$verse) ? "dark" : "light";
+
+   my $remainingCount = $indexOfVerseStartPositionOnThatLine; # usually 0 (for all but a handful of verses)
+
+   # Now traverse @localMapInfo and find the start-coordinate which matches our $beginshade
+   foreach my $map (@localMapInfo) {
+       my @mapA = @{$map};
+# [$startx,$endx,$color]
+       if ( $mapA[2] eq $beginshade ) {
+          if ($remainingCount-- <= 0) {
+             return($startRow,$mapA[0]);
+          }
+       }
+   }
+
+   # error case should never occur
+   return [];
+}
 
 __DATA__
 FILENAME,LINENUMBER,STARTX1,ENDX1,COLOR1,STARTX2,ENDX2,COLOR2,...
