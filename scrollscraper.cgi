@@ -541,6 +541,20 @@ if ($trueTypeFonts) {
 	if ($trueTypeFonts) {
 		for (my $row=0; $row < 3; $row++) {
                         my @localMapInfo = @{$mapInfo{$_}{$row}};
+                        # traversing forward, i.e. right-to-left to process Hebrew sensibly
+                        foreach my $map (@localMapInfo) {
+                            my @mapA = @{$map};
+                            my $startx = $mapA[0];
+                            my $endx = $mapA[1];
+                            my $color = $mapA[2];
+                            my $chapter = $mapA[3];
+                            my $verse = $mapA[4];
+
+			    my $formattedVerseName = sprintf("%02d%03d%03d",$book,$chapter,$verse);
+			    $hebrewText{$formattedVerseName} = hebrew($formattedVerseName);
+                        }
+
+                        my @localMapInfo = @{$mapInfo{$_}{$row}};
                         # traversing in reverse, which essentially means left-to-right despite
                         # the use of Hebrew.   Since HTML operates left-to-right
                         foreach my $map (reverse @localMapInfo) {
@@ -550,10 +564,10 @@ if ($trueTypeFonts) {
                             my $color = $mapA[2];
                             my $chapter = $mapA[3];
                             my $verse = $mapA[4];
+
                             # boolean: is this verse within the requested reading section?
                             my $withinReading = compareChapterAndVerse("$startc:$startv","$chapter:$verse") <= 0 && compareChapterAndVerse("$endc:$endv","$chapter:$verse") >= 0;
-			    my $formattedVerseName = sprintf("%02d%03d%03d",$book,$chapter,$verse);
-			    $hebrewText{$formattedVerseName} = hebrew($formattedVerseName);
+
                             my $divNameBase = $_;
                             $divNameBase =~ s/t\d\///;
                             $divNameBase =~ s/\.gif//;
