@@ -518,7 +518,7 @@ if ($trueTypeFonts) {
 #
 # And analogously for $trailingVerse at the end
     foreach (@rightOutputs) {
-        s/\/webmedia//;
+        s/\/webmedia\///;
 	# TODO: when using trueTypeFonts then iterate through %mapInfo and retrieve all
         # the chapter+verse pairs as Hebrew text
 	if ($trueTypeFonts) {
@@ -571,7 +571,7 @@ foreach (@rightOutputs) {
 	if ($coloring) {
 		print $cacheOutRef "<img alt=\"\" src=\"./colorImage.cgi?thegif=$_&coloring=$coloring\"><br>\n";
 	} else {
-		print $cacheOutRef "<img alt=\"\" src=\"$outputSite$_\"><br>\n";
+		print $cacheOutRef "<img alt=\"\" src=\"$outputSite/webmedia/$_\"><br>\n";
 	}
 	$gifCount++;
 }
