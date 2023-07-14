@@ -23,6 +23,7 @@ use HTML::TokeParser;
 use GD;
 use CGI;
 use GD::Text;
+use verse2hebrew;
 
 my $fontFile = "fonts/SILEOTSR.ttf";
  
@@ -386,9 +387,11 @@ if (CachedCopyIsValid($cacheFileName, $outputVersion) && $useCache) {
 
 if ($generateCache && open CACHEOUT,">$cacheFileName") {
 	$cacheOutRef = \*CACHEOUT;
+        binmode(CACHEOUT,"encoding(UTF-8)")
 } else {
 	$cacheOutRef = \*STDOUT;
 	$cacheOpenFailed = 1;
+        binmode(STDOUT,"encoding(UTF-8)")
 }
 
 
