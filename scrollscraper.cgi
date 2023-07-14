@@ -602,6 +602,12 @@ if ($trueTypeFonts) {
         $shade = "dark";
     }
     print $cacheOutRef "}\n";
+    print $cacheOutRef "span.dummy {\n";
+    print $cacheOutRef "background-color:red\;\n";
+    print $cacheOutRef "width:100\%\;\n";
+    print $cacheOutRef "height:0em\;\n";
+    print $cacheOutRef "display:inline-block\;\n";
+    print $cacheOutRef "}\n";
 
     print
 "div.sep { font-family: hebrewFont; font-size: 18px; float: left; width: 4px; text-align: right; height: 30px }\n";
