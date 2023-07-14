@@ -113,7 +113,7 @@ if ($q->param('book')) {
 	$useCache = 0 if $q->param('dontUseCache');
 	$doAudio = 0 if $q->param('noAudio');
 	$audioRepeatCount = $q->param('audioRepeatCount') if $q->param('audioRepeatCount');
-	$coloring = $q->param('coloring') if $q->param('coloring');
+	$coloring = ${\$q->param('coloring')} if length(${\$q->param('coloring')}) > 1;
 	$doShading = $q->param('doShading') if $q->param('doShading');
 	$trueTypeFonts = $q->param('trueTypeFonts') if $q->param('trueTypeFonts');
 	
@@ -492,13 +492,18 @@ if ($trueTypeFonts) {
     print $cacheOutRef "     src: url(\"$fontFile\")\;\n";
     print $cacheOutRef "}\n";
 
-    my @colors = ( "132/132/255", "100/46/201" );
+    my @colors = ( "132,132,255", "100,46,201" );
+    if ($coloring) {
+        my @fields = split /,/,$coloring;
+        $colors[0] = join(',',$fields[0],$fields[1],$fields[2]);
+        $colors[1] = join(',',$fields[3],$fields[4],$fields[5]);
+    }
     my $shade = "light";
 
     print $cacheOutRef ":root {\n";
 
     foreach my $color (@colors) {    # for each of our two colors
-        my @arr = split /\//, $color;
+        my @arr = split /,/, $color;
         my $hex = sprintf("%02x%02x%02x",$arr[0],$arr[1],$arr[2]);
         print $cacheOutRef "  --our${shade}text: #${hex}\;\n";
         print $cacheOutRef "  --ourobscured${shade}text: #${hex}40\;\n";
