@@ -70,6 +70,7 @@ my $coloring;
 my $generateCache = 1;
 my $doShading = 0;
 my $trueTypeFonts = 0;
+my %hebrewText;
 my $blankImage = "alpha_TOP1_0.png"; # used for padding on LHS of table, when $doShading is used
 
 my $agent = LWP::UserAgent->new;
