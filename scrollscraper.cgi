@@ -533,6 +533,8 @@ if ($trueTypeFonts) {
 
     my @divNames;
     my %verses2rowRegions;
+    my %divName2Hebrew;
+
 
     foreach (@rightOutputs) {
         s/\/webmedia\///;
@@ -555,7 +557,7 @@ if ($trueTypeFonts) {
                             $rightToLeftPosition++;
                             $leftToRightPosition--;
                             my $lenx = $endx - $startx + 1;
-
+                            next if ($color eq "NONE");
 
                             my $divNameBase;
                             $divNameBase = "X" . $strippedGIFname . "-" . $row;
@@ -570,12 +572,15 @@ if ($trueTypeFonts) {
 
     foreach my $formattedVerseName (keys %verses2rowRegions) {
        my @verseRegionLengths;
-       foreach my $region (@{verses2rowRegions{$formattedVerseName}}) {
-           my @the_region = @{$region};
-           push @verseRegionLengths,$the_region[0][1];
+       foreach my $region (@{@{verses2rowRegions{$formattedVerseName}}}) {
+           push @verseRegionLengths,@{$region}[1];
        }
        my $hebrewText = hebrew($formattedVerseName);
        my @hebrewRegions = partitionHebrewVerse($hebrewText, $fontFile, @verseRegionLengths);
+       foreach my $region (@{@{verses2rowRegions{$formattedVerseName}}}) {
+           my $fullDivName = @{$region}[0];
+           $divName2Hebrew{$fullDivName} = shift @hebrewRegions;
+       }
 
        my $dbg;
     }
@@ -613,6 +618,9 @@ if ($trueTypeFonts) {
                             print "div.$fullDivName { font-family: hebrewFont; font-size: $fontSize; color: var($colorName); float: left; width: ${lenx}px; text-align: justify; height: 30px }\n";
                             # TODO: we printed the div Style above, but also need to build up
                             # an output string for the associated HTML body
+                            my $hebrew = $divName2Hebrew{$fullDivName};
+                            next unless $hebrew;
+                            $trueTypeBufferedOutput .= "<div class=$fullDivName><span style=\"position: relative; top: 0px\">$hebrew</span><span class=dummy> </span></div>\n";
 		        }
 		  }
     }
@@ -651,6 +659,7 @@ print $cacheOutRef "<br>\n" unless $sbs;
 print $cacheOutRef "<span style=\"position: relative; top: 0px\">\n" if ($doShading);
 
 if ($trueTypeFonts) {
+    print "$trueTypeBufferedOutput";
 } else {
 	foreach (@rightOutputs) {
 		if ($coloring) {
