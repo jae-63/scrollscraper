@@ -490,6 +490,7 @@ print $cacheOutRef "<title>".join(" ",@title)."</title>\n";
 
 my $trueTypeBufferedOutput = "";
 
+
 if ($trueTypeFonts) {
     print $cacheOutRef "<style type=\"text/css\">\n";
     print $cacheOutRef "\@font-face {\n";
@@ -530,18 +531,20 @@ if ($trueTypeFonts) {
 #
 # And analogously for $trailingVerse at the end
 
-    my %divNames;
-
     my @divNames;
+    my %verses2rowRegions;
 
     foreach (@rightOutputs) {
         s/\/webmedia\///;
-	# TODO: when using trueTypeFonts then iterate through %mapInfo and retrieve all
-        # the chapter+verse pairs as Hebrew text
-	if ($trueTypeFonts) {
+        my $strippedGIFname = $_;
+        $strippedGIFname =~ s/t\d\///;
+        $strippedGIFname =~ s/\.gif//;
+
 		for (my $row=0; $row < 3; $row++) {
                         my @localMapInfo = @{$mapInfo{$_}{$row}};
                         # traversing forward, i.e. right-to-left to process Hebrew sensibly
+                        my $rightToLeftPosition = -1;
+                        my $leftToRightPosition = $#localMapInfo + 1;
                         foreach my $map (@localMapInfo) {
                             my @mapA = @{$map};
                             my $startx = $mapA[0];
@@ -549,14 +552,46 @@ if ($trueTypeFonts) {
                             my $color = $mapA[2];
                             my $chapter = $mapA[3];
                             my $verse = $mapA[4];
+                            $rightToLeftPosition++;
+                            $leftToRightPosition--;
+                            my $lenx = $endx - $startx + 1;
 
+
+                            my $divNameBase;
+                            $divNameBase = "X" . $strippedGIFname . "-" . $row;
+
+                            my $fullDivName = $divNameBase . "-" . $leftToRightPosition;
 			    my $formattedVerseName = sprintf("%02d%03d%03d",$book,$chapter,$verse);
-			    $hebrewText{$formattedVerseName} = hebrew($formattedVerseName);
-                        }
+                            push @{$verses2rowRegions{$formattedVerseName}},[$fullDivName,$lenx];
+                            my $dbg;
+		         }
+		   }
+    }
 
+    foreach my $formattedVerseName (keys %verses2rowRegions) {
+       my @verseRegionLengths;
+       foreach my $region (@{verses2rowRegions{$formattedVerseName}}) {
+           my @the_region = @{$region};
+           push @verseRegionLengths,$the_region[0][1];
+       }
+       my $hebrewText = hebrew($formattedVerseName);
+       my @hebrewRegions = partitionHebrewVerse($hebrewText, $fontFile, @verseRegionLengths);
+
+       my $dbg;
+    }
+
+    foreach (@rightOutputs) {
+        s/\/webmedia\///;
+        my $strippedGIFname = $_;
+        $strippedGIFname =~ s/t\d\///;
+        $strippedGIFname =~ s/\.gif//;
+	# TODO: when using trueTypeFonts then iterate through %mapInfo and retrieve all
+        # the chapter+verse pairs as Hebrew text
+		for (my $row=0; $row < 3; $row++) {
                         my @localMapInfo = @{$mapInfo{$_}{$row}};
                         # traversing in reverse, which essentially means left-to-right despite
                         # the use of Hebrew.   Since HTML operates left-to-right
+                        my $leftToRightPosition = -1;
                         foreach my $map (reverse @localMapInfo) {
                             my @mapA = @{$map};
                             my $startx = $mapA[0];
@@ -564,17 +599,14 @@ if ($trueTypeFonts) {
                             my $color = $mapA[2];
                             my $chapter = $mapA[3];
                             my $verse = $mapA[4];
+                            $leftToRightPosition++;
 
                             # boolean: is this verse within the requested reading section?
                             my $withinReading = compareChapterAndVerse("$startc:$startv","$chapter:$verse") <= 0 && compareChapterAndVerse("$endc:$endv","$chapter:$verse") >= 0;
 
-                            my $divNameBase = $_;
-                            $divNameBase =~ s/t\d\///;
-                            $divNameBase =~ s/\.gif//;
-                            $divNameBase = $divNameBase . "-" . $row . "-C" . $chapter . "-V" . $verse;
-                            $divNames{$divNameBase} = 0 unless defined $divNames{$divNameBase};
-                            $divNames{$divNameBase}++;
-                            my $fullDivName = $divNameBase . "-" . $divNames{$divNameBase};
+                            my $divNameBase;
+                            $divNameBase = "X" . $strippedGIFname . "-" . $row;
+                            my $fullDivName = $divNameBase . "-" . $leftToRightPosition;
                             push @divNames,$fullDivName;
                             my $lenx = $endx - $startx + 1;
                             my $colorName = "--our" . ($withinReading ? "" : "obscured") . "${color}text";
@@ -583,7 +615,6 @@ if ($trueTypeFonts) {
                             # an output string for the associated HTML body
 		        }
 		  }
-	}
     }
     print $cacheOutRef "</style>\n";
 }
@@ -861,17 +892,14 @@ sub match_all_positions {
 }
 
 
-# partition a single Hebrew verse over one or more lines of output which each
-# have a prescribed width.   It doesn't matter for purposes of the calculation, but
-# in general if there are 3 or more output lines than the intermediate lines will
-# all of the maximum length, $gifWidth
+# partition a single Hebrew verse over one or more horizontal regions
+# have a prescribed width.
 #
-# returns an array of Hebrew strings, one per output line.   The number of output line
-# winds up being ($yend-$ystart+1).
+# returns an array of Hebrew strings, one per input pixel-width
 sub partitionHebrewVerse {
-   my ($verse,$fontFile,$xstart,$ystart,$xend,$yend) = @_;
-
-   return [] if $yend < $ystart;
+   my $verse = shift;
+   my $fontFile = shift;
+   my @prefixPixelWidths = @_;
 
 # ptSize doesn't matter much because we wind up calculating everything in
 # proportion to the @verseCoordinates dimensions which are passed to the
@@ -880,13 +908,6 @@ sub partitionHebrewVerse {
    my $ptSize = 24;
 
    my @retval;
-
-   my @prefixPixelWidths;
-   push @prefixPixelWidths,($gifWidth-$xstart);
-   for (my $i = $ystart+1; $i < $yend; $i++) {
-     push @prefixPixelWidths,$gifWidth;
-   }
-   push @prefixPixelWidths,$xend;
 
    my $totalPixelWidth = 0;
    foreach my $prefixPixelWidth (@prefixPixelWidths) {
