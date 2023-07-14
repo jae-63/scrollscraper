@@ -497,9 +497,20 @@ if ($trueTypeFonts) {
     print $cacheOutRef "}\n";
     
 # TODO: add a ton of CSS Styles here for verse-specific configuration
-    foreach (@rightOutputs) P
-	# TODO: when using trueTypeFonts then iterate through %mapInfo and find retrieve all the chapter+
-	# verse pairs as Hebrew text
+
+# Let's consider a $leadingVerse and a $trailingVerse which generally aren't the same
+# as $startvc and $endv.   Instead, $leadingVerse is the first verse which appears, in 
+# whole or in part, in the firstGIF, which is referenced by $firstGIFIndex above.   We
+# want to calculate the Hebrew text which appears in this partial verse, which is in
+# general the upper-right portion of our reading, and which we'll usually present using
+# an "obscured" font, analogous to how we "shade" sections of the reading in the
+# non-trueType case.
+#
+# And analogously for $trailingVerse at the end
+    foreach (@rightOutputs) {
+        s/\/webmedia//;
+	# TODO: when using trueTypeFonts then iterate through %mapInfo and retrieve all
+        # the chapter+verse pairs as Hebrew text
 	if ($trueTypeFonts) {
 		for (my $row=0; $row < 3; $row++) {
                         my @localMapInfo = @{$mapInfo{$_}{$row}};
