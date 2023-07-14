@@ -487,6 +487,9 @@ my @title = (getBookName($book,0), getPortionName($beginPortion)," $startc:$star
 print $cacheOutRef "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n";
 print $cacheOutRef "<html>\n<head>\n";
 print $cacheOutRef "<title>".join(" ",@title)."</title>\n";
+
+my $trueTypeBufferedOutput = "";
+
 if ($trueTypeFonts) {
     print $cacheOutRef "<style type=\"text/css\">\n";
     print $cacheOutRef "\@font-face {\n";
@@ -529,6 +532,8 @@ if ($trueTypeFonts) {
 
     my %divNames;
 
+    my @divNames;
+
     foreach (@rightOutputs) {
         s/\/webmedia\///;
 	# TODO: when using trueTypeFonts then iterate through %mapInfo and retrieve all
@@ -556,6 +561,7 @@ if ($trueTypeFonts) {
                             $divNames{$divNameBase} = 0 unless defined $divNames{$divNameBase};
                             $divNames{$divNameBase}++;
                             my $fullDivName = $divNameBase . "-" . $divNames{$divNameBase};
+                            push @divNames,$fullDivName;
                             my $lenx = $endx - $startx + 1;
                             my $colorName = "--our" . ($withinReading ? "" : "obscured") . "${color}text";
                             print "div.$fullDivName { font-family: hebrewFont; font-size: $fontSize; color: var($colorName); float: left; width: ${lenx}px; text-align: justify; height: 30px }\n";
@@ -576,7 +582,7 @@ print $cacheOutRef "<hr>";
 print $cacheOutRef "<table><tr><td>\n" if $sbs;
 
 
-print $cacheOutRef "<span style=\"position: relative; top: 0px\">\n" if ($doShading);
+print $cacheOutRef "<span style=\"position: relative; top: 0px\">\n" if ($doShading || $trueTypeFonts);
 foreach (@leftOutputs) {
 	print $cacheOutRef "<img alt=\"\" src=\"$outputSite$_\"><br>\n";
 	$gifCount++;
@@ -584,7 +590,7 @@ foreach (@leftOutputs) {
 
 my $verticalOffset = -1 * ($gifCount * 90 + 90);
 
-if ($doShading) {
+if ($doShading || $trueTypeFonts) {
 	# This left-side "shading" is only performed to workaround a common Web browser printing bug (found in nearly all
 	# major browsers except Safari, as of 12/2010).  By making the geometry identical on both left & right sides, we
 	# can avoid this problem.
@@ -598,13 +604,17 @@ if ($doShading) {
 print $cacheOutRef "</td><td>\n" if $sbs;
 print $cacheOutRef "<br>\n" unless $sbs;
 print $cacheOutRef "<span style=\"position: relative; top: 0px\">\n" if ($doShading);
-foreach (@rightOutputs) {
-	if ($coloring) {
-		print $cacheOutRef "<img alt=\"\" src=\"./colorImage.cgi?thegif=$_&coloring=$coloring\"><br>\n";
-	} else {
-		print $cacheOutRef "<img alt=\"\" src=\"$outputSite/webmedia/$_\"><br>\n";
+
+if ($trueTypeFonts) {
+} else {
+	foreach (@rightOutputs) {
+		if ($coloring) {
+			print $cacheOutRef "<img alt=\"\" src=\"./colorImage.cgi?thegif=$_&coloring=$coloring\"><br>\n";
+		} else {
+			print $cacheOutRef "<img alt=\"\" src=\"$outputSite/webmedia/$_\"><br>\n";
+		}
+		$gifCount++;
 	}
-	$gifCount++;
 }
 
 if ($doShading) {
