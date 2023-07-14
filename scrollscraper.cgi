@@ -34,6 +34,15 @@ my $fontFile = "fonts/SILEOTSR.ttf";
 # a manner which affects previously cached output files
 # 
 my $outputVersion = 9;
+#
+# Provide a debug mode where outputted cached files (executed in that DEBUG mode) don't
+# impact the Production views, on the live ScrollScraper server
+#
+# Sample usage:
+#    DEBUG=1 perl ./scrollscraper2.cgi "book=5&audioRepeatCount=1&coloring=0&doShading=on&startc=28&startv=52&endc=28&endv=52"
+# where scrollscraper2.cgi is an edited development copy of scrollscraper.cgi
+#
+$outputVersion-- if defined $ENV{"DEBUG"};
 
 my $site = "https://bible.ort.org";
 my $outputSite = $site;
