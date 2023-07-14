@@ -122,7 +122,7 @@ sub goForward {
         my $versesInThisChapter =
           $versesPerChapter[ $book - 1 ][ $chapter - 1 ];
         $verse++;
-        if ( $verse >= $versesInThisChapter ) {
+        if ( $verse > $versesInThisChapter ) {
             $chapter++;
             $verse = 1;
         }

@@ -711,7 +711,7 @@ sub goForward {
      while ($go_forward_count-- > 0) {
 	     my $versesInThisChapter = $versesPerChapter[$book-1][$chapter-1];
              $verse++;
-	     if ($verse >= $versesInThisChapter) {
+	     if ($verse > $versesInThisChapter) {
 		     $chapter++;
 		     $verse = 1;
 	     }

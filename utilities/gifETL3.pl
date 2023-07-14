@@ -123,7 +123,7 @@ sub goForward {
         my $versesInThisChapter =
           $versesPerChapter[ $book - 1 ][ $chapter - 1 ];
         $verse++;
-        if ( $verse >= $versesInThisChapter ) {
+        if ( $verse > $versesInThisChapter ) {
             $chapter++;
             $verse = 1;
         }
@@ -382,8 +382,16 @@ while (<DATA>) {
 	$chapterAndVerse2Info[$book][$chapter][$verse]{'indexOfVerseStartPositionOnThatLine'} = $fields[6];
 }
 
-my $oldBook = -1;
-my $shade = 'dark'; # each of the 5 books starts with the dark shade
+my $book = -1;
+my $chapter = -1;
+my $verse = -1;
+my $lastColor = 'dark'; # each of the 5 books starts with the dark shade
+
+my @filenames;
+my %fileName2Number;
+my $fileNameNumber = 0;
+my %mapInfo;
+
 # now read the result of another ETL on STDIN.   We're going to try to augment this with chapter/verse info
 #
 # Use the %chapterAndVerse2Info data structure, especially 'lineNumberOnWhichThisVerseBegins' to sanity
@@ -396,15 +404,30 @@ while (<>) {
         if ($row == 0) {
 		push @filenames,$filename;
 		$fileName2Number{$filename} = $fileNameNumber++;
+                if ($filename =~ /t(\d)\//) {
+                        my $newBook = $1;
+                        if ($newBook != $book) {
+                                  $book = $newBook;
+                                  $chapter = 1;
+                                  $verse = 1;
+                                  $lastColor = 'dark'; # each of the 5 books starts with the dark shade
+                        }
+                 }
         }
         my @localMapInfo;
         while ($#fields >= 0) {
             	my $startx = shift @fields;
                	my $endx = shift @fields;
                	my $color = shift @fields;
-               	push @localMapInfo,[$startx,$endx,$color];
+                if ($color ne $lastColor && $color ne 'NONE') {
+                    # did we switch colors?  If so then move forward a verse!
+		    ($book,$chapter,$verse) = goForward($book,$chapter,$verse,1);
+                    $lastColor = $color;
+                }
+               	push @localMapInfo,[$startx,$endx,$color,$chapter,$verse];
         }
         $mapInfo{$filename}{$row} = \@localMapInfo;
+        print "$filename,$row," . join( ',', flat(@localMapInfo) ) . "\n";
 }
 
 __DATA__
