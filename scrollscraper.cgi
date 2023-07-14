@@ -272,9 +272,8 @@ my $firstGIFIndex = $fileName2Number{$firstGIFName};
 my $finalGIFIndex = $fileName2Number{$finalGIFName};
 
 if ($firstGIFIndex > $finalGIFIndex) {
-	my $tmp = $firstGIFIndex;
-	$firstGIFIndex = $finalGIFIndex;
-	$finalGIFIndex = $tmp;
+	($firstGIFIndex,$finalGIFIndex) = ($finalGIFIndex,$firstGIFIndex);
+	($startc,$startv,$endc,$endv) = ($endc,$endv,$startc,$startv);
 }
 
 #
@@ -498,6 +497,22 @@ if ($trueTypeFonts) {
     print $cacheOutRef "}\n";
     
 # TODO: add a ton of CSS Styles here for verse-specific configuration
+    foreach (@rightOutputs) P
+	# TODO: when using trueTypeFonts then iterate through %mapInfo and find retrieve all the chapter+
+	# verse pairs as Hebrew text
+	if ($trueTypeFonts) {
+		for (my $row=0; $row < 3; $row++) {
+                        my @localMapInfo = @{$mapInfo{$_}{$row}};
+                        foreach my $map (@localMapInfo) {
+                            my @mapA = @{$map};
+                            my $chapter = $mapA[3];
+                            my $verse = $mapA[4];
+			    my $formattedVerseName = sprintf("%02d%03d%03d",$book,$chapter,$verse);
+			    $hebrewText{$formattedVerseName} = hebrew($formattedVerseName);
+		        }
+		  }
+	}
+    }
     print $cacheOutRef "</style>\n";
 }
 
