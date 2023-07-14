@@ -234,6 +234,8 @@ my %mapInfo;
 my @leftOutputs;
 my @rightOutputs;
 
+my $fontSize = 18;
+
 my $readingFileNames = 1;
 my $fileNameNumber = 0;
 my %fileName2Number;
@@ -510,6 +512,8 @@ if ($trueTypeFonts) {
         $shade = "dark";
     }
     print $cacheOutRef "}\n";
+
+    print "div.sep { font-family: hebrewFont; font-size: 18px; float: left; width: 4px; text-align: right; height: 30px }\n";
     
 # TODO: add a ton of CSS Styles here for verse-specific configuration
 
@@ -522,6 +526,9 @@ if ($trueTypeFonts) {
 # non-trueType case.
 #
 # And analogously for $trailingVerse at the end
+
+    my %divNames;
+
     foreach (@rightOutputs) {
         s/\/webmedia\///;
 	# TODO: when using trueTypeFonts then iterate through %mapInfo and retrieve all
@@ -529,12 +536,31 @@ if ($trueTypeFonts) {
 	if ($trueTypeFonts) {
 		for (my $row=0; $row < 3; $row++) {
                         my @localMapInfo = @{$mapInfo{$_}{$row}};
-                        foreach my $map (@localMapInfo) {
+                        # traversing in reverse, which essentially means left-to-right despite
+                        # the use of Hebrew.   Since HTML operates left-to-right
+                        foreach my $map (reverse @localMapInfo) {
                             my @mapA = @{$map};
+                            my $startx = $mapA[0];
+                            my $endx = $mapA[1];
+                            my $color = $mapA[2];
                             my $chapter = $mapA[3];
                             my $verse = $mapA[4];
+                            # boolean: is this verse within the requested reading section?
+                            my $withinReading = compareChapterAndVerse("$startc:$startv","$chapter:$verse") <= 0 && compareChapterAndVerse("$endc:$endv","$chapter:$verse") >= 0;
 			    my $formattedVerseName = sprintf("%02d%03d%03d",$book,$chapter,$verse);
 			    $hebrewText{$formattedVerseName} = hebrew($formattedVerseName);
+                            my $divNameBase = $_;
+                            $divNameBase =~ s/t\d\///;
+                            $divNameBase =~ s/\.gif//;
+                            $divNameBase = $divNameBase . "-" . $row . "-C" . $chapter . "-V" . $verse;
+                            $divNames{$divNameBase} = 0 unless defined $divNames{$divNameBase};
+                            $divNames{$divNameBase}++;
+                            my $fullDivName = $divNameBase . "-" . $divNames{$divNameBase};
+                            my $lenx = $endx - $startx + 1;
+                            my $colorName = "--our" . ($withinReading ? "" : "obscured") . "${color}text";
+                            print "div.$fullDivName { font-family: hebrewFont; font-size: $fontSize; color: var($colorName); float: left; width: ${lenx}px; text-align: justify; height: 30px }\n";
+                            # TODO: we printed the div Style above, but also need to build up
+                            # an output string for the associated HTML body
 		        }
 		  }
 	}
