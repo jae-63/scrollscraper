@@ -778,7 +778,7 @@ print $cacheOutRef "<span style=\"position: relative; top: 0px\">\n"
   if ($doShading);
 
 if ($trueTypeFonts) {
-    print "$trueTypeBufferedOutput";
+    print $cacheOutRef "$trueTypeBufferedOutput";
 }
 else {
     foreach (@rightOutputs) {
