@@ -8,6 +8,8 @@ my $gifWidth     = 445;
 my $gifRowHeight = 30;
 my $gifNumRows   = 3;
 
+my $extendToEdge             = 25;
+
 # some parameters which might need tweaking, for identifying dark-blue vs light-blue vs blank
 # text sections
 my $windowWidthForSmoothing  = 20;
@@ -426,8 +428,41 @@ while (<>) {
                 }
                	push @localMapInfo,[$startx,$endx,$color,$chapter,$verse];
         }
-        $mapInfo{$filename}{$row} = \@localMapInfo;
-        print "$filename,$row," . join( ',', flat(@localMapInfo) ) . "\n";
+        my @extendedLocalMapInfo;
+        my $ind = -1;
+        my $revise_next_start=0;
+        my $next_start_revised;
+
+        foreach my $map (@localMapInfo) {
+            	$ind++;
+            	my @extra_element;
+            	my ($startx,$endx,$color,$chapter,$verse) = @{$localMapInfo[$ind]};
+                if ($revise_next_start) {
+                    $startx = $next_start_revised;
+                    $revise_next_start = 0;
+                }
+                $startx = 0 if ($ind == 0 && $startx < $extendToEdge);
+                if ($ind >= $#localMapInfo) {
+                    $endx = $gifWidth-1 if ($gifWidth-$endx) < $extendToEdge;
+                } else {
+                    # insert a 'NONE' block before the next block if there is a gap
+            	    my ($next_startx,$next_endx,$next_color,$next_chapter,$next_verse) = @{$localMapInfo[$ind+1]};
+                    if (($endx+1) <= ($next_startx-1)) { # ready to add some NONE but let's figure out the right way
+                        if ($color eq 'NONE') {
+                            $endx = $next_endx;
+                        } elsif ($next_color eq 'NONE') {
+                            $revise_next_start = 1;
+                            $next_start_revised = $endx+1;
+                        } else {
+                	    @extra_element = [$endx+1,$next_startx-1,'NONE',0,0];
+                        }
+                    }
+                }
+               	push @extendedLocalMapInfo,[$startx,$endx,$color,$chapter,$verse];
+             	push @extendedLocalMapInfo,@extra_element if @extra_element;
+        }
+        $mapInfo{$filename}{$row} = \@extendedLocalMapInfo;
+        print "$filename,$row," . join( ',', flat(@extendedLocalMapInfo) ) . "\n";
 }
 
 __DATA__
