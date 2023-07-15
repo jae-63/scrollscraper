@@ -11,7 +11,7 @@ my $gifNumRows   = 3;
 # some parameters which might need tweaking, for identifying dark-blue vs light-blue vs blank
 # text sections
 my $windowWidthForSmoothing  = 20;
-my $colorThreshold           = 0.1;
+my $colorThreshold           = 0.05;
 my $minFeaturePixelWidth     = 5;
 my $minNoneFeaturePixelWidth = 45;
 
