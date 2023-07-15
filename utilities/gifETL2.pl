@@ -180,6 +180,11 @@ sub processTikkunRowsByColorFromURL {
 
     my $gifdata = $response->decoded_content;
 
+    if (length($gifdata) <= 0) {
+        return [] if ($ENV{"DUMMY_GIFNAMES_OK"});
+        die "Unable to load URL $theurl";
+    }
+
     my @retval;
 
     for ( my $row = 0 ; $row < 3 ; $row++ ) {
