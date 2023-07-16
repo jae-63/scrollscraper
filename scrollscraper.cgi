@@ -724,12 +724,12 @@ if ($trueTypeFonts) {
                   . ( $withinReading ? "" : "obscured" )
                   . "${color}text";
                 if ($color eq "NONE") {
-                    print $cacheOutRef "div.$fullDivName { float: left; width: ${lenx}px; text-align: right; height: 30px }\n";
+                    print $cacheOutRef "div.$fullDivName { width: ${lenx}px; float: left; text-align: right; height: 30px }\n";
                     $trueTypeBufferedOutput .=
 "<div class=$fullDivName><span style=\"position: relative; top: 0px\"> </span><span class=dummy> </span></div>\n";
                 } else {
                     print $cacheOutRef
-"div.$fullDivName { font-family: hebrewFont; font-size: $fontSize; color: var($colorName); float: left; width: ${lenx}px; text-align: justify; height: 30px }\n";
+"div.$fullDivName { width: ${lenx}px; font-family: hebrewFont; font-size: $fontSize; color: var($colorName); float: left; text-align: justify; height: 30px }\n";
                     my $hebrew = $divName2Hebrew{$fullDivName};
                     next unless $hebrew;
                     $trueTypeBufferedOutput .=
