@@ -609,7 +609,7 @@ if ($trueTypeFonts) {
     print $cacheOutRef "display:inline-block\;\n";
     print $cacheOutRef "}\n";
 
-    print
+    print $cacheOutRef
 "div.sep { font-family: hebrewFont; font-size: 18px; float: left; width: 4px; text-align: right; height: 30px }\n";
 
     # TODO: add a ton of CSS Styles here for verse-specific configuration
@@ -723,13 +723,19 @@ if ($trueTypeFonts) {
                 my $colorName = "--our"
                   . ( $withinReading ? "" : "obscured" )
                   . "${color}text";
-                print
+                if ($color eq "NONE") {
+                    print $cacheOutRef "div.$fullDivName { float: left; width: ${lenx}px; text-align: right; height: 30px }\n";
+                    $trueTypeBufferedOutput .=
+"<div class=$fullDivName><span style=\"position: relative; top: 0px\"> </span><span class=dummy> </span></div>\n";
+                } else {
+                    print $cacheOutRef
 "div.$fullDivName { font-family: hebrewFont; font-size: $fontSize; color: var($colorName); float: left; width: ${lenx}px; text-align: justify; height: 30px }\n";
-
-                my $hebrew = $divName2Hebrew{$fullDivName};
-                next unless $hebrew;
-                $trueTypeBufferedOutput .=
+                    my $hebrew = $divName2Hebrew{$fullDivName};
+                    next unless $hebrew;
+                    $trueTypeBufferedOutput .=
 "<div class=$fullDivName><span style=\"position: relative; top: 0px\">$hebrew</span><span class=dummy> </span></div>\n";
+                }
+
             }
         }
     }
