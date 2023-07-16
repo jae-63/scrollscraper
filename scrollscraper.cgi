@@ -24,6 +24,7 @@ use GD;
 use CGI;
 use GD::Text;
 use verse2hebrew;
+use Data::Dumper;
 
 my $fontFile = "fonts/SILEOTSR.ttf";
 
@@ -684,6 +685,8 @@ if ($trueTypeFonts) {
 
         my $dbg;
     }
+
+    my $dbg;
 
     foreach (@rightOutputs) {
         s/\/webmedia\///;
