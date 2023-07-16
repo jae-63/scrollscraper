@@ -726,8 +726,6 @@ if ($trueTypeFonts) {
                 print
 "div.$fullDivName { font-family: hebrewFont; font-size: $fontSize; color: var($colorName); float: left; width: ${lenx}px; text-align: justify; height: 30px }\n";
 
-               # TODO: we printed the div Style above, but also need to build up
-               # an output string for the associated HTML body
                 my $hebrew = $divName2Hebrew{$fullDivName};
                 next unless $hebrew;
                 $trueTypeBufferedOutput .=
