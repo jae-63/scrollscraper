@@ -50,6 +50,7 @@ my $outputSite = "https://scrollscraper.adatshalom.net";
 my $base =
 "$site/books/torahd5.asp?action=displaypage&book=%d&chapter=%d&verse=%d&portion=%d";
 my $gifWidth      = 445;
+my $maximumVerseLengthInGIFs = 3;
 my $shadingDir    = "ScrollScraperalphaPNGs";
 my $forbiddenFile = "forbidden-referers.txt";
 my $smilFormat =
@@ -612,27 +613,26 @@ if ($trueTypeFonts) {
     print $cacheOutRef
 "div.sep { font-family: hebrewFont; font-size: 18px; float: left; width: 4px; text-align: right; height: 30px }\n";
 
-    # TODO: add a ton of CSS Styles here for verse-specific configuration
 
-# Let's consider a $leadingVerse and a $trailingVerse which generally aren't the same
-# as $startvc and $endv.   Instead, $leadingVerse is the first verse which appears, in
-# whole or in part, in the firstGIF, which is referenced by $firstGIFIndex above.   We
-# want to calculate the Hebrew text which appears in this partial verse, which is in
-# general the upper-right portion of our reading, and which we'll usually present using
-# an "obscured" font, analogous to how we "shade" sections of the reading in the
-# non-trueType case.
-#
-# And analogously for $trailingVerse at the end
+# Part of the processing involves GIFs before and after the images which will
+# actually be displayed, since we need to calculate the entire length of the 
+# truncated Hebrew verse which appears at the beginning of the reading, and
+# analogously at the end of the reading.
 
     my @divNames;
     my %verses2rowRegions;
     my %divName2Hebrew;
+    my %rightGIFsToBeDisplayed;
 
-    foreach (@rightOutputs) {
+    for ( my $gifIndex = $firstGIFIndex-$maximumVerseLengthInGIFs ;
+        $gifIndex <= $finalGIFIndex+$maximumVerseLengthInGIFs ; $gifIndex++ ) {
+        next if ($gifIndex < 0 || $gifIndex >= $#filenames);
+        $_ = $filenames[$gifIndex];
         s/\/webmedia\///;
         my $strippedGIFname = $_;
-        $strippedGIFname =~ s/t\d\///;
+        $strippedGIFname =~ s/\//-/;
         $strippedGIFname =~ s/\.gif//;
+        $rightGIFsToBeDisplayed{$strippedGIFname}++ if ($gifIndex >= $firstGIFIndex && $gifIndex <= $finalGIFIndex);
 
         for ( my $row = 0 ; $row < 3 ; $row++ ) {
             my @localMapInfo = @{ $mapInfo{$_}{$row} };
@@ -653,7 +653,7 @@ if ($trueTypeFonts) {
                 next if ( $color eq "NONE" );
 
                 my $divNameBase;
-                $divNameBase = "X" . $strippedGIFname . "-" . $row;
+                $divNameBase = $strippedGIFname . "-" . $row;
 
                 my $fullDivName = $divNameBase . "-" . $leftToRightPosition;
                 my $formattedVerseName =
@@ -688,7 +688,7 @@ if ($trueTypeFonts) {
     foreach (@rightOutputs) {
         s/\/webmedia\///;
         my $strippedGIFname = $_;
-        $strippedGIFname =~ s/t\d\///;
+        $strippedGIFname =~ s/\//-/;
         $strippedGIFname =~ s/\.gif//;
 
  # TODO: when using trueTypeFonts then iterate through %mapInfo and retrieve all
@@ -716,7 +716,7 @@ if ($trueTypeFonts) {
                   >= 0;
 
                 my $divNameBase;
-                $divNameBase = "X" . $strippedGIFname . "-" . $row;
+                $divNameBase = $strippedGIFname . "-" . $row;
                 my $fullDivName = $divNameBase . "-" . $leftToRightPosition;
                 push @divNames, $fullDivName;
                 my $lenx      = $endx - $startx + 1;

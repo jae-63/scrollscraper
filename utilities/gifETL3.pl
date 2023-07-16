@@ -449,7 +449,7 @@ while (<>) {
             	    my ($next_startx,$next_endx,$next_color,$next_chapter,$next_verse) = @{$localMapInfo[$ind+1]};
                     if (($endx+1) <= ($next_startx-1)) { # ready to add some NONE but let's figure out the right way
                         if ($color eq 'NONE') {
-                            $endx = $next_endx;
+                            $endx = $next_startx-1;
                         } elsif ($next_color eq 'NONE') {
                             $revise_next_start = 1;
                             $next_start_revised = $endx+1;
