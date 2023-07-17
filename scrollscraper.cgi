@@ -817,7 +817,7 @@ else {
         }
         else {
             print $cacheOutRef
-              "<img alt=\"\" src=\"$outputSite/webmedia/$_\"><br>\n";
+              "<img alt=\"\" src=\"$outputSite/$_\"><br>\n";
         }
         $gifCount++;
     }
