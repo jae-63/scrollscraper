@@ -766,7 +766,7 @@ foreach (@leftOutputs) {
 
 my $verticalOffset = -1 * ( $gifCount * 90 + 90 );
 
-if ( $doShading || $trueTypeFonts ) {
+if ( $doShading ) {
 
 # This left-side "shading" is only performed to workaround a common Web browser printing bug (found in nearly all
 # major browsers except Safari, as of 12/2010).  By making the geometry identical on both left & right sides, we
