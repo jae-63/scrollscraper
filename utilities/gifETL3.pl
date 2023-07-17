@@ -8,7 +8,7 @@ my $gifWidth     = 445;
 my $gifRowHeight = 30;
 my $gifNumRows   = 3;
 
-my $extendToEdge             = 35;
+my $extendToEdge             = 25;
 
 # some parameters which might need tweaking, for identifying dark-blue vs light-blue vs blank
 # text sections
