@@ -86,6 +86,7 @@ my $generateCache = 1;
 my $doShading     = 0;
 my $trueTypeFonts = 0;
 my %hebrewText;
+my %fontSizeOverride;
 my $blankImage = "alpha_TOP1_0.png"
   ;    # used for padding on LHS of table, when $doShading is used
 
@@ -234,6 +235,11 @@ my @parshaInfo = (
 );
 
 # Derived from bible.ort.org.   Note that both the King James bible and Machon Mamre differ from this!
+my @fontSizeOverrides = (
+    [ 2, 15, 1, 22, 0.8], # Song of the Sea, Exodus 15:1-22
+    [ 5, 32, 1, 43, 0.9], # Haazinu, Deuteronomy 32:1-43
+);
+
 my @versesPerChapter = (
     [
         31, 25, 24, 26, 32, 22, 24, 22, 29, 32, 32, 20, 18, 24,
@@ -270,7 +276,17 @@ my %mapInfo;
 my @leftOutputs;
 my @rightOutputs;
 
-my $fontSize = 18;
+my $defaultFontSize = 18;
+
+# populate font size override hash
+foreach my $override (@fontSizeOverrides) {
+    my @override = @{$override};
+    my($book,$chapter,$startv,$endv,$ratio) = @override;
+    for (my $v = $startv; $v <= $endv; $v++) {
+        my $newFontSize = int($defaultFontSize * $ratio + 0.5);
+        $fontSizeOverride{"$book:$chapter:$v"} = $newFontSize;
+    }
+}
 
 my $readingFileNames = 1;
 my $fileNameNumber   = 0;
@@ -728,6 +744,7 @@ if ($trueTypeFonts) {
                 my $fullDivName = $divNameBase . "-" . $leftToRightPosition;
                 push @divNames, $fullDivName;
                 my $lenx      = $endx - $startx + 1;
+                my $fontSize  = $fontSizeOverride{"$book:$chapter:$verse"} || $defaultFontSize;
                 my $colorName = "--our"
                   . ( $withinReading ? "" : "obscured" )
                   . "${color}text";
