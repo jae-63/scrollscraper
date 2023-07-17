@@ -19,7 +19,10 @@ RUN apt-get install --yes \
  apt-utils \
  perl \
  expat \
- libexpat-dev
+ libexpat-dev \
+ tesseract-ocr \
+ libtesseract-dev \
+ tesseract-ocr-heb
 
 # Install perl modules
 RUN apt-get install -y cpanminus

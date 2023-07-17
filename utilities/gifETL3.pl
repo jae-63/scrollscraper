@@ -443,7 +443,11 @@ while (<>) {
                 }
                 $startx = 0 if ($ind == 0 && $startx < $extendToEdge);
                 if ($ind >= $#localMapInfo) {
-                    $endx = $gifWidth-1 if ($gifWidth-$endx) < $extendToEdge;
+                    if (($gifWidth-$endx) < $extendToEdge) {
+                        $endx = $gifWidth-1;
+                    } else {
+                	 @extra_element = [$endx+1,$gifWidth-1,'NONE',0,0];
+                    }
                 } else {
                     # insert a 'NONE' block before the next block if there is a gap
             	    my ($next_startx,$next_endx,$next_color,$next_chapter,$next_verse) = @{$localMapInfo[$ind+1]};
