@@ -4,6 +4,11 @@ FROM ubuntu:14.04
 # File Author / Maintainer
 MAINTAINER Jonathan Epstein <jonathanepstein9@gmail.com>
 
+# This project is constrained to use the Perl 'GD' module.   It also
+# needs a simple Text-to-Speech command-line tool, for which Google's
+# "gtts" is a good option.   Unfortanately at present these two requirements
+# tie us to older versions of Ubuntu, Perl and Python than one would prefer.
+
 # Update the repository sources list
 RUN apt-get update
 
