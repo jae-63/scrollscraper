@@ -575,6 +575,11 @@ my @title = (
 print $cacheOutRef
   "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n";
 print $cacheOutRef "<html>\n<head>\n";
+
+print $cacheOutRef "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
+print $cacheOutRef "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
+print $cacheOutRef "<head>\n";
+print $cacheOutRef "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n";
 print $cacheOutRef "<title>" . join( " ", @title ) . "</title>\n";
 
 my $trueTypeBufferedOutput = "<span style=\"position: relative; top: 0px; max-width: 445px; display: block\">";
