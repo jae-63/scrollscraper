@@ -22,3 +22,6 @@ clean:
 
 intermediate_outputs/gif_names.txt:
 	find webmedia/ -name \*.gif | sort | sed "s/^/\//" >$@
+
+final_outputs/gif_info.csv: intermediate_outputs/gif_names.txt
+	perl utilities/gifETL.pl <$< >$@
