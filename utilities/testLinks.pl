@@ -44,17 +44,17 @@ push @selections,[2,15,1+rand()*20]; # Song of Sea
 push @selections,[5,32,1+rand()*40]; # Haazinu
 push @selections,[rand(5)+1,1,rand(3)]; # one random near the beginning of a book
 
-my $book = int(rand(5)) + 1; # random book for selection near end
+my $book = int(rand(5)) + 1; # random book for selection near end of that book
 #my $chaptersInBook = $versesPerChapter[ $book - 1 ];
 my $chaptersInBook = @{ $versesPerChapter[ $book - 1 ] };
-$chaptersInBook++;
+$chaptersInBook;
 push @selections,[$book,$chaptersInBook-1,$versesPerChapter[$book-1][$chaptersInBook-1]-2-rand(5)];
 
 for (my $i = 0; $i < 7; $i++) {
-    my $book = int(rand(5)) + 1; # random book for selection near end
+    my $book = int(rand(5)) + 1;
     my $chaptersInBook = @{ $versesPerChapter[ $book - 1 ] };
-    $chaptersInBook++;
-    my $chapter = int(rand($chaptersInBook));
+    $chaptersInBook;
+    my $chapter = int(rand($chaptersInBook)+1);
     my $verse = rand($versesPerChapter[$book-1][$chapter-1]) + 1;
     push @selections,[$book,$chapter,$verse];
 }
