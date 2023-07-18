@@ -16,3 +16,9 @@ $(BUILDSTAMP_FILE):
 clean:
 	docker image rm -f $(IMAGE)
 	rm -f $(BUILDSTAMP_FILE)
+
+
+======== Makefile targets to be run within the scrollscraper container appear below ==========
+
+intermediate_outputs/gif_names.txt:
+	find webmedia/ -name \*.gif | sort | sed "s/^/\//" >@$
