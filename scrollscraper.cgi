@@ -239,7 +239,7 @@ my @parshaInfo = (
 # Derived from bible.ort.org.   Note that both the King James bible and Machon Mamre differ from this!
 my @fontSizeOverrides = (
     [ 2, 15, 1, 22, 0.65], # Song of the Sea, Exodus 15:1-22
-    [ 5, 32, 1, 43, 0.95], # Haazinu, Deuteronomy 32:1-43
+    [ 5, 32, 1, 47, 0.85], # Haazinu, Deuteronomy 32:1-47
 );
 
 my @versesPerChapter = (
