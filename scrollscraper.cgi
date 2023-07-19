@@ -238,8 +238,8 @@ my @parshaInfo = (
 
 # Derived from bible.ort.org.   Note that both the King James bible and Machon Mamre differ from this!
 my @fontSizeOverrides = (
-    [ 2, 15, 1, 22, 0.6], # Song of the Sea, Exodus 15:1-22
-    [ 5, 32, 1, 43, 0.9], # Haazinu, Deuteronomy 32:1-43
+    [ 2, 15, 1, 22, 0.65], # Song of the Sea, Exodus 15:1-22
+    [ 5, 32, 1, 43, 0.95], # Haazinu, Deuteronomy 32:1-43
 );
 
 my @versesPerChapter = (
@@ -278,7 +278,7 @@ my %mapInfo;
 my @leftOutputs;
 my @rightOutputs;
 
-my $defaultFontSize = 18;
+my $defaultFontSize = 17;
 
 # populate font size override hash
 foreach my $override (@fontSizeOverrides) {
