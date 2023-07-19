@@ -1192,7 +1192,7 @@ sub startRowAndXPosition {
 
 # Now traverse @localMapInfo and find the first map-element (from right-to-left in Hebrew)
 # which matches our $chapter and $verse
-    my $last_startx;
+    my ($last_startx,$last_color);
     foreach my $map (@localMapInfo) {
         my @mapA = @{$map};
 
