@@ -9,7 +9,7 @@ etl: $(BUILDSTAMP_FILE)
 
 dataprep: build
 
-$(BUILDSTAMP_FILE): Dockerfile
+$(BUILDSTAMP_FILE): Dockerfile scrollscraper.cgi
 	docker build -t $(IMAGE) .
 	touch $@
 
