@@ -542,7 +542,7 @@ if ($doShading) {
     my $dbg;
     my ( $row2, $x2 );
 
-    my ( $row1, $x1 ) = startRowAndXPosition( $book, $startc, $startv );
+    my ( $row1, $x1 ) = startRowAndXPosition( $book, $startc, $startv , 0);
 
     $row1++;    # off-by-one use of 0-based vs 1-based
 
@@ -569,7 +569,7 @@ if ($doShading) {
         ( $row2, $x2 ) = startRowAndXPosition(
             $book,
             $followingChapterAfterThisReading,
-            $followingVerseAfterThisReading
+            $followingVerseAfterThisReading, 1
         );
     }
     else {
@@ -1176,7 +1176,7 @@ sub startRowAndXPosition {
 
     # returns (startRow,startX)
 
-    my ( $book, $chapter, $verse ) = @_;
+    my ( $book, $chapter, $verse, $moveRightOverWhitespace ) = @_;
     my $theGIF   = $chapterAndVerse2Info[$book][$chapter][$verse]{'firstGIF'};
     my $startRow = $chapterAndVerse2Info[$book][$chapter][$verse]
       {'lineNumberOnWhichThisVerseBegins'};
@@ -1192,13 +1192,21 @@ sub startRowAndXPosition {
 
 # Now traverse @localMapInfo and find the first map-element (from right-to-left in Hebrew)
 # which matches our $chapter and $verse
+    my $last_startx;
     foreach my $map (@localMapInfo) {
         my @mapA = @{$map};
 
         # [$startx,$endx,$color,$chapter,$verse]
         if ( $mapA[3] eq $chapter && $mapA[4] eq $verse ) {
-            return ( $startRow, $mapA[0] );
+	    # a correction to avoid shading too little text on a "BOT" shading GIF
+	    if ($moveRightOverWhitespace && defined($last_startx) && $last_color eq 'NONE') {
+                return ( $startRow, $last_startx );
+	    } else {
+                return ( $startRow, $mapA[0] );
+	    }
         }
+	$last_startx = $mapA[0];
+	$last_color = $mapA[2];
     }
 
     # error case should never occur
