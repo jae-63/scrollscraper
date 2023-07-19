@@ -31,7 +31,7 @@ intermediate_outputs/color_analysis.csv: intermediate_outputs/gif_names.txt
 	@echo This command could take 30 minutes or so to run.  Be patient.
 	perl utilities/gifETL2.pl <$< >$@
 
-intermediate_outputs/augmented_color_analysis_with_verses.csv: final_outputs/gif_info.csv intermediate_outputs/color_analysis.csv
+intermediate_outputs/augmented_color_analysis_with_verses.csv: intermediate_outputs/color_analysis.csv final_outputs/gif_info.csv
 	grep -v BOOK,CHAPTER <$< | perl utilities/gifETL3.pl >$@
 
 final_outputs/map.csv: intermediate_outputs/augmented_color_analysis_with_verses.csv utilities/handCuration.sed
