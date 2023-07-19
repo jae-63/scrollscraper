@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>scrollscraper FAQ</title>
+  <meta content="Jonathan Epstein" name="author">
+</head>
+<body>
+<h2>scroll-scraper Technical FAQ for software engineers and others with technical interests</h2>
+<br>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+	      </span>I hate that ScrollScraper was down so long!   Please explain the bible.ort.org image naming convention, in case you get a hit by a bus or something. :-)<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+In the original version of Scrollscraper, the software traversed the bible.ort.org website and figured out which verses it needed to include on-the-fly.    It wasn't too important to precisely understand the ORT convention for naming the underlying GIF images which contain the Torah readings.     Each of these GIF files contains three lines of Hebrew text.
+<br><br>
+In light of the demise of bible.ort.org in late 2022, it became much more important to understand the ORT convention.    What follows is a reverse-engineered interpretation of the filenames, which I believe to be correct:
+
+<b><tt>ccvvqxyz.gif</tt></b> where:
+<ul>
+	<li><b><tt>cc</tt></b> = the chapter</li>
+	<li><b><tt>vv</tt></b> = the verse.   But specifically, it's the LAST verse for which some content is included within this GIF file</li>
+	<li><b><tt>q</tt></b> = one of 'C', 'F', or 'D'.    A 'C' file continues the text of the 'ccvv' verse mentioned above, in the following file.   An 'F' file ends cleanly and does not continue.   The rare 'D' files are in the middle of a long verse which began in a previous image and ends in a later image.</li>
+	<li><b><tt>x</tt></b> = how many verses start on the first of the three lines in this GIF?</li>
+	<li><b><tt>y</tt></b> = how many verses start on the second of the three lines in this GIF?</li>
+	<li><b><tt>z</tt></b> = how many verses start on the third of the three lines in this GIF?</li>
+</ul>
+Examples:
+<ul>
+	<li> <a href=webmedia/t1/1721F010.gif>t1/1721F010.gif</a> - Genesis 17.    Verse 21 is entirely contained within this file, but it begins with a section of verse 20.    Verse 21 begins somewhere on this second line (of the three lines) of this image.</li>
+	<li><a href=webmedia/t2/0203C201.gif>t2/0203C201.gif</a> - Exodus 2.     Verse 3 is the last verse which starts in this file.    Verse 1&2 begin in this file, both on the first of the three lines.    Verse 3 begins on the final of the three lines.</li>
+</ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<br>
+<br>
+<br>
+Contact: Jonathan Epstein (<a
+ href="mailto:jonathanepstein9@gmail.com">jonathanepstein9@gmail.com</a>).&nbsp;&nbsp;
+Comments, requests and bug reports welcome.<br>
+Last modified 19 July 2023<br>
+</body>
+</html>
