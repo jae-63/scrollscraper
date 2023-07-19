@@ -100,20 +100,24 @@ RUN pip install gdown
 WORKDIR /var/opt
 RUN mkdir scrollscraper
 RUN mkdir scrollscraper/data
+RUN mkdir scrollscraper/intermediate_outputs
+RUN mkdir scrollscraper/final_outputs
 RUN mkdir scrollscraper/fonts
 RUN mkdir scrollscraper/ScrollScraperalphaPNGs
 RUN mkdir scrollscraper/webmedia
 ADD data/webmedia.tgz /var/opt/scrollscraper/webmedia
 COPY data/entire_torah.json /var/opt/scrollscraper/data
 COPY ScrollScraperalphaPNGs/* /var/opt/scrollscraper/ScrollScraperalphaPNGs
+COPY intermediate_outputs/* /var/opt/scrollscraper/intermediate_outputs
+COPY final_outputs/* /var/opt/scrollscraper/final_outputs
 COPY fonts/* /var/opt/scrollscraper/fonts
 COPY utilities/gifETL.pl /var/opt/scrollscraper/utilities/
 COPY utilities/gifETL2.pl /var/opt/scrollscraper/utilities/
 COPY utilities/gifETL3.pl /var/opt/scrollscraper/utilities/
-COPY utilities/gif_names_from_cache_old.txt /var/opt/scrollscraper/utilities/
 COPY utilities/handCuration.sed /var/opt/scrollscraper/utilities/
 COPY utilities/fetchMP3s.sh /var/opt/scrollscraper/utilities/
 ADD *.cgi /var/opt/scrollscraper
+ADD Makefile /var/opt/scrollscraper
 ADD *.pm /var/opt/scrollscraper
 ADD *.html /var/opt/scrollscraper
 ADD *.txt /var/opt/scrollscraper
