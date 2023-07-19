@@ -36,3 +36,9 @@ intermediate_outputs/augmented_color_analysis_with_verses.csv: intermediate_outp
 
 final_outputs/map.csv: intermediate_outputs/augmented_color_analysis_with_verses.csv utilities/handCuration.sed
 	sed -f utilities/handCuration.sed <$< >$@
+
+clean-scrollscraper-data:
+	rm -f intermediate_outputs/* final_outputs/*
+
+test-scrollscraper.html: final_outputs/map.csv final_outputs/gif_info.csv
+	perl scrollscraper.cgi "book=5&audioRepeatCount=1&coloring=0&doShading=on&startc=32&startv=35&endc=32&endv=45&dontUseCache=1&trueTypeFonts=1" >$@
