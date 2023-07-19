@@ -727,8 +727,6 @@ if ($trueTypeFonts) {
         $strippedGIFname =~ s/\//-/;
         $strippedGIFname =~ s/\.gif//;
 
- # TODO: when using trueTypeFonts then iterate through %mapInfo and retrieve all
- # the chapter+verse pairs as Hebrew text
         for ( my $row = 0 ; $row < 3 ; $row++ ) {
             my @localMapInfo = @{ $mapInfo{$_}{$row} };
 
