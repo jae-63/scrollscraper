@@ -24,7 +24,7 @@ intermediate_outputs/gif_names.txt:
 	find webmedia/ -name \*.gif | sort | sed "s/^/\//" >$@
 
 final_outputs/gif_info.csv: intermediate_outputs/gif_names.txt
-	@echo This command could take 10 minutes or so to run.  Be patient.
+	@echo This command could take 5 minutes or so to run.  Be patient.
 	perl utilities/gifETL.pl <$< >$@
 
 intermediate_outputs/color_analysis.csv: intermediate_outputs/gif_names.txt
