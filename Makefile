@@ -44,4 +44,4 @@ test-scrollscraper.html: final_outputs/map.csv final_outputs/gif_info.csv
 	perl scrollscraper.cgi "book=5&audioRepeatCount=1&coloring=0&doShading=on&startc=32&startv=35&endc=32&endv=45&dontUseCache=1&trueTypeFonts=1" >$@
 
 sampleTorahMap.png: utilities/generateSampleTorahMap.pl final_outputs/map.csv
-	grep t2/1513C102.gif final_outputs/map.csv |  perl utilities/generateSampleTorahMap.pl >$@
+	grep t2/1601C101.gif final_outputs/map.csv |  perl utilities/generateSampleTorahMap.pl >$@

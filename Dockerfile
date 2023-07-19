@@ -116,6 +116,7 @@ COPY utilities/gifETL2.pl /var/opt/scrollscraper/utilities/
 COPY utilities/gifETL3.pl /var/opt/scrollscraper/utilities/
 COPY utilities/handCuration.sed /var/opt/scrollscraper/utilities/
 COPY utilities/fetchMP3s.sh /var/opt/scrollscraper/utilities/
+COPY utilities/generateSampleTorahMap.pl /var/opt/scrollscraper/utilities/
 ADD *.cgi /var/opt/scrollscraper
 ADD Makefile /var/opt/scrollscraper
 ADD *.pm /var/opt/scrollscraper
@@ -123,8 +124,9 @@ ADD *.html /var/opt/scrollscraper
 ADD *.txt /var/opt/scrollscraper
 ADD *.gif /var/opt/scrollscraper
 ADD *.GIF /var/opt/scrollscraper
-RUN touch /var/opt/scrollscraper/final_outputs/gif_info.csv;
-RUN touch /var/opt/scrollscraper/intermediate_outputs/augmented_color_analysis_with_verses.csv;
-RUN touch /var/opt/scrollscraper/intermediate_outputs/augmented_color_analysis_with_verses.csv;
+RUN touch /var/opt/scrollscraper/intermediate_outputs/gif_names.txt
+RUN touch /var/opt/scrollscraper/intermediate_outputs/color_analysis.csv
+RUN touch /var/opt/scrollscraper/final_outputs/gif_info.csv
+RUN touch /var/opt/scrollscraper/intermediate_outputs/augmented_color_analysis_with_verses.csv
 RUN touch /var/opt/scrollscraper/final_outputs/map.csv
 ENV IS_DOCKER=1
