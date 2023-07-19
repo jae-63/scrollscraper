@@ -27,5 +27,8 @@ final_outputs/gif_info.csv: intermediate_outputs/gif_names.txt
 	@echo This command could take 10 minutes or so to run.  Be patient.
 	perl utilities/gifETL.pl <$< >$@
 
+intermediate_outputs/color_analysis.csv: intermediate_outputs/gif_names.txt
+	perl utilities/gifETL2.pl <$< >$@
+
 intermediate_outputs/augmented_color_analysis_with_verses.csv: final_outputs/gif_info.csv intermediate_outputs/color_analysis.csv
 	perl utilities/gifETL3.pl <$< >$@
