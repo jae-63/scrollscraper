@@ -4,7 +4,7 @@ use List::Util qw(min max);
 use GD;
 use LWP::Simple;
 
-GIF_INFO_CSV="final_outputs/gif_info.csv";
+my $GIF_INFO_CSV="final_outputs/gif_info.csv";
 
 my $gifWidth     = 445;
 my $gifRowHeight = 30;
