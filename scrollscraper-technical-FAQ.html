@@ -3,7 +3,7 @@
 <head>
   <meta content="text/html; charset=ISO-8859-1"
  http-equiv="content-type">
-  <title>scrollscraper FAQ</title>
+  <title>scrollscraper Technical FAQ</title>
   <meta content="Jonathan Epstein" name="author">
 </head>
 <body>
@@ -57,21 +57,25 @@ Examples:
 	      those GIF images to figure out which sections were dark-blue and which were light-blue, and thereby
 	      estimate which sections to hide by shading at the beginning and end of a reading.<p>
 
-	      Following the demise of bible.ort.org in 2022, in order to bring it online, ScrollScraper had to
-	      be modified to operate much differently.   All of the ORT GIF images are on the ScrollScraper website,
+	      Following the demise of bible.ort.org in 2022, in order to bring it back online, ScrollScraper had to
+	      be modified to operate very differently.   All of the ORT GIF images are now on the ScrollScraper website,
 	      and it makes sense to treat this set of Torah images as a unified whole rather than just examining
 	      a small set of images for each ScrollScraper user.   Given the amount of effort to effectively address
-	      the above-mentioned Shading problem in this new environment, it made sense to create a dataset and
+	      the above-mentioned <b>shading</b> problem in this new environment, it made sense to create a dataset and
 	      data structures which could address not only the Shading problem, but also to take advantage of this
 	      global knowledge to create the most-requested ScrollScraper feature: TrueType fonts on the right side
-	      of the page.   The bible.ort.org images are great and must have taken a tremendous amount of work to
+	      of the page.<p>
+
+	      The <code>bible.ort.org</code> images are great and must have taken a tremendous amount of work to
 	      create, but unfortunately each vertical line is only 30 pixels high and each line is 445 pixels wide.
 	      So they're quite granular when you zoom-in or print at high resolution.
 
 	      So now there's a global map for the entire Torah, which knows the start-and-stop coordinates of each
-	      Torah verse, and also knows about white space between verses.   Given that information and the
+	      Torah verse, and also knows about white space between verses, and even within a verse.   Given that information and the
 	      lengths of those segments, and which segments belong to which verse, it's not difficult to interpolate
-	      how to divide the (TrueType) Hebrew text of each verse among those segments.<p>
+	      how to partition the (TrueType) Hebrew text of each verse among those segments.  Then if you place
+	      those Hebrew fragments in the same position as their corresponding GIF fragment, you've solved
+	      the TrueType problem.<p>
 
 	      For example, consider one image's worth of data (there are 6938 such images), from Exodus:<p>
 	      <code>
@@ -80,8 +84,8 @@ Examples:
 		      t2/1601C101.gif,1,0,444,dark,15,27<br>
 		      t2/1601C101.gif,2,0,80,dark,15,27,81,105,NONE,0,0,106,444,light,16,1<br>
 	      </code>
-	      That's not very human-readable, but let's examine the last line of that output in another format:
-	      <table>
+	      That's not very human-readable, but let's examine the last line of that output in another format:<p>
+	      <table border="3">
 		      <th><td>Start-x</td><td>End-x</td><td>Color</td><td>Chapter</td><td>Verse</td></th>
 		      <tr><td>0</td><td>80</td><td>dark</td><td>15</td><td>27</td></tr>
 		      <tr><td>81</td><td>015</td><td>NONE</td><td></td><td></td></tr>
