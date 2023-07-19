@@ -32,7 +32,7 @@ intermediate_outputs/color_analysis.csv: intermediate_outputs/gif_names.txt
 	perl utilities/gifETL2.pl <$< >$@
 
 intermediate_outputs/augmented_color_analysis_with_verses.csv: final_outputs/gif_info.csv intermediate_outputs/color_analysis.csv
-	perl utilities/gifETL3.pl <$< >$@
+	grep -v BOOK,CHAPTER <$< | perl utilities/gifETL3.pl >$@
 
 final_outputs/map.csv: intermediate_outputs/augmented_color_analysis_with_verses.csv utilities/handCuration.sed
 	sed -f utilities/handCuration.sed <$< >$@
