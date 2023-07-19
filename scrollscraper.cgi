@@ -1200,7 +1200,7 @@ sub startRowAndXPosition {
         if ( $mapA[3] eq $chapter && $mapA[4] eq $verse ) {
 	    # a correction to avoid shading too little text on a "BOT" shading GIF
 	    if ($moveRightOverWhitespace && defined($last_startx) && $last_color eq 'NONE') {
-                return ( $startRow, $last_startx );
+                return ( $startRow, int(($last_startx+$mapA[0])/2) );
 	    } else {
                 return ( $startRow, $mapA[0] );
 	    }
