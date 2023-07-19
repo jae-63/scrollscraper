@@ -57,6 +57,25 @@ Examples:
     </tr>
   </tbody>
 </table>
+<table style="width: 100%; text-align: left;" border="0" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
+	      </span>How can I fiddle with ScrollScraper on my own computer, and make code changes and technical suggestions?</span>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
+	      ScrollScraper is now a Dockerized application, so all you need is a Docker environment installed on your computer such as
+	      <a href="https://www.docker.com/products/docker-desktop/">Docker for Desktop</a>.    Once you've installed Docker and downloaded or git-pulled the <a href="https://github.com/jae-63/scrollscraper/">ScrollScraper source code repo</a> you can run "make docker-buildstamp" to build the ScrollScraper Docker image.   Then you can "docker run" that image and "docker exec" inside of the resulting Docker container, to start experimenting.
+	      <p>
+	      Once you've exec'd into the container, you can run:
+	      <code>cd /var/opt/scrollscraper; make test-scrollscraper.html</code>.
+      </td>
+    </tr>
+  </tbody>
+</table>
 <br>
 <br>
 <br>
