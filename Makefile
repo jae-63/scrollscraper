@@ -9,7 +9,7 @@ etl: $(BUILDSTAMP_FILE)
 
 dataprep: build
 
-$(BUILDSTAMP_FILE):
+$(BUILDSTAMP_FILE): Dockerfile
 	docker build -t $(IMAGE) .
 	touch $@
 
