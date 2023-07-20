@@ -36,7 +36,7 @@ my $MAP_CSV = "final_outputs/map.csv";
 # $outputVersion should be incremented each time the format is changed in
 # a manner which affects previously cached output files
 #
-my $outputVersion = 9;
+my $outputVersion = 10;
 #
 # Provide a debug mode where outputted cached files (executed in that DEBUG mode) don't
 # impact the Production views, on the live ScrollScraper server
