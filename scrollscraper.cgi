@@ -707,8 +707,15 @@ if ($trueTypeFonts) {
             push @verseRegionLengths, @{$region}[1];
         }
         my $hebrewText = hebrew($formattedVerseName);
+
+	# now that we've calculated the lengths of all the segments associated
+	# with the verse, we can partition the Hebrew verse into pieces.
         my @hebrewRegions =
           partitionHebrewVerse( $hebrewText, $fontFile, @verseRegionLengths );
+
+	#  Below, $fullDivName uniquely defines the name of one of our HTML
+	#  Div's.    And we use the same cross-reference name to store the
+	#  corresponding Hebrew segment, since that will make it easy to find.
         foreach
           my $region ( @{ @{ verses2rowRegions { $formattedVerseName } } } )
         {
@@ -721,6 +728,9 @@ if ($trueTypeFonts) {
 
     my $dbg;
 
+    # Now we'll print CSS Div definitions into the HTML Head, while also
+    # building-up the actual HTML Divs for the Body, which contain Hebrew
+    # text and reference the corresponding Div definition.
     foreach (@rightOutputs) {
         s/\/webmedia\///;
         my $strippedGIFname = $_;
@@ -886,6 +896,10 @@ unless ($cacheOpenFailed) {
     close CACHEIN;
 }
 
+
+
+
+
 sub calcPortion {
     my ( $book, $chapter, $verse ) = @_;
     my $fmted = sprintf( "%d.%03d", $chapter, $verse );
@@ -979,19 +993,6 @@ sub rangeToFileName {
     return "$dir/$file";
 }
 
-sub verseAppearsInURL {
-    my ( $content, $chapter, $verse ) = @_;
-
-    my $p = HTML::TokeParser->new( \$content );
-
-    while ( my $token = $p->get_token() ) {
-        if ( $token->[0] eq "T" && $token->[1] =~ /\d+:\d+/ ) {
-            return 1 if $token->[1] eq "$chapter:$verse";
-        }
-    }
-
-    return 0;
-}
 
 sub CachedCopyIsValid {
     my ( $cacheFileName, $outputVersion ) = @_;
