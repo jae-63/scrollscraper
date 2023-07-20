@@ -4,10 +4,11 @@ IMAGE = scrollscraper
 .PHONY: all
 all: $(BUILDSTAMP_FILE)
 
-etl: $(BUILDSTAMP_FILE)
-	docker run -t $(IMAGE) -e "perl utilities/runETL.pl"
+test: $(BUILDSTAMP_FILE)
+	docker run -t $(IMAGE) -e "cd scrollscraper; make test-scrollscraper.html"
 
-dataprep: build
+clean-dataprep: $(BUILDSTAMP_FILE)
+	docker run -t $(IMAGE) -e "cd scrollscraper; make clean-scrollscraper-data; make test-scrollscraper.html"
 
 $(BUILDSTAMP_FILE): Dockerfile scrollscraper.cgi
 	docker build -t $(IMAGE) .
