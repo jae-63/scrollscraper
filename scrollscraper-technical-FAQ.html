@@ -63,7 +63,7 @@ Examples:
 	      a small set of images for each ScrollScraper user.   Given the amount of effort to effectively address
 	      the above-mentioned <b>shading</b> problem in this new environment, it made sense to create a dataset and
 	      data structures which could address not only the Shading problem, but also to take advantage of this
-	      global knowledge to create the most-requested ScrollScraper feature: TrueType fonts on the right side
+	      global knowledge to create the most-requested ScrollScraper feature: <b>TrueType fonts</b> on the right side
 	      of the page.<p>
 
 	      The <code>bible.ort.org</code> images are great and must have taken a tremendous amount of work to
@@ -83,14 +83,15 @@ Examples:
 		      t2/1601C101.gif,0,0,137,light,15,26,138,291,NONE,15,26,292,444,dark,15,27<br>
 		      t2/1601C101.gif,1,0,444,dark,15,27<br>
 		      t2/1601C101.gif,2,0,80,dark,15,27,81,105,NONE,0,0,106,444,light,16,1<br>
-	      </code>
+	      </code><p>
 	      That's not very human-readable, but let's examine the last line of that output in another format:<p>
 	      <table border="3">
-		      <th><td>Start-x</td><td>End-x</td><td>Color</td><td>Chapter</td><td>Verse</td></th>
+		      <tr><th>Start-x</th><th>End-x</th><th>Color</th><th>Chapter</th><th>Verse</th></tr>
 		      <tr><td>0</td><td>80</td><td>dark</td><td>15</td><td>27</td></tr>
 		      <tr><td>81</td><td>015</td><td>NONE</td><td></td><td></td></tr>
 		      <tr><td>106</td><td>444</td><td>light</td><td>16</td><td>1</td></tr>
-	      </table>
+	      </table><br><p>
+	      We can view this more legibly in a diagram, adjacent to the original ORT gif, as:<br><br>
 	      <table><tr>
 			      <td><img src="webmedia/t2/1601C101.gif"></td><td><img src="otherComputedPNGs/sampleTorahMap.png"></td>
 	      </tr></table>
