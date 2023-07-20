@@ -637,6 +637,9 @@ if ($trueTypeFonts) {
         $shade = "dark";
     }
     print $cacheOutRef "}\n";
+    print $cacheOutRef "table {\n";
+    print $cacheOutRef "  border-spacing: 30px;\n";
+    print $cacheOutRef "}\n";
     print $cacheOutRef "span.dummy {\n";
     print $cacheOutRef "background-color:red\;\n";
     print $cacheOutRef "width:100\%\;\n";
