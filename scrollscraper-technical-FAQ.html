@@ -52,7 +52,7 @@ Examples:
     </tr>
     <tr>
       <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
-	      Through 2022, ScrollScraper worked by retrieving successful screenfuls from the bible.ort.org
+	      From its inception c. 2005 through 2022, ScrollScraper worked by retrieving successive pages from the bible.ort.org
 	      website, and then assembling a Torah reading from the associated GIFs.   It also optionally examined
 	      those GIF images to figure out which sections were dark-blue and which were light-blue, and thereby
 	      estimate which sections to hide by shading at the beginning and end of a reading.<p>
@@ -62,7 +62,7 @@ Examples:
 	      and it makes sense to treat this set of Torah images as a unified whole rather than just examining
 	      a small set of images for each ScrollScraper user.   Given the amount of effort to effectively address
 	      the above-mentioned <b>shading</b> problem in this new environment, it made sense to create a dataset and
-	      data structures which could address not only the Shading problem, but also to take advantage of this
+	      data structures which could address not only the shading problem, but also to take advantage of this
 	      global knowledge to create the most-requested ScrollScraper feature: <b>TrueType fonts</b> on the right side
 	      of the page.<p>
 
@@ -87,14 +87,20 @@ Examples:
 		      t2/1601C101.gif,1,0,444,dark,15,27<br>
 		      t2/1601C101.gif,2,0,80,dark,15,27,81,105,NONE,0,0,106,444,light,16,1<br>
 	      </code><p>
-	      That's not very human-readable, but let's examine the last line of that output in another format:<p>
+	      That's not very human-readable, but let's examine that in a tabular format:<p>
 	      <table border="3">
 		      <tr><th>Start-x</th><th>End-x</th><th>Color</th><th>Chapter</th><th>Verse</th></tr>
+		      <tr><td>0</td><td>137</td><td>dark</td><td>15</td><td>26</td></tr>
+		      <tr><td>138</td><td>291</td><td>NONE</td><td></td><td></td></tr>
+		      <tr><td>292</td><td>444</td><td>dark</td><td>15</td><td>27</td></tr>
+		      <tr><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr>
+		      <tr><td>0</td><td>444</td><td>dark</td><td>15</td><td>27</td></tr>
+		      <tr><td><hr></td><td><hr></td><td><hr></td><td><hr></td><td><hr></td></tr>
 		      <tr><td>0</td><td>80</td><td>dark</td><td>15</td><td>27</td></tr>
 		      <tr><td>81</td><td>105</td><td>NONE</td><td></td><td></td></tr>
 		      <tr><td>106</td><td>444</td><td>light</td><td>16</td><td>1</td></tr>
 	      </table><br><p>
-	      We can view this more legibly as a graphic, adjacent to the original ORT gif, as:<br><br>
+	      We can also view that as a graphic, adjacent to the original ORT gif, as:<br><br>
 	      <table><tr>
 			      <td><img src="webmedia/t2/1601C101.gif"></td><td><img src="otherComputedPNGs/sampleTorahMap.png"></td>
 		      </tr></table><p><br>
@@ -143,7 +149,7 @@ Examples:
     <tr>
       <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
 	      ScrollScraper is now a Dockerized application, so all you need is a Docker environment installed on your computer such as
-	      <a href="https://www.docker.com/products/docker-desktop/">Docker for Desktop</a>.    Once you've installed Docker and downloaded or git-pulled the <a href="https://github.com/jae-63/scrollscraper/">ScrollScraper source code repo</a> you can run "make docker-buildstamp" to build the ScrollScraper Docker image.   Then you can "docker run" that image and "docker exec" inside of the resulting Docker container, to start experimenting.
+	      <a href="https://www.docker.com/products/docker-desktop/">Docker for Desktop</a>.    Once you've installed Docker and downloaded or git-pulled the <a href="https://github.com/jae-63/scrollscraper/">ScrollScraper source code repo</a> you can run <code>docker build -t scrollscraper .</code> to build the ScrollScraper Docker image.   Then you can <code>docker run</code> that image and <code>docker exec</code> inside of the resulting Docker container, to start experimenting.
 	      <p>
 	      Once you've exec'd into the container, you can run:
 	      <code>cd /var/opt/scrollscraper; make test-scrollscraper.html</code>
