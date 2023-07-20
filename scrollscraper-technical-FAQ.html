@@ -14,7 +14,7 @@
   <tbody>
     <tr>
       <td style="vertical-align: top;"><span style="font-weight: bold;">Q:
-	      </span>I hate that ScrollScraper was down so long!   Please explain the bible.ort.org image naming convention, in case you get a hit by a bus or something. :-)<br>
+	      </span>I hate that ScrollScraper was down so long!   Please explain the <code>bible.ort.org</code> image naming convention, in case you get a hit by a bus or something. :-)<br>
       </td>
     </tr>
     <tr>
@@ -52,12 +52,12 @@ Examples:
     </tr>
     <tr>
       <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
-	      From its inception c. 2005 through 2022, ScrollScraper worked by retrieving successive pages from the bible.ort.org
+	      From its inception c. 2005 through 2022, ScrollScraper worked by retrieving successive pages from the <code>bible.ort.org</code>
 	      website, and then assembling a Torah reading from the associated GIFs.   It also optionally examined
 	      those GIF images to figure out which sections were dark-blue and which were light-blue, and thereby
 	      estimate which sections to hide by shading at the beginning and end of a reading.<p>
 
-	      Following the demise of bible.ort.org in 2022, in order to bring it back online, ScrollScraper had to
+	      Following the demise of <code>bible.ort.org</code> in 2022, in order to bring ScrollScraper back online, its software had to
 	      be modified to operate very differently.   All of the ORT GIF images are now on the ScrollScraper website,
 	      and it makes sense to treat this set of Torah images as a unified whole rather than just examining
 	      a small set of images for each ScrollScraper user.   Given the amount of effort to effectively address
@@ -149,7 +149,7 @@ Examples:
     <tr>
       <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
 	      ScrollScraper is now a Dockerized application, so all you need is a Docker environment installed on your computer such as
-	      <a href="https://www.docker.com/products/docker-desktop/">Docker for Desktop</a>.    Once you've installed Docker and downloaded or git-pulled the <a href="https://github.com/jae-63/scrollscraper/">ScrollScraper source code repo</a> you can run <code>docker build -t scrollscraper .</code> to build the ScrollScraper Docker image.   Then you can <code>docker run</code> that image and <code>docker exec</code> inside of the resulting Docker container, to start experimenting.
+	      <a href="https://www.docker.com/products/docker-desktop/">Docker for Desktop</a>.    Once you've installed Docker and downloaded or git-pulled the <a href="https://github.com/jae-63/scrollscraper/">ScrollScraper source code repo</a> you can run <code>docker build -t scrollscraper .</code> to build the ScrollScraper Docker image (the first build will take about half an hour.  Subsequently re-builds will be much faster).   Then you can <code>docker run</code> that image and <code>docker exec</code> inside of the resulting Docker container, to start experimenting.
 	      <p>
 	      Once you've exec'd into the container, you can run:
 	      <code>cd /var/opt/scrollscraper; make test-scrollscraper.html</code>
