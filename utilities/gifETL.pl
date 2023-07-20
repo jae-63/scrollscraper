@@ -328,7 +328,7 @@ while (<>) {
 	chomp;
 	my $path = $_;
 	$path =~ s/^.*webmedia\///;
-	if (/t(\d)\/(\d\d)(\d\d)([FC])(\d\d\d).gif/) {
+	if (/t(\d)\/(\d\d)(\d\d)([FDC])(\d\d\d).gif/) {
 		# $gifVerse is the LAST verse which includes content within this GIF
 		# Apparently 'F' signifies the end of a paragraph, corresponding roughly to a petukha.   Alternatively,
 		# think of 'F' as a clean-finish, while 'C' means the verse continues into the next GIF
@@ -343,7 +343,7 @@ while (<>) {
 
 		$last_image_was_F = ($C_or_D_or_F eq 'F');
 
-		while ($goBackCount-- > 0) {
+		while ($goBackCount-- > 0 && $C_or_D_or_F ne 'D') {
 		    my $isFirstImageForThisVerse = ($goBackCount <= 0);
 		    my $lineNumberOnWhichThisVerseBegins;
 		    my $indexOfVerseStartPositionOnThatLine;

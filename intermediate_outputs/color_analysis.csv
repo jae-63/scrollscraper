@@ -3316,6 +3316,9 @@ t2/1523F110.gif,2,4,433,dark
 t2/1526C201.gif,0,5,331,light,342,434,dark
 t2/1526C201.gif,1,13,428,dark
 t2/1526C201.gif,2,6,359,dark,389,437,light
+t2/1526D000.gif,0,7,436,light
+t2/1526D000.gif,1,7,434,light
+t2/1526D000.gif,2,7,434,light
 t2/1601C101.gif,0,7,137,light,149,277,NONE,292,434,dark
 t2/1601C101.gif,1,11,434,dark
 t2/1601C101.gif,2,6,80,dark,106,436,light
@@ -3376,6 +3379,9 @@ t2/1629C010.gif,2,5,433,light
 t2/1632C111.gif,0,4,293,light,319,433,dark
 t2/1632C111.gif,1,6,110,dark,135,427,light
 t2/1632C111.gif,2,12,368,light,388,433,dark
+t2/1632D000.gif,0,6,427,dark
+t2/1632D000.gif,1,6,434,dark
+t2/1632D000.gif,2,6,434,dark
 t2/1634C101.gif,0,6,62,dark,90,434,light
 t2/1634C101.gif,1,12,434,light
 t2/1634C101.gif,2,5,180,light,196,434,dark
@@ -5149,6 +5155,9 @@ t3/1004C010.gif,2,6,435,light
 t3/1006C011.gif,0,13,435,light
 t3/1006C011.gif,1,6,224,light,237,434,dark
 t3/1006C011.gif,2,6,319,dark,330,435,light
+t3/1006D000.gif,0,6,435,light
+t3/1006D000.gif,1,6,435,light
+t3/1006D000.gif,2,6,434,light
 t3/1007F100.gif,0,6,237,light,263,434,dark
 t3/1007F100.gif,1,5,434,dark
 t3/1007F100.gif,2,5,163,dark,168,443,NONE
@@ -6877,6 +6886,9 @@ t4/0817C001.gif,2,7,77,dark,96,436,light
 t4/0819C011.gif,0,13,436,light
 t4/0819C011.gif,1,7,151,light,162,436,dark
 t4/0819C011.gif,2,7,124,dark,136,430,light
+t4/0819D000.gif,0,10,433,light
+t4/0819D000.gif,1,10,433,light
+t4/0819D000.gif,2,4,433,light
 t4/0821C101.gif,0,5,59,light,81,435,dark
 t4/0821C101.gif,1,4,433,dark
 t4/0821C101.gif,2,5,209,dark,231,434,light
@@ -9217,6 +9229,9 @@ t5/1217C011.gif,2,5,328,dark,355,435,light
 t5/1218C001.gif,0,5,434,light
 t5/1218C001.gif,1,13,434,light
 t5/1218C001.gif,2,13,197,light,213,434,dark
+t5/1218D000.gif,0,6,434,dark
+t5/1218D000.gif,1,6,434,dark
+t5/1218D000.gif,2,6,434,dark
 t5/1220C110.gif,0,6,37,dark,51,434,light
 t5/1220C110.gif,1,7,73,light,79,239,NONE,240,434,dark
 t5/1220C110.gif,2,6,434,dark
@@ -9298,6 +9313,9 @@ t5/1404C011.gif,2,5,97,light,113,433,dark
 t5/1407C111.gif,0,5,157,dark,173,433,light
 t5/1407C111.gif,1,11,89,light,110,434,dark
 t5/1407C111.gif,2,10,396,dark,409,433,light
+t5/1407D000.gif,0,5,433,light
+t5/1407D000.gif,1,6,433,light
+t5/1407D000.gif,2,5,433,light
 t5/1409C101.gif,0,5,40,light,61,434,dark
 t5/1409C101.gif,1,6,433,dark
 t5/1409C101.gif,2,6,73,dark,84,310,NONE,311,433,light
@@ -9832,6 +9850,9 @@ t5/2519F000.gif,2,0,443,NONE
 t5/2602C011.gif,0,0,443,NONE
 t5/2602C011.gif,1,12,428,light
 t5/2602C011.gif,2,5,264,light,278,424,dark
+t5/2602D000.gif,0,6,434,dark
+t5/2602D000.gif,1,12,434,dark
+t5/2602D000.gif,2,6,427,dark
 t5/2603F100.gif,0,5,31,dark,59,434,light
 t5/2603F100.gif,1,11,435,light
 t5/2603F100.gif,2,6,429,light
@@ -10027,6 +10048,9 @@ t5/2861C110.gif,2,5,433,dark
 t5/2863C101.gif,0,5,335,dark,358,434,light
 t5/2863C101.gif,1,5,433,light
 t5/2863C101.gif,2,4,374,light,391,433,dark
+t5/2863D000.gif,0,5,433,dark
+t5/2863D000.gif,1,5,433,dark
+t5/2863D000.gif,2,10,433,dark
 t5/2864F100.gif,0,5,202,dark,217,433,light
 t5/2864F100.gif,1,4,433,light
 t5/2864F100.gif,2,5,423,light
@@ -10156,6 +10180,9 @@ t5/3105C101.gif,2,5,435,light
 t5/3107C101.gif,0,6,163,light,185,435,dark
 t5/3107C101.gif,1,6,435,dark
 t5/3107C101.gif,2,6,180,dark,191,384,NONE,391,434,light
+t5/3107D000.gif,0,5,436,light
+t5/3107D000.gif,1,6,435,light
+t5/3107D000.gif,2,6,435,light
 t5/3109C101.gif,0,6,137,light,155,435,dark
 t5/3109C101.gif,1,13,434,dark
 t5/3109C101.gif,2,6,46,dark,60,435,light
