@@ -149,7 +149,7 @@ Examples:
     <tr>
       <td style="vertical-align: top;"><span style="font-weight: bold;">A:</span>
 	      ScrollScraper is now a Dockerized application, so all you need is a Docker environment installed on your computer such as
-	      <a href="https://www.docker.com/products/docker-desktop/">Docker for Desktop</a>.    Once you've installed Docker and downloaded or git-pulled the <a href="https://github.com/jae-63/scrollscraper/">ScrollScraper source code repo</a> you can run <code>docker build -t scrollscraper .</code> to build the ScrollScraper Docker image (the first build will take about half an hour.  Subsequently re-builds will be much faster).   Then you can <code>docker run</code> that image and <code>docker exec</code> inside of the resulting Docker container, to start experimenting.
+	      <a href="https://www.docker.com/products/docker-desktop/">Docker for Desktop</a>.    Once you've installed Docker and downloaded or git-pulled the <a href="https://github.com/jae-63/scrollscraper/">ScrollScraper source code repo</a> you can run <code>docker build -t scrollscraper .</code> to build the ScrollScraper Docker image (the first build will take about half an hour.  Subsequent re-builds will be much faster).   Then you can <code>docker run</code> that image and <code>docker exec</code> inside of the resulting Docker container, to start experimenting.
 	      <p>
 	      Once you've exec'd into the container, you can run:
 	      <code>cd /var/opt/scrollscraper; make test-scrollscraper.html</code>
