@@ -104,6 +104,7 @@ RUN mkdir scrollscraper/intermediate_outputs
 RUN mkdir scrollscraper/final_outputs
 RUN mkdir scrollscraper/fonts
 RUN mkdir scrollscraper/ScrollScraperalphaPNGs
+RUN mkdir scrollscraper/otherComputedPNGs
 RUN mkdir scrollscraper/webmedia
 ADD data/webmedia.tgz /var/opt/scrollscraper/webmedia
 COPY data/entire_torah.json /var/opt/scrollscraper/data
@@ -117,6 +118,7 @@ COPY utilities/gifETL3.pl /var/opt/scrollscraper/utilities/
 COPY utilities/handCuration.sed /var/opt/scrollscraper/utilities/
 COPY utilities/fetchMP3s.sh /var/opt/scrollscraper/utilities/
 COPY utilities/generateSampleTorahMap.pl /var/opt/scrollscraper/utilities/
+COPY otherComputedPNGs/sampleTorahMap.png /var/opt/scrollscraper/otherComputedPNGs/
 ADD *.cgi /var/opt/scrollscraper
 ADD Makefile /var/opt/scrollscraper
 ADD *.pm /var/opt/scrollscraper

@@ -158,6 +158,10 @@ else {
     $doShading = 1;        # more debugging code
 }
 
+# the caching filename calculation doesn't seem to work and we don't
+# need to reference the cache in the post-bible.ort.org era anyhow
+$useCache = 0;
+
 my $flags = $sbs | ( $translit << 1 ) | ( $showStartAndEndButtons << 2 ) |
   ( $doAudio << 3 ) | ( $doShading << 4 ) | ( $trueTypeFonts << 5 );
 
@@ -542,7 +546,7 @@ if ($doShading) {
     my $dbg;
     my ( $row2, $x2 );
 
-    my ( $row1, $x1 ) = startRowAndXPosition( $book, $startc, $startv , 0);
+    my ( $row1, $x1 ) = startRowAndXPosition( $book, $startc, $startv , 1);
 
     $row1++;    # off-by-one use of 0-based vs 1-based
 
@@ -1202,7 +1206,7 @@ sub startRowAndXPosition {
 
         # [$startx,$endx,$color,$chapter,$verse]
         if ( $mapA[3] eq $chapter && $mapA[4] eq $verse ) {
-	    # a correction to avoid shading too little text on a "BOT" shading GIF
+	    # a correction to avoid shading too little text on a shading GIF
 	    if ($moveRightOverWhitespace && defined($last_startx) && $last_color eq 'NONE') {
                 return ( $startRow, int(($last_startx+$mapA[0])/2) );
 	    } else {
