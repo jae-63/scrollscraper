@@ -5,7 +5,7 @@ IMAGE = scrollscraper
 all: $(BUILDSTAMP_FILE)
 
 test: $(BUILDSTAMP_FILE)
-	docker run -t $(IMAGE) -e "cd scrollscraper; make test-scrollscraper.html"
+	docker  run -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.html; cat test-scrollscraper.html"
 
 clean-dataprep: $(BUILDSTAMP_FILE)
 	docker run -t $(IMAGE) -e "cd scrollscraper; make clean-scrollscraper-data; make test-scrollscraper.html"
