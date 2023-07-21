@@ -614,7 +614,7 @@ print $cacheOutRef "<head>\n";
 print $cacheOutRef "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n";
 print $cacheOutRef "<title>" . join( " ", @title ) . "</title>\n";
 
-my $trueTypeBufferedOutput = "<span style=\"position: relative; top: 0px; max-width: 445px; display: block\">";
+my $trueTypeBufferedOutput = "<span style=\"position: relative; top: 0px; max-width: 445px; display: block\">\n";
 
 if ($trueTypeFonts) {
     print $cacheOutRef "<style type=\"text/css\">\n";
