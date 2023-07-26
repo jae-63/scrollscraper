@@ -217,6 +217,9 @@ chomp $thisDir;
 
 
 my $catList = "";
+
+print THESCRIPT "touch $tmpdir/input1.txt\n";
+
 # Historically these were RealAudio ("ra") files, so for backwards compatability let's retain the older parameter name
 foreach my $raFile (@raFiles) {
 	my $url = sprintf $mp3UrlFormat,$book,$raFile;
@@ -227,17 +230,31 @@ foreach my $raFile (@raFiles) {
             $catList .= "|";
         }
 	$catList .= "$tmpdir/$raFile.mp3";
+        print THESCRIPT "echo \"file '$raFile.mp3'\" >>$tmpdir/input1.txt\n";
 }
-print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:$catList\" reading.mp3)\n";
+#print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:$catList\" reading.mp3)\n";
+print THESCRIPT "(cd $tmpdir; $ffmpeg -f concat -i input1.txt -c copy reading.mp3)\n";
+
 my $catList2 = "";
+print THESCRIPT "touch $tmpdir/input2.txt\n";
+print THESCRIPT "echo \"file '$ttsFileName'\" >>$tmpdir/input2.txt\n";
+print THESCRIPT "echo \"file '$thisDir/$spacerShortMp3'\" >>$tmpdir/input2.txt\n";
+
 for (my $i = 0; $i < $audioRepeatCount; $i++) {
-	$catList2 .= "|$thisDir/$spacerLongMp3" unless ($i == 0);
+	unless ($i == 0) {
+	    $catList2 .= "|$thisDir/$spacerLongMp3";
+            print THESCRIPT "echo \"file '$thisDir/$spacerLongMp3'\" >>$tmpdir/input2.txt\n";
+	}
 	$catList2 .= "|$tmpdir/reading.mp3";
+        print THESCRIPT "echo \"file 'reading.mp3'\" >>$tmpdir/input2.txt\n";
 }
 
-print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:";
-print THESCRIPT "$ttsFileName|$thisDir/$spacerShortMp3";
-print THESCRIPT "$catList2\" aggregate.mp3)\n";
+print THESCRIPT "(cd $tmpdir; $ffmpeg -f concat -i input2.txt -c copy aggregate.mp3)\n";
+
+#print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:";
+#print THESCRIPT "$ttsFileName|$thisDir/$spacerShortMp3";
+#print THESCRIPT "$catList2\" aggregate.mp3)\n";
+
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated raw->wav'\n";
 # print THESCRIPT "$sox -r 44100 -c 2 -s -w $tmpdir/aggregate.raw $tmpdir/aggregate.wav >/dev/null\n";
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated wav->mp3'\n";
