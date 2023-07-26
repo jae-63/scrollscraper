@@ -16,6 +16,7 @@ my $qDir = "/home/ec2-user/scrollscraperWorkingDir";
 # my $festivalOptions = "-scale 3 -o";
 my $gttsCli = "/usr/local/bin/gtts-cli";
 my $ffmpeg = "/home/ec2-user/ffmpeg-3.4-64bit-static/ffmpeg";
+my $mp3wrap = "mp3wrap";
 # my $mplayer = "/home/jepstein/mplayerExperiments/MPlayer-1.0rc1/mplayer"; # use for RealAudio->Wav conversion
 my $mp3wrap = "/usr/local/bin/mp3wrap";
 # my $raUrlFormat = "http://bible.ort.org/webmedia/t%d/%s.ra";
@@ -24,6 +25,9 @@ my $mp3UrlFormat = "http://bible.ort.org/webmedia/t%d/%s.mp3";
 # my $spacerLongRaw = "/home/jepstein/mplayerExperiments/spacerlong.raw";
 my $spacerShortMp3 = "./spacershort.mp3";
 my $spacerLongMp3 = "./spacerlong.mp3";
+my $ortMp3BaseDir = "/srv/www/scrollscraper.adatshalom.net/public_html/ORT_MP3s.recoded";
+# The following is a mount point to use with Docker
+my $ortMp3BaseDir = "/ort_mp3s" if $ENV{"IS_DOCKER"};
 my $smilbase = "./smil/";
 my $mainURL = "http://scrollscraper.adatshalom.net";
 
@@ -208,24 +212,22 @@ my $catList = "";
 # Historically these were RealAudio ("ra") files, so for backwards compatability let's retain the older parameter name
 foreach my $raFile (@raFiles) {
 	my $url = sprintf $mp3UrlFormat,$book,$raFile;
-	print THESCRIPT "cp /srv/www/scrollscraper.adatshalom.net/public_html/ORT_MP3s.recoded/t$book/$raFile.mp3 $tmpdir/$raFile.mp3 2>/dev/null\n";
+	print THESCRIPT "cp $ortMp3BaseDir/t$book/$raFile.mp3 $tmpdir/$raFile.mp3 2>/dev/null\n";
 #	print THESCRIPT "wget $url -O $tmpdir/$raFile.mp3 2>/dev/null\n";
 # 	print THESCRIPT "$sox $tmpdir/$raFile.wav -r 44100 -c 2 -s -w $tmpdir/$raFile.raw >/dev/null\n";
         if ($catList) {
-            $catList .= "|";
+            $catList .= " ";
         }
 	$catList .= "$tmpdir/$raFile.mp3";
 }
-print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:$catList\" reading.mp3)\n";
+print THESCRIPT "(cd $tmpdir; $mp3wrap reading.mp3 $catList)\n";
 my $catList2 = "";
 for (my $i = 0; $i < $audioRepeatCount; $i++) {
-	$catList2 .= "|$thisDir/$spacerLongMp3" unless ($i == 0);
-	$catList2 .= "|$tmpdir/reading.mp3";
+	$catList2 .= " $thisDir/$spacerLongMp3" unless ($i == 0);
+	$catList2 .= " $tmpdir/reading.mp3";
 }
 
-print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:";
-print THESCRIPT "$ttsFileName|$thisDir/$spacerShortMp3";
-print THESCRIPT "$catList2\" aggregate.mp3)\n";
+print THESCRIPT "(cd $tmpdir; $mp3wrap aggregate.mp3 $ttsFileName $thisDir/$spacerShortMp3 $catList2)\n";
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated raw->wav'\n";
 # print THESCRIPT "$sox -r 44100 -c 2 -s -w $tmpdir/aggregate.raw $tmpdir/aggregate.wav >/dev/null\n";
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated wav->mp3'\n";

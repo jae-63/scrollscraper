@@ -22,7 +22,8 @@ RUN apt-get install --yes \
  libexpat-dev \
  tesseract-ocr \
  libtesseract-dev \
- tesseract-ocr-heb
+ tesseract-ocr-heb \
+ mp3wrap
 
 # Install perl modules
 RUN apt-get install -y cpanminus
