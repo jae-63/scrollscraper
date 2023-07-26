@@ -60,6 +60,16 @@ RUN cpanm GD \
  GD::Text \
  JSON::Parse
 
+RUN mkdir ffmpeg-source && \
+  cd ffmpeg-source && \
+  curl -k -o ffmpeg.tar.xz https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz && \
+  xz -d -v ffmpeg.tar.xz && \
+  tar xf ffmpeg.tar && \
+  cd ffmpeg-6.0/ && \
+  ./configure --disable-x86asm && \
+  make && \
+  cp ffmpeg /usr/local/bin
+
 
 # Copy-hacked from tomersha/docker-ubuntu-14.04-python-3.6.2
 # PyEnv
