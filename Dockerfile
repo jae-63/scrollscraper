@@ -126,6 +126,7 @@ ADD *.pm /var/opt/scrollscraper
 ADD *.html /var/opt/scrollscraper
 ADD *.txt /var/opt/scrollscraper
 ADD *.gif /var/opt/scrollscraper
+ADD *.mp3 /var/opt/scrollscraper
 ADD *.GIF /var/opt/scrollscraper
 RUN touch /var/opt/scrollscraper/intermediate_outputs/gif_names.txt
 RUN touch /var/opt/scrollscraper/intermediate_outputs/color_analysis.csv
