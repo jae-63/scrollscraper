@@ -14,6 +14,11 @@ $(BUILDSTAMP_FILE): Dockerfile scrollscraper.cgi
 	docker build -t $(IMAGE) .
 	touch $@
 
+download-mp3s: $(BUILDSTAMP_FILE)
+	mkdir -p local_ort_mp3s
+	run -v ./local_ort_mp3s:/ort_mp3s -w /var/opt/scrollscraper -i -t scrollscraper /bin/bash -x utilities/fetchMP3s.sh
+	touch $@
+
 clean:
 	docker image rm -f $(IMAGE)
 	rm -f $(BUILDSTAMP_FILE)
