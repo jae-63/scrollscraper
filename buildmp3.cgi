@@ -33,7 +33,8 @@ my $spacerLongMp3 = "./spacerlong.mp3";
 my $ortMp3BaseDir = "/srv/www/scrollscraper.adatshalom.net/public_html/ORT_MP3s.recoded";
 # The following is a mount point to use with Docker
 my $ortMp3BaseDir = "/ort_mp3s" if $ENV{"IS_DOCKER"};
-my $smilbase = "./smil/";
+my $smilBase = "./smil/";
+my $smilBase = "/state/smil/" if $ENV{"IS_DOCKER"};
 my $mainURL = "http://scrollscraper.adatshalom.net";
 
 my @englishBookNames = ("Genesis","Exodus","Leviticus","Numbers","Deuteronomy");
@@ -50,8 +51,8 @@ my @versesPerChapter = (
 );
 
 
-my $dayStampFile = "./smil/daystampAndLock.txt";
-my $ipDatabase = "./smil/ipdatabase";
+my $dayStampFile = "$smilBase/daystampAndLock.txt";
+my $ipDatabase = "$smilBase/ipdatabase";
 
 # parameters to be obtained via CGI; @raFiles should be split// from a text string
 my ($book,@raFiles,$audioRepeatCount,$startc,$startv,$endc,$endv,$flags,$httpStyle);
@@ -115,7 +116,7 @@ unless (@raFiles) {
 #        print STDERR "Audiolist: $audioList\n";
 }
 
-my $audioFileName = rangeToFileName($smilbase, $book,$startc,$startv,$endc,$endv,$flags,$audioRepeatCount) . "REC.mp3";
+my $audioFileName = rangeToFileName($smilBase, $book,$startc,$startv,$endc,$endv,$flags,$audioRepeatCount) . "REC.mp3";
 if ( -f $audioFileName && ! -z $audioFileName && -f "$audioFileName.COMPLETED") {
 	#
 	# update the actual MP3 file's timestamp to show this access attempt, but leave the
@@ -188,7 +189,7 @@ if ($startc != $endc) {
 	$tts .= "verses $startv through $endv.";
 }
 
-$tts .= "  The following recorded materials are copyright world-ORT, 1997, all rights reserved.";
+$tts .= "  The following recorded materials are copyright world-ORT, nineteen-ninety-seven, all rights reserved.";
 my $ttsFileName = "$tmpdir/synthesizedSpeech.mp3";
 
 # Sample gtts-cli usage:

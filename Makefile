@@ -5,16 +5,18 @@ IMAGE = scrollscraper
 all: $(BUILDSTAMP_FILE)
 
 test: $(BUILDSTAMP_FILE)
-	docker run -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.html; cat test-scrollscraper.html"
+	docker run -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.html; cat test-scrollscraper.html"
 
 test-mp3: download-mp3s $(BUILDSTAMP_FILE)
-	docker run -v `pwd`/local_ort_mp3s:/ort_mp3s -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.mp3"
+	docker run -v `pwd`/local_ort_mp3s:/ort_mp3s -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.mp3"
 
 clean-dataprep: $(BUILDSTAMP_FILE)
 	docker run -w /var/opt/scrollscraper -t $(IMAGE) /bin/bash -c "cd scrollscraper; make clean-scrollscraper-data; make test-scrollscraper.html"
 
 $(BUILDSTAMP_FILE): Dockerfile scrollscraper.cgi buildmp3.cgi Makefile
 	docker build -t $(IMAGE) .
+	mkdir -p state/smil
+	touch state/smil/daystampAndLock.txt
 	touch $@
 
 download-mp3s:

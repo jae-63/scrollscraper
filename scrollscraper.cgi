@@ -67,7 +67,8 @@ my $lame =
   "/home/jepstein/lame-3.97/frontend/lame"; # use "lame" for WAV->MP3 conversion
 
 my $cachebase = "./cache/";
-my $smilbase  = "./smil/";
+my $smilBase  = "./smil/";
+my $smilBase = "/state/smil/" if $ENV{"IS_DOCKER"};
 
 my $usage =
   "Usage: " . $0 . " book startchapter startverse endchapter endverse";
@@ -398,9 +399,9 @@ my $beginPortion   = calcPortion( $book, $startc, $startv );
 my $chaptersInBook = $versesPerChapter[ $book - 1 ] + 1;
 
 if ( $doAudio && $endc >= $startc ) {
-    system("mkdir -p $smilbase");
+    system("mkdir -p $smilBase");
     $smilFileName =
-      rangeToFileName( $smilbase, $book, $startc, $startv, $endc, $endv,
+      rangeToFileName( $smilBase, $book, $startc, $startv, $endc, $endv,
         $flags )
       . ".smil";
     open SMIL, ">$smilFileName"
@@ -426,11 +427,11 @@ if ( $doAudio && $endc >= $startc ) {
         $tts .=
 "  The following recorded materials are copyright world-ORT, 1997, all rights reserved.";
         my $wavFileName =
-          rangeToFileName( $smilbase, $book, $startc, $startv, $endc, $endv,
+          rangeToFileName( $smilBase, $book, $startc, $startv, $endc, $endv,
             $flags )
           . ".wav";
         my $audioFileName =
-          rangeToFileName( $smilbase, $book, $startc, $startv, $endc, $endv,
+          rangeToFileName( $smilBase, $book, $startc, $startv, $endc, $endv,
             $flags )
           . ".mp3";
 
