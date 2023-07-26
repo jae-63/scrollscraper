@@ -33,8 +33,8 @@ my $ortMp3BaseDir = "/srv/www/scrollscraper.adatshalom.net/public_html/ORT_MP3s.
 # The following is a mount point to use with Docker
 $ortMp3BaseDir = "/ort_mp3s" if $ENV{"IS_DOCKER"};
 
-my $spacerShortMp3 = "./spacershort.mp3";
-my $spacerLongMp3 = "./spacerlong.mp3";
+my $spacerShortMp3 = "spacershort.mp3";
+my $spacerLongMp3 = "spacerlong.mp3";
 my $smilBase = "./smil/";
 $smilBase = "/state/smil/" if $ENV{"IS_DOCKER"};
 my $mainURL = "http://scrollscraper.adatshalom.net";
@@ -167,7 +167,7 @@ EOF
 	exit 1;
 }
 
-my $tmpdir = "/tmp/$$.mp3.scrollscraper";
+my $tmpdir = "/tmp/$$" . "_mp3_scrollscraper";
 
 my $effortRequired = ($#raFiles+1) * $audioRepeatCount;
 my $scriptfname = $ENV{"REMOTE_ADDR"} . "_" . $effortRequired . "_" . "$$.sh";
@@ -233,17 +233,21 @@ foreach my $raFile (@raFiles) {
         print THESCRIPT "echo \"file '$raFile.mp3'\" >>$tmpdir/input1.txt\n";
 }
 #print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:$catList\" reading.mp3)\n";
+
+print THESCRIPT "cp $thisDir/$spacerShortMp3 $tmpdir/\n";
+print THESCRIPT "cp $thisDir/$spacerLongMp3 $tmpdir/\n";
+
 print THESCRIPT "(cd $tmpdir; $ffmpeg -f concat -i input1.txt -c copy reading.mp3)\n";
 
 my $catList2 = "";
 print THESCRIPT "touch $tmpdir/input2.txt\n";
-print THESCRIPT "echo \"file '$ttsFileName'\" >>$tmpdir/input2.txt\n";
-print THESCRIPT "echo \"file '$thisDir/$spacerShortMp3'\" >>$tmpdir/input2.txt\n";
+print THESCRIPT "echo \"file 'synthesizedSpeech.mp3'\" >>$tmpdir/input2.txt\n";
+print THESCRIPT "echo \"file '$spacerShortMp3'\" >>$tmpdir/input2.txt\n";
 
 for (my $i = 0; $i < $audioRepeatCount; $i++) {
 	unless ($i == 0) {
 	    $catList2 .= "|$thisDir/$spacerLongMp3";
-            print THESCRIPT "echo \"file '$thisDir/$spacerLongMp3'\" >>$tmpdir/input2.txt\n";
+            print THESCRIPT "echo \"file '$spacerLongMp3'\" >>$tmpdir/input2.txt\n";
 	}
 	$catList2 .= "|$tmpdir/reading.mp3";
         print THESCRIPT "echo \"file 'reading.mp3'\" >>$tmpdir/input2.txt\n";
