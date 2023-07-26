@@ -13,7 +13,7 @@ test-mp3: download-mp3s
 clean-dataprep: $(BUILDSTAMP_FILE)
 	docker run -w /var/opt/scrollscraper -t $(IMAGE) /bin/bash -c "cd scrollscraper; make clean-scrollscraper-data; make test-scrollscraper.html"
 
-$(BUILDSTAMP_FILE): Dockerfile scrollscraper.cgi
+$(BUILDSTAMP_FILE): Dockerfile scrollscraper.cgi buildmp3.cgi Makefile
 	docker build -t $(IMAGE) .
 	touch $@
 
