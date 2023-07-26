@@ -17,7 +17,7 @@ $(BUILDSTAMP_FILE): Dockerfile scrollscraper.cgi buildmp3.cgi Makefile
 	docker build -t $(IMAGE) .
 	touch $@
 
-download-mp3s: $(BUILDSTAMP_FILE)
+download-mp3s:
 	mkdir -p local_ort_mp3s
 	docker run -v `pwd`/local_ort_mp3s:/ort_mp3s -w /var/opt/scrollscraper -i -t scrollscraper /bin/bash -x utilities/fetchMP3s.sh
 	touch $@
