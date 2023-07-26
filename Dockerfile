@@ -62,10 +62,9 @@ RUN cpanm GD \
 
 RUN mkdir ffmpeg-source && \
   cd ffmpeg-source && \
-  curl -k -o ffmpeg.tar.xz https://ffmpeg.org/releases/ffmpeg-6.0.tar.xz && \
-  xz -d -v ffmpeg.tar.xz && \
-  tar xf ffmpeg.tar && \
-  cd ffmpeg-6.0/ && \
+  curl -k -o ffmpeg.tar.gz https://ffmpeg.org/releases/ffmpeg-3.4.13.tar.gz && \
+  tar xzf ffmpeg.tar.gz && \
+  cd ffmpeg-3.4.13/ && \
   ./configure --disable-x86asm && \
   make && \
   cp ffmpeg /usr/local/bin

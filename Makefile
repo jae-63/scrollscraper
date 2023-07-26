@@ -8,6 +8,8 @@ test: $(BUILDSTAMP_FILE)
 	docker run -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.html; cat test-scrollscraper.html"
 
 test-mp3: download-mp3s $(BUILDSTAMP_FILE)
+	mkdir -p state/smil
+	touch state/smil/daystampAndLock.txt
 	docker run -v `pwd`/local_ort_mp3s:/ort_mp3s -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.mp3"
 
 clean-dataprep: $(BUILDSTAMP_FILE)
