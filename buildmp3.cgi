@@ -2,6 +2,10 @@
 use Fcntl ':flock'; # import LOCK_* constants
 use CGI;
 
+# set environment vars to make gtts-cli happy
+$ENV{'LC_ALL'}='C.UTF-8'
+$ENV{'LANG'}='C.UTF-8'
+
 my $qDir = "/home/ec2-user/scrollscraperWorkingDir";
 my $qDir = "./scrollscraperWorkingDir" if $ENV{"IS_DOCKER"};
 # my $lame = "/home/jepstein/lame-3.97/frontend/lame"; # use "lame" for WAV->MP3 conversion
