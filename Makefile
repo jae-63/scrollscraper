@@ -7,7 +7,7 @@ all: $(BUILDSTAMP_FILE)
 test: $(BUILDSTAMP_FILE)
 	docker run -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.html; cat test-scrollscraper.html"
 
-test-mp3: download-mp3s
+test-mp3: download-mp3s $(BUILDSTAMP_FILE)
 	docker run -v `pwd`/local_ort_mp3s:/ort_mp3s -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.mp3"
 
 clean-dataprep: $(BUILDSTAMP_FILE)
