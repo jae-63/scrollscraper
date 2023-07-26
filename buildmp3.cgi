@@ -7,7 +7,7 @@ $ENV{'LC_ALL'}='C.UTF-8';
 $ENV{'LANG'}='C.UTF-8';
 
 my $qDir = "/home/ec2-user/scrollscraperWorkingDir";
-my $qDir = "./scrollscraperWorkingDir" if $ENV{"IS_DOCKER"};
+$qDir = "./scrollscraperWorkingDir" if $ENV{"IS_DOCKER"};
 # my $lame = "/home/jepstein/lame-3.97/frontend/lame"; # use "lame" for WAV->MP3 conversion
 # my $sox = "/home/jepstein/mplayerExperiments/sox-13.0.0/src/sox";
 # public-domain sox-based concatenation From: http://www.boutell.com/scripts/catwav.html
@@ -20,7 +20,7 @@ my $qDir = "./scrollscraperWorkingDir" if $ENV{"IS_DOCKER"};
 # my $festivalSpeechSynthesis = "/home/jepstein/festival/festival/bin/text2wave";
 # my $festivalOptions = "-scale 3 -o";
 my $gttsCli = "/usr/local/bin/gtts-cli";
-my $gttsCli = "gtts-cli" if $ENV{"IS_DOCKER"};
+$gttsCli = "gtts-cli" if $ENV{"IS_DOCKER"};
 my $ffmpeg = "/home/ec2-user/ffmpeg-3.4-64bit-static/ffmpeg";
 my $mp3wrap = "mp3wrap";
 # my $mplayer = "/home/jepstein/mplayerExperiments/MPlayer-1.0rc1/mplayer"; # use for RealAudio->Wav conversion
@@ -32,9 +32,9 @@ my $spacerShortMp3 = "./spacershort.mp3";
 my $spacerLongMp3 = "./spacerlong.mp3";
 my $ortMp3BaseDir = "/srv/www/scrollscraper.adatshalom.net/public_html/ORT_MP3s.recoded";
 # The following is a mount point to use with Docker
-my $ortMp3BaseDir = "/ort_mp3s" if $ENV{"IS_DOCKER"};
+$ortMp3BaseDir = "/ort_mp3s" if $ENV{"IS_DOCKER"};
 my $smilBase = "./smil/";
-my $smilBase = "/state/smil/" if $ENV{"IS_DOCKER"};
+$smilBase = "/state/smil/" if $ENV{"IS_DOCKER"};
 my $mainURL = "http://scrollscraper.adatshalom.net";
 
 my @englishBookNames = ("Genesis","Exodus","Leviticus","Numbers","Deuteronomy");

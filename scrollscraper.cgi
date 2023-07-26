@@ -68,7 +68,7 @@ my $lame =
 
 my $cachebase = "./cache/";
 my $smilBase  = "./smil/";
-my $smilBase = "/state/smil/" if $ENV{"IS_DOCKER"};
+$smilBase = "/state/smil/" if $ENV{"IS_DOCKER"};
 
 my $usage =
   "Usage: " . $0 . " book startchapter startverse endchapter endverse";
