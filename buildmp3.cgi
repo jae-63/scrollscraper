@@ -2,7 +2,6 @@
 use Fcntl ':flock'; # import LOCK_* constants
 use CGI;
 
-# set environment vars to make gtts-cli happy
 $ENV{'LC_ALL'}='C.UTF-8';
 $ENV{'LANG'}='C.UTF-8';
 
@@ -22,17 +21,20 @@ $qDir = "./scrollscraperWorkingDir" if $ENV{"IS_DOCKER"};
 my $gttsCli = "/usr/local/bin/gtts-cli";
 $gttsCli = "gtts-cli" if $ENV{"IS_DOCKER"};
 my $ffmpeg = "/home/ec2-user/ffmpeg-3.4-64bit-static/ffmpeg";
-my $mp3wrap = "mp3wrap";
+$ffmpeg = "ffmpeg" if $ENV{"IS_DOCKER"};
 # my $mplayer = "/home/jepstein/mplayerExperiments/MPlayer-1.0rc1/mplayer"; # use for RealAudio->Wav conversion
+my $mp3wrap = "/usr/local/bin/mp3wrap";
 # my $raUrlFormat = "http://bible.ort.org/webmedia/t%d/%s.ra";
 my $mp3UrlFormat = "http://bible.ort.org/webmedia/t%d/%s.mp3";
 # my $spacerShortRaw = "/home/jepstein/mplayerExperiments/spacershort.raw";
 # my $spacerLongRaw = "/home/jepstein/mplayerExperiments/spacerlong.raw";
-my $spacerShortMp3 = "./spacershort.mp3";
-my $spacerLongMp3 = "./spacerlong.mp3";
+
 my $ortMp3BaseDir = "/srv/www/scrollscraper.adatshalom.net/public_html/ORT_MP3s.recoded";
 # The following is a mount point to use with Docker
 $ortMp3BaseDir = "/ort_mp3s" if $ENV{"IS_DOCKER"};
+
+my $spacerShortMp3 = "./spacershort.mp3";
+my $spacerLongMp3 = "./spacerlong.mp3";
 my $smilBase = "./smil/";
 $smilBase = "/state/smil/" if $ENV{"IS_DOCKER"};
 my $mainURL = "http://scrollscraper.adatshalom.net";
@@ -189,7 +191,7 @@ if ($startc != $endc) {
 	$tts .= "verses $startv through $endv.";
 }
 
-$tts .= "  The following recorded materials are copyright world-ORT, nineteen-ninety-seven, all rights reserved.";
+$tts .= "  The following recorded materials are copyright world-ORT, nineteen ninety-seven, all rights reserved.";
 my $ttsFileName = "$tmpdir/synthesizedSpeech.mp3";
 
 # Sample gtts-cli usage:
@@ -222,23 +224,25 @@ foreach my $raFile (@raFiles) {
 #	print THESCRIPT "wget $url -O $tmpdir/$raFile.mp3 2>/dev/null\n";
 # 	print THESCRIPT "$sox $tmpdir/$raFile.wav -r 44100 -c 2 -s -w $tmpdir/$raFile.raw >/dev/null\n";
         if ($catList) {
-            $catList .= " ";
+            $catList .= "|";
         }
 	$catList .= "$tmpdir/$raFile.mp3";
 }
-print THESCRIPT "(cd $tmpdir; $mp3wrap reading $catList)\n";
+print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:$catList\" reading.mp3)\n";
 my $catList2 = "";
 for (my $i = 0; $i < $audioRepeatCount; $i++) {
-	$catList2 .= " $thisDir/$spacerLongMp3" unless ($i == 0);
-	$catList2 .= " $tmpdir/reading_MP3WRAP.mp3";
+	$catList2 .= "|$thisDir/$spacerLongMp3" unless ($i == 0);
+	$catList2 .= "|$tmpdir/reading.mp3";
 }
 
-print THESCRIPT "(cd $tmpdir; $mp3wrap aggregate $ttsFileName $thisDir/$spacerShortMp3 $catList2)\n";
+print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:";
+print THESCRIPT "$ttsFileName|$thisDir/$spacerShortMp3";
+print THESCRIPT "$catList2\" aggregate.mp3)\n";
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated raw->wav'\n";
 # print THESCRIPT "$sox -r 44100 -c 2 -s -w $tmpdir/aggregate.raw $tmpdir/aggregate.wav >/dev/null\n";
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated wav->mp3'\n";
 # print THESCRIPT "nice $lame -h --silent --scale 2 $tmpdir/aggregate.wav $audioFileName >/dev/null\n";
-print THESCRIPT "cp -p $tmpdir/aggregate_MP3WRAP.mp3 $audioFileName\n";
+print THESCRIPT "cp -p $tmpdir/aggregate.mp3 $audioFileName\n";
 print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Processing complete!'\n";
 print THESCRIPT "/bin/touch $audioFileName.COMPLETED\n";
 print THESCRIPT "/bin/rm -f $audioFileName.STARTED\n";
