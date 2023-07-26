@@ -206,7 +206,7 @@ print THESCRIPT "startTimeFmted=`/bin/date`\n";
 print THESCRIPT "mkdir $tmpdir\n";
 print THESCRIPT "/bin/echo \"<br>\" `/bin/date` \"Beginning processing of $scriptfname\"\n";
 
-print THESCRIPT "$gttsCli \"$tts\" -o $ttsFileName\n";
+print THESCRIPT "LC_ALL=C.UTF-8 LANG=C.UTF-8 $gttsCli \"$tts\" -o $ttsFileName\n";
 # print THESCRIPT "$sox $ttsFileName -r 44100 -c 2 -s -w $tmpdir/synthesizedSpeech.raw >/dev/null\n";
 
 my $thisDir=`pwd`;
@@ -225,19 +225,19 @@ foreach my $raFile (@raFiles) {
         }
 	$catList .= "$tmpdir/$raFile.mp3";
 }
-print THESCRIPT "(cd $tmpdir; $mp3wrap reading.mp3 $catList)\n";
+print THESCRIPT "(cd $tmpdir; $mp3wrap reading $catList)\n";
 my $catList2 = "";
 for (my $i = 0; $i < $audioRepeatCount; $i++) {
 	$catList2 .= " $thisDir/$spacerLongMp3" unless ($i == 0);
-	$catList2 .= " $tmpdir/reading.mp3";
+	$catList2 .= " $tmpdir/reading_MP3WRAP.mp3";
 }
 
-print THESCRIPT "(cd $tmpdir; $mp3wrap aggregate.mp3 $ttsFileName $thisDir/$spacerShortMp3 $catList2)\n";
+print THESCRIPT "(cd $tmpdir; $mp3wrap aggregate $ttsFileName $thisDir/$spacerShortMp3 $catList2)\n";
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated raw->wav'\n";
 # print THESCRIPT "$sox -r 44100 -c 2 -s -w $tmpdir/aggregate.raw $tmpdir/aggregate.wav >/dev/null\n";
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated wav->mp3'\n";
 # print THESCRIPT "nice $lame -h --silent --scale 2 $tmpdir/aggregate.wav $audioFileName >/dev/null\n";
-print THESCRIPT "cp -p $tmpdir/aggregate.mp3 $audioFileName\n";
+print THESCRIPT "cp -p $tmpdir/aggregate_MP3WRAP.mp3 $audioFileName\n";
 print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Processing complete!'\n";
 print THESCRIPT "/bin/touch $audioFileName.COMPLETED\n";
 print THESCRIPT "/bin/rm -f $audioFileName.STARTED\n";
