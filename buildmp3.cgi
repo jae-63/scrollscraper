@@ -191,7 +191,7 @@ my $ttsFileName = "$tmpdir/synthesizedSpeech.mp3";
 #   gtts-cli "hello" -o /tmp/hello.mp3
 
 print THESCRIPT "#!/bin/sh\n\nonint ()\n{\n\trm -rf $tmpdir\n\texit 1\n}\n\n";
-print THESCRIPT "trap onint SIGINT\ntrap onint SIGQUIT\ntrap onint SIGTERM\ntrap onint SIGPIPE\n\n";
+print THESCRIPT "trap onint INT\ntrap onint QUIT\ntrap onint TERM\ntrap onint PIPE\n\n";
 print THESCRIPT "/bin/touch $audioFileName.STARTED\n";
 print THESCRIPT "queuedTime=" . `/bin/date +%s` . "\n";
 my $fmtedTime = `/bin/date`;
