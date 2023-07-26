@@ -3,6 +3,7 @@ use Fcntl ':flock'; # import LOCK_* constants
 use CGI;
 
 my $qDir = "/home/ec2-user/scrollscraperWorkingDir";
+my $qDir = "./scrollscraperWorkingDir" if $ENV{"IS_DOCKER"};
 # my $lame = "/home/jepstein/lame-3.97/frontend/lame"; # use "lame" for WAV->MP3 conversion
 # my $sox = "/home/jepstein/mplayerExperiments/sox-13.0.0/src/sox";
 # public-domain sox-based concatenation From: http://www.boutell.com/scripts/catwav.html
@@ -15,10 +16,10 @@ my $qDir = "/home/ec2-user/scrollscraperWorkingDir";
 # my $festivalSpeechSynthesis = "/home/jepstein/festival/festival/bin/text2wave";
 # my $festivalOptions = "-scale 3 -o";
 my $gttsCli = "/usr/local/bin/gtts-cli";
+my $gttsCli = "gtts-cli" if $ENV{"IS_DOCKER"};
 my $ffmpeg = "/home/ec2-user/ffmpeg-3.4-64bit-static/ffmpeg";
 my $mp3wrap = "mp3wrap";
 # my $mplayer = "/home/jepstein/mplayerExperiments/MPlayer-1.0rc1/mplayer"; # use for RealAudio->Wav conversion
-my $mp3wrap = "/usr/local/bin/mp3wrap";
 # my $raUrlFormat = "http://bible.ort.org/webmedia/t%d/%s.ra";
 my $mp3UrlFormat = "http://bible.ort.org/webmedia/t%d/%s.mp3";
 # my $spacerShortRaw = "/home/jepstein/mplayerExperiments/spacershort.raw";
