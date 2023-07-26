@@ -16,6 +16,6 @@ mkdir -p $STARTDIR/data
 #gdown https://drive.google.com/uc?id=${newmap[t5]}
 for tname in t1 t2 t3 t4 t5; do
   outname="ORT_MP3s.recoded.${tname}.tar"
-  gdown --id ${newmap[t5]} -O $STARTDIR/data/${outname}
-  (cd $STARTDIR/data; mkdir -p $OUTDIR/$tname; cd $OUTDIR/$tname; tar xf $STARTDIR/data/${outname})
+  gdown --id ${newmap[t5]} -O ${STARTDIR}/data/${outname}
+  (cd ${STARTDIR}/data; mkdir -p ${OUTDIR}/$tname; cd ${OUTDIR}/$tname; tar xf ${STARTDIR}/data/${outname})
 done
