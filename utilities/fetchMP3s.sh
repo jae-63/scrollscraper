@@ -1,16 +1,16 @@
 #!/bin/bash
 declare -A newmap
 
-# https://drive.google.com/file/d/13AR-eT3WrQSZ7noO9b6GEiqqXL8a5awz/view?usp=sharing
-newmap[t1]="13AR-eT3WrQSZ7noO9b6GEiqqXL8a5awz"
-# https://drive.google.com/file/d/1zOn02n4DIySBBdYyr5RXKRjZzLe8UngI/view?usp=sharing
-newmap[t2]="1zOn02n4DIySBBdYyr5RXKRjZzLe8UngI"
-# https://drive.google.com/file/d/1ditZtFKx_ti6I7SN1_hQxIHecx0EkaIA/view?usp=sharing
-newmap[t3]="1ditZtFKx_ti6I7SN1_hQxIHecx0EkaIA"
-# https://drive.google.com/file/d/1fyv3a7eIhzB7zGDleXp5yDzoS51YS4GL/view?usp=sharing
-newmap[t4]="1fyv3a7eIhzB7zGDleXp5yDzoS51YS4GL"
-# https://drive.google.com/file/d/1q4RMYvOBm_t1AeQ_r6tpjMweMu4Cf_yx/view?usp=sharing
-newmap[t5]="1q4RMYvOBm_t1AeQ_r6tpjMweMu4Cf_yx"
+# https://drive.google.com/file/d/1u1KTSl_fyKWswqbz4mFK67oyjg9CKN4h/view?usp=sharing
+newmap[t1]="1u1KTSl_fyKWswqbz4mFK67oyjg9CKN4h"
+# https://drive.google.com/file/d/1EtkS0zvq4yOriIu3AlCwWDFirF3U67YN/view?usp=sharing
+newmap[t2]="1EtkS0zvq4yOriIu3AlCwWDFirF3U67YN"
+# https://drive.google.com/file/d/1Jm6cwqiX4xQltEtUb41IyXmXj0crVZDS/view?usp=sharing
+newmap[t3]="1Jm6cwqiX4xQltEtUb41IyXmXj0crVZDS"
+# https://drive.google.com/file/d/1XTX8F3yanKXBoNw7lA7MxWEjX2FlwRhR/view?usp=sharing
+newmap[t4]="1XTX8F3yanKXBoNw7lA7MxWEjX2FlwRhR"
+# https://drive.google.com/file/d/16Y0bVdiG4qNsjzsNDcOtkxXDsJKX77bS/view?usp=sharing
+newmap[t5]="16Y0bVdiG4qNsjzsNDcOtkxXDsJKX77bS"
 
 OUTDIR=/ort_mp3s
 if [ -z "$IS_DOCKER" ]; then
