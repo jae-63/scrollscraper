@@ -5,8 +5,13 @@ use CGI;
 $ENV{'LC_ALL'}='C.UTF-8';
 $ENV{'LANG'}='C.UTF-8';
 
+# we currently have two different ffmpeg command-line approaches, governed by this 
+# variable
+my $fileMethod = 0;
+
 my $qDir = "/home/ec2-user/scrollscraperWorkingDir";
 $qDir = "./scrollscraperWorkingDir" if $ENV{"IS_DOCKER"};
+
 # my $lame = "/home/jepstein/lame-3.97/frontend/lame"; # use "lame" for WAV->MP3 conversion
 # my $sox = "/home/jepstein/mplayerExperiments/sox-13.0.0/src/sox";
 # public-domain sox-based concatenation From: http://www.boutell.com/scripts/catwav.html
@@ -18,10 +23,13 @@ $qDir = "./scrollscraperWorkingDir" if $ENV{"IS_DOCKER"};
 ## rm /tmp/$$*.raw
 # my $festivalSpeechSynthesis = "/home/jepstein/festival/festival/bin/text2wave";
 # my $festivalOptions = "-scale 3 -o";
+
 my $gttsCli = "/usr/local/bin/gtts-cli";
 $gttsCli = "gtts-cli" if $ENV{"IS_DOCKER"};
+
 my $ffmpeg = "/home/ec2-user/ffmpeg-3.4-64bit-static/ffmpeg";
 $ffmpeg = "ffmpeg" if $ENV{"IS_DOCKER"};
+
 # my $mplayer = "/home/jepstein/mplayerExperiments/MPlayer-1.0rc1/mplayer"; # use for RealAudio->Wav conversion
 my $mp3wrap = "/usr/local/bin/mp3wrap";
 # my $raUrlFormat = "http://bible.ort.org/webmedia/t%d/%s.ra";
@@ -232,12 +240,16 @@ foreach my $raFile (@raFiles) {
 	$catList .= "$tmpdir/$raFile.mp3";
         print THESCRIPT "echo \"file '$raFile.mp3'\" >>$tmpdir/input1.txt\n";
 }
-#print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:$catList\" reading.mp3)\n";
 
-print THESCRIPT "cp $thisDir/$spacerShortMp3 $tmpdir/\n";
-print THESCRIPT "cp $thisDir/$spacerLongMp3 $tmpdir/\n";
+if ($fileMethod) {
+    print THESCRIPT "cp $thisDir/$spacerShortMp3 $tmpdir/\n";
+    print THESCRIPT "cp $thisDir/$spacerLongMp3 $tmpdir/\n";
 
-print THESCRIPT "(cd $tmpdir; $ffmpeg -f concat -i input1.txt -c copy reading.mp3)\n";
+    print THESCRIPT "(cd $tmpdir; $ffmpeg -f concat -i input1.txt -c copy reading.mp3)\n";
+} else {
+    print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:$catList\" reading.mp3)\n";
+}
+
 
 my $catList2 = "";
 print THESCRIPT "touch $tmpdir/input2.txt\n";
@@ -253,11 +265,13 @@ for (my $i = 0; $i < $audioRepeatCount; $i++) {
         print THESCRIPT "echo \"file 'reading.mp3'\" >>$tmpdir/input2.txt\n";
 }
 
-print THESCRIPT "(cd $tmpdir; $ffmpeg -f concat -i input2.txt -c copy aggregate.mp3)\n";
-
-#print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:";
-#print THESCRIPT "$ttsFileName|$thisDir/$spacerShortMp3";
-#print THESCRIPT "$catList2\" aggregate.mp3)\n";
+if ($fileMethod) {
+    print THESCRIPT "(cd $tmpdir; $ffmpeg -f concat -i input2.txt -c copy aggregate.mp3)\n";
+} else {
+    print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:";
+    print THESCRIPT "$ttsFileName|$thisDir/$spacerShortMp3";
+    print THESCRIPT "$catList2\" aggregate.mp3)\n";
+}
 
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated raw->wav'\n";
 # print THESCRIPT "$sox -r 44100 -c 2 -s -w $tmpdir/aggregate.raw $tmpdir/aggregate.wav >/dev/null\n";
