@@ -7,6 +7,9 @@ all: $(BUILDSTAMP_FILE)
 test: $(BUILDSTAMP_FILE)
 	docker run -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.html; cat test-scrollscraper.html"
 
+test-mp3: download-mp3s
+	docker run -v `pwd`/local_ort_mp3s:/ort_mp3s -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.mp3"
+
 clean-dataprep: $(BUILDSTAMP_FILE)
 	docker run -w /var/opt/scrollscraper -t $(IMAGE) /bin/bash -c "cd scrollscraper; make clean-scrollscraper-data; make test-scrollscraper.html"
 
@@ -51,3 +54,8 @@ otherComputedPNGs/sampleTorahMap.png: utilities/generateSampleTorahMap.pl final_
 
 test-scrollscraper.html: final_outputs/map.csv final_outputs/gif_info.csv
 	perl scrollscraper.cgi "book=5&audioRepeatCount=1&coloring=0&doShading=on&startc=32&startv=35&endc=32&endv=45&dontUseCache=1&trueTypeFonts=1" >$@
+
+test-scrollscraper.mp3: buildmp3.cgi
+	mkdir -p scrollscraperWorkingDir smil
+	touch smil/daystampAndLock.txt
+	perl buildmp3.cgi "flags=41&book=5&startc=32&endc=32&startv=35&endv=45&audioRepeatCount=1&raFiles="
