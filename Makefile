@@ -62,4 +62,4 @@ test-scrollscraper.html: final_outputs/map.csv final_outputs/gif_info.csv
 test-scrollscraper.mp3: buildmp3.cgi
 	mkdir -p scrollscraperWorkingDir smil
 	touch smil/daystampAndLock.txt
-	perl buildmp3.cgi "flags=41&book=5&startc=32&endc=32&startv=35&endv=45&audioRepeatCount=1&raFiles="
+	perl buildmp3.cgi "flags=41&book=5&startc=32&endc=32&startv=35&endv=45&audioRepeatCount=2&raFiles="
