@@ -60,12 +60,15 @@ RUN cpanm GD \
  GD::Text \
  JSON::Parse
 
+RUN apt-get install --yes \
+ libmp3lame-dev
+
 RUN mkdir ffmpeg-source && \
   cd ffmpeg-source && \
   curl -k -o ffmpeg.tar.gz https://ffmpeg.org/releases/ffmpeg-3.4.13.tar.gz && \
   tar xzf ffmpeg.tar.gz && \
   cd ffmpeg-3.4.13/ && \
-  ./configure --disable-x86asm && \
+  ./configure --disable-x86asm --enable-libmp3lame && \
   make && \
   cp ffmpeg /usr/local/bin
 
