@@ -98,7 +98,7 @@ if ($parsha eq "MASTER") {
 			} else {
 				print "$_\n";
 			}
-		} elsif (/(.*)href=\"https:\/\/www.sefaria.org\/(Genesis|Exodus|Leviticus|Numbers|Deuteronomy)\.(\d+)\.(\d+)-(\d+\.)?(\d+).*<\/a>(.*)/) {
+		} elsif (/(.*)<a title="[^"]*".* href=\"https:\/\/www.sefaria.org\/(Genesis|Exodus|Leviticus|Numbers|Deuteronomy)\.(\d+)\.(\d+)-(\d+\.)?(\d+).*<\/a>(.*)/) {
 			my $prefix = $1;
 			my $suffix = $7;
 			my $bookTitle = $2;
@@ -110,7 +110,7 @@ if ($parsha eq "MASTER") {
 			$endv = $6;
 			my $range = "$startc:$startv-$endc:$endv";
 			if ($startc) {
-				print "${prefix}href=\"$scrollscraperbase/scrollscraper.cgi?doShading=1&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv\">$bookTitle $range</a>${suffix}\n";
+				print "${prefix}<a title=\"Tikkun text from ScrollScraper\" href=\"$scrollscraperbase/scrollscraper.cgi?doShading=1&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv\">$bookTitle $range</a>${suffix}\n";
 			} else {
 				print "$_\n";
 			}
