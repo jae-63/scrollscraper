@@ -12,12 +12,82 @@ binmode( STDOUT, "encoding(UTF-8)" );
 my @englishBookNames =
   ( "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy" );
 
+my @sedrotNames = (
+    "bereshit",
+    "noach",
+    "lech-lecha",
+    "vayera",
+    "chayei-sara",
+    "toldot",
+    "vayetzei",
+    "vayishlach",
+    "vayeshev",
+    "miketz",
+    "vayigash",
+    "vayechi",
+    "shemot",
+    "vaera",
+    "bo",
+    "beshalach",
+    "yitro",
+    "mishpatim",
+    "terumah",
+    "tetzaveh",
+    "ki-tisa",
+    "vayakhel",
+    "pekudei",
+    "vayikra",
+    "tzav",
+    "shmini",
+    "tazria",
+    "metzora",
+    "achrei-mot",
+    "kedoshim",
+    "emor",
+    "behar",
+    "bechukotai",
+    "bamidbar",
+    "nasso",
+    "behaalotcha",
+    "shlach",
+    "korach",
+    "chukat",
+    "balak",
+    "pinchas",
+    "matot",
+    "masei",
+    "devarim",
+    "vaetchanan",
+    "eikev",
+    "reeh",
+    "shoftim",
+    "ki-teitzei",
+    "ki-tavo",
+    "nitzavim",
+    "vayeilech",
+    "haazinu",
+    "vezot-haberakhah",
+    "vayakhel-pekudei",
+    "tazria-metzora",
+    "achrei-mot-kedoshim",
+    "behar-bechukotai",
+    "chukat-balak",
+    "matot-masei",
+    "nitzavim-vayeilech",
+);
+
 my %englishBookName2Number;
+my %sedrotNames;
+
 
 
 my $book = 1;
 foreach my $bookName (@englishBookNames) {
      $englishBookName2Number{$bookName} = $book++;
+}
+
+foreach (@sedrotNames) {
+     $sedrotNames{$_}++;
 }
 
 my $q = new CGI;
@@ -56,6 +126,8 @@ if ($parsha eq "MASTER") {
 			print "$1$scrollscraperbase/sedrot.cgi?parsha=$2$4\n";
 		} elsif (/^(<li>.*href=\")(.*)(\.html)?(\".Parashat)/) {
 			print "$1$scrollscraperbase/sedrot.cgi?parsha=$2$4 $2\n";
+		} elsif (/^(<li>.*href=\")(.*)\"(.*)/ && defined $sedrotNames{$2}) {
+			print "$1$scrollscraperbase/sedrot.cgi?parsha=$2\"$3\n";
 		} else {
 			print "$_\n";
 		}
