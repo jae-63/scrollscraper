@@ -63,3 +63,7 @@ test-scrollscraper.mp3: buildmp3.cgi
 	mkdir -p scrollscraperWorkingDir smil
 	touch smil/daystampAndLock.txt
 	perl buildmp3.cgi "flags=41&book=5&startc=32&endc=32&startv=35&endv=45&audioRepeatCount=2&raFiles="
+
+test-sedrot.count.txt: sedrot.cgi
+	perl sedrot.cgi MASTER | grep -i scrollscraper | wc -l >$@
+	echo Matched `cat $@` scrollscraper strings by running the fragile sedrot.cgi.   A value greater than 50 is good.
