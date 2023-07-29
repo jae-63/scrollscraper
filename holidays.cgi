@@ -113,7 +113,7 @@ if ($name eq "MASTER") {
 			$endv = $6;
 			my $range = "$startc:$startv-$endc:$endv";
 			if ($startc) {
-				print "${prefix}<a title=\"Tikkun text from ScrollScraper\" href=\"$scrollscraperbase/scrollscraper.cgi?doShading=1&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv\">$bookTitle $range</a>${suffix}\n";
+				print "${prefix}<a title=\"Tikkun text from ScrollScraper\" href=\"$scrollscraperbase/scrollscraper.cgi?doShading=1&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv&trueTypeFonts=0\">$bookTitle $range</a>${suffix}\n";
 			} else {
 				print "$_\n";
 			}
