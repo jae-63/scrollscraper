@@ -12,6 +12,9 @@ test-mp3: download-mp3s $(BUILDSTAMP_FILE)
 	touch state/smil/daystampAndLock.txt
 	docker run -v `pwd`/local_ort_mp3s:/ort_mp3s -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.mp3"
 
+test-sedrot: sedrot.cgi $(BUILDSTAMP_FILE)
+	docker run -v `pwd`/local_ort_mp3s:/ort_mp3s -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-sedrot.count.txt"
+
 clean-dataprep: $(BUILDSTAMP_FILE)
 	docker run -w /var/opt/scrollscraper -t $(IMAGE) /bin/bash -c "cd scrollscraper; make clean-scrollscraper-data; make test-scrollscraper.html"
 
