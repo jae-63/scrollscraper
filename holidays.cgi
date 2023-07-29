@@ -5,8 +5,21 @@ use LWP::Simple;
 use HTML::TokeParser;
 use CGI;
 
-my $hebcalbase = "http://www.hebcal.com/holidays";
-my $scrollscraperbase = "http://scrollscraper.adatshalom.net";
+binmode( STDOUT, "encoding(UTF-8)" );
+
+my $hebcalbase = "https://www.hebcal.com/holidays";
+my $scrollscraperbase = "https://scrollscraper.adatshalom.net";
+
+my @englishBookNames =
+  ( "Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy" );
+
+my %englishBookName2Number;
+
+my $book = 1;
+foreach my $bookName (@englishBookNames) {
+     $englishBookName2Number{$bookName} = $book++;
+}
+
 
 my $q = new CGI;
 my $name;
@@ -19,6 +32,12 @@ if ($q->param('name')) {
 
 die "Invalid parameter" unless $name =~ /^[-\w]{1,30}$/;
 
+my $agent = LWP::UserAgent->new;
+
+$agent->ssl_opts(verify_hostname => 0,
+              SSL_verify_mode => 0x00);
+my $content;
+
 print "The content below has been derived from Hebcal.com, and the links have been modified to point to the ScrollScraper tikkun readings.\n";
 print "The unadulterated version of this web page appears <a href=\"";
 	
@@ -26,7 +45,9 @@ if ($name eq "MASTER") {
 	my $url = "$hebcalbase";
 
 	print "$url\">here</a>.<hr>\n";
-	my $content = get($url) or die "Unable to fetch $url";
+        my $response = $agent->get($url) or die "Unable to fetch $url";
+
+        $content = $response->decoded_content;
 	my @lines = split /[\r\n]+/,$content;
 
 	foreach (@lines) {
@@ -40,10 +61,12 @@ if ($name eq "MASTER") {
 		}
 	}
 } else {
-	my $url = "$hebcalbase/$name.html";
+	my $url = "$hebcalbase/$name";
 
 	print "$url\">here</a>.<hr>\n";
-	my $content = get($url) or die "Unable to fetch $url";
+        my $response = $agent->get($url) or die "Unable to fetch $url";
+
+        $content = $response->decoded_content;
 	my @lines = split /[\r\n]+/,$content;
 
 	foreach (@lines) {
@@ -75,6 +98,22 @@ if ($name eq "MASTER") {
 			}
 			if ($startc) {
 				print "href=\"$scrollscraperbase/scrollscraper.cgi?doShading=1&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv\">$optionalBookTitle$range</a>$br\n";
+			} else {
+				print "$_\n";
+			}
+		} elsif (/(.*)<a title="[^"]*".* href=\"https:\/\/www.sefaria.org\/(Genesis|Exodus|Leviticus|Numbers|Deuteronomy)\.(\d+)\.(\d+)-(\d+\.)?(\d+).*<\/a>(.*)/) {
+			my $prefix = $1;
+			my $suffix = $7;
+			my $bookTitle = $2;
+			my $book = $englishBookName2Number{$bookTitle};
+			my ($startc,$startv,$endc,$endv);
+			$startc = $3;
+			$startv = $4;
+			$endc = $5 || $startc;
+			$endv = $6;
+			my $range = "$startc:$startv-$endc:$endv";
+			if ($startc) {
+				print "${prefix}<a title=\"Tikkun text from ScrollScraper\" href=\"$scrollscraperbase/scrollscraper.cgi?doShading=1&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv\">$bookTitle $range</a>${suffix}\n";
 			} else {
 				print "$_\n";
 			}
