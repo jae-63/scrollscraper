@@ -5,9 +5,9 @@ use strict;
 use LWP::Simple;
 use HTML::TokeParser;
 use CGI;
-
-my $hebcalbase = "http://www.hebcal.com/sedrot";
-my $scrollscraperbase = "http://scrollscraper.adatshalom.net";
+my $hebcalbase = "https://www.hebcal.com/sedrot";
+my $scrollscraperbase = "https://scrollscraper.adatshalom.net";
+binmode( STDOUT, "encoding(UTF-8)" );
 
 my $q = new CGI;
 my $parsha;
@@ -19,15 +19,24 @@ if ($q->param('parsha')) {
 }
 die "Invalid parameter" unless $parsha =~ /^\w{1,30}$/;
 
+my $agent = LWP::UserAgent->new;
+
+$agent->ssl_opts(verify_hostname => 0,
+              SSL_verify_mode => 0x00);
+my $content;
+
+
 
 print "The content below has been derived from Hebcal.com, and the links have been modified to point to the ScrollScraper tikkun readings.\n";
 print "The unadulterated version of this web page appears <a href=\"";
 	
 if ($parsha eq "MASTER") {
-	my $url = "$hebcalbase";
+	my $url = "$hebcalbase/";
 
 	print "$url\">here</a>.<hr>\n";
-	my $content = get($url) or die "Unable to fetch $url";
+        my $response = $agent->get($url) or die "Unable to fetch $url";
+
+        $content = $response->decoded_content;
 	my @lines = split /[\r\n]+/,$content;
 
 	foreach (@lines) {
@@ -44,7 +53,9 @@ if ($parsha eq "MASTER") {
 	my $url = "$hebcalbase/$parsha.html";
 
 	print "$url\">here</a>.<hr>\n";
-	my $content = get($url) or die "Unable to fetch $url";
+        my $response = $agent->get($url) or die "Unable to fetch $url";
+
+        $content = $response->decoded_content;
 	my @lines = split /[\r\n]+/,$content;
 
 	foreach (@lines) {
