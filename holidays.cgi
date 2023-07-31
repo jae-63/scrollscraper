@@ -110,6 +110,7 @@ if ($name eq "MASTER") {
 			$startc = $3;
 			$startv = $4;
 			$endc = $5 || $startc;
+			$endc ~= s/\.//g;
 			$endv = $6;
 			my $range = "$startc:$startv-$endc:$endv";
 			if ($startc) {
