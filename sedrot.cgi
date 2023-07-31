@@ -179,8 +179,8 @@ if ($parsha eq "MASTER") {
 			$startc = $3;
 			$startv = $4;
 			$endc = $5 || $startc;
-			$endc ~= s/\.//g;
 			$endv = $6;
+			$endc =~ s/\.//g;
 			my $range = "$startc:$startv-$endc:$endv";
 			if ($startc) {
 				print "${prefix}<a title=\"Tikkun text from ScrollScraper\" href=\"$scrollscraperbase/scrollscraper.cgi?doShading=1&book=$book&startc=$startc&endc=$endc&startv=$startv&endv=$endv&trueTypeFonts=0\">$bookTitle $range</a>${suffix}\n";
