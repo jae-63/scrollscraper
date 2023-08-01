@@ -241,12 +241,12 @@ my @parshaInfo = (
     [ 5, 33, 1,  54, "Vezot HaBerachah" ],
 );
 
-# Derived from bible.ort.org.   Note that both the King James bible and Machon Mamre differ from this!
 my @fontSizeOverrides = (
-    [ 2, 15, 1, 22, 0.65], # Song of the Sea, Exodus 15:1-22
+    [ 2, 15, 1, 23, 0.65], # Song of the Sea, Exodus 15:1-23
     [ 5, 32, 1, 47, 0.85], # Haazinu, Deuteronomy 32:1-47
 );
 
+# Derived from bible.ort.org.   Note that both the King James bible and Machon Mamre differ from this!
 my @versesPerChapter = (
     [
         31, 25, 24, 26, 32, 22, 24, 22, 29, 32, 32, 20, 18, 24,
