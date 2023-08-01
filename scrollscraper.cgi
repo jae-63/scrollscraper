@@ -781,8 +781,11 @@ if ($trueTypeFonts) {
                     $trueTypeBufferedOutput .=
 "<div class=$fullDivName><span style=\"position: relative; top: 0px\"> </span><span class=dummy> </span></div>\n";
                 } else {
+		    my $justify_or_right = 'justify';
+		    # this special handling is to make shirat hayam come out better.   Hopefully won't break other stuff.
+		    $justify_or_right = 'right' if ($leftToRightPosition >= 2 && $endx <= int($gifWidth * 0.25) && $startx == 0);
                     print $cacheOutRef
-"div.$fullDivName { width: ${lenx}px; font-family: hebrewFont; font-size: $fontSize; color: var($colorName); float: left; text-align: justify; height: 30px }\n";
+"div.$fullDivName { width: ${lenx}px; font-family: hebrewFont; font-size: $fontSize; color: var($colorName); float: left; text-align: $justify_or_right; height: 30px }\n";
                     my $hebrew = $divName2Hebrew{$fullDivName};
                     next unless $hebrew;
                     $trueTypeBufferedOutput .=
