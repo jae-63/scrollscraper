@@ -2,6 +2,8 @@
 use Fcntl ':flock'; # import LOCK_* constants
 use CGI;
 
+my $execution_path = $0;
+
 $ENV{'LC_ALL'}='C.UTF-8';
 $ENV{'LANG'}='C.UTF-8';
 
@@ -11,6 +13,10 @@ my $fileMethod = 0;
 
 my $qDir = "/home/ec2-user/scrollscraperWorkingDir";
 $qDir = "./scrollscraperWorkingDir" if $ENV{"IS_DOCKER"};
+
+if ( $execution_path =~ /^\/?cgi-bin\// && $ENV{"IS_DOCKER"}) {
+    $base = " ../scrollscraperWorkingDir";
+}
 
 # my $lame = "/home/jepstein/lame-3.97/frontend/lame"; # use "lame" for WAV->MP3 conversion
 # my $sox = "/home/jepstein/mplayerExperiments/sox-13.0.0/src/sox";

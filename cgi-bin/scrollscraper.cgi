@@ -26,6 +26,8 @@ use GD::Text;
 use verse2hebrew;
 use Data::Dumper;
 
+my $execution_path = $0;
+
 my $fontFile = "fonts/SILEOTSR.ttf";
 my $GIF_INFO_CSV = "final_outputs/gif_info.csv";
 my $MAP_CSV = "final_outputs/map.csv";
@@ -68,6 +70,10 @@ my $lame =
 
 my $cachebase = "./cache/";
 my $smilBase  = "./smil/";
+if ( $execution_path =~ /^\/?cgi-bin\//) {
+    $cachebase = "../cache/";
+    $smilBase  = "../smil/";
+}
 $smilBase = "/state/smil/" if $ENV{"IS_DOCKER"};
 
 my $usage =
