@@ -24,6 +24,7 @@ use GD;
 use CGI;
 use GD::Text;
 use verse2hebrew;
+use Cwd;
 use Data::Dumper;
 
 my $execution_path = $0;
@@ -38,7 +39,7 @@ my $MAP_CSV = "final_outputs/map.csv";
 # $outputVersion should be incremented each time the format is changed in
 # a manner which affects previously cached output files
 #
-my $outputVersion = 10;
+my $outputVersion = 11;
 #
 # Provide a debug mode where outputted cached files (executed in that DEBUG mode) don't
 # impact the Production views, on the live ScrollScraper server
@@ -304,8 +305,13 @@ foreach my $override (@fontSizeOverrides) {
 my $fileNameNumber   = 0;
 my %fileName2Number;
 
+my $current_dir = getcwd;
+
 my $GIF_INFO_CSV = "final_outputs/gif_info.csv";
 my $MAP_CSV = "final_outputs/map.csv";
+if ( $current_dir =~ /cgi-bin\/?$/) {
+    chdir ("../");
+}
 
 open GIF_INFO_CSV,"<$GIF_INFO_CSV" or die "Unable to open $GIF_INFO_CSV";
 open MAP_CSV,"<$MAP_CSV" or die "Unable to open $MAP_CSV";

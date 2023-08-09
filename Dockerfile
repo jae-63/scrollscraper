@@ -119,12 +119,14 @@ RUN mkdir scrollscraper/fonts
 RUN mkdir scrollscraper/ScrollScraperalphaPNGs
 RUN mkdir scrollscraper/otherComputedPNGs
 RUN mkdir scrollscraper/webmedia
+RUN mkdir scrollscraper/cgi-bin
 ADD data/webmedia.tgz /var/opt/scrollscraper/webmedia
 COPY data/entire_torah.json /var/opt/scrollscraper/data
 COPY ScrollScraperalphaPNGs/* /var/opt/scrollscraper/ScrollScraperalphaPNGs
 COPY intermediate_outputs/* /var/opt/scrollscraper/intermediate_outputs
 COPY final_outputs/* /var/opt/scrollscraper/final_outputs
 COPY fonts/* /var/opt/scrollscraper/fonts
+COPY cgi-bin/*.cgi /var/opt/scrollscraper/cgi-bin
 COPY utilities/gifETL.pl /var/opt/scrollscraper/utilities/
 COPY utilities/gifETL2.pl /var/opt/scrollscraper/utilities/
 COPY utilities/gifETL3.pl /var/opt/scrollscraper/utilities/
@@ -132,14 +134,14 @@ COPY utilities/handCuration.sed /var/opt/scrollscraper/utilities/
 COPY utilities/fetchMP3s.sh /var/opt/scrollscraper/utilities/
 COPY utilities/generateSampleTorahMap.pl /var/opt/scrollscraper/utilities/
 COPY otherComputedPNGs/sampleTorahMap.png /var/opt/scrollscraper/otherComputedPNGs/
-ADD *.cgi /var/opt/scrollscraper
 ADD Makefile /var/opt/scrollscraper
-ADD *.pm /var/opt/scrollscraper
 ADD *.html /var/opt/scrollscraper
+ADD *.pm /var/opt/scrollscraper
 ADD *.txt /var/opt/scrollscraper
 ADD *.gif /var/opt/scrollscraper
 ADD *.mp3 /var/opt/scrollscraper
 ADD *.GIF /var/opt/scrollscraper
+RUN chmod 755 /var/opt/scrollscraper/cgi-bin/*.cgi
 RUN touch /var/opt/scrollscraper/intermediate_outputs/gif_names.txt
 RUN touch /var/opt/scrollscraper/intermediate_outputs/color_analysis.csv
 RUN touch /var/opt/scrollscraper/final_outputs/gif_info.csv
