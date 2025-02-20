@@ -2,22 +2,7 @@
 use Fcntl ':flock'; # import LOCK_* constants
 use CGI;
 
-my $execution_path = $0;
-
-$ENV{'LC_ALL'}='C.UTF-8';
-$ENV{'LANG'}='C.UTF-8';
-
-# we currently have two different ffmpeg command-line approaches, governed by this 
-# variable
-my $fileMethod = 0;
-
 my $qDir = "/home/ec2-user/scrollscraperWorkingDir";
-$qDir = "./scrollscraperWorkingDir" if $ENV{"IS_DOCKER"};
-
-if ( $execution_path =~ /^\/?cgi-bin\// && $ENV{"IS_DOCKER"}) {
-    $base = " ../scrollscraperWorkingDir";
-}
-
 # my $lame = "/home/jepstein/lame-3.97/frontend/lame"; # use "lame" for WAV->MP3 conversion
 # my $sox = "/home/jepstein/mplayerExperiments/sox-13.0.0/src/sox";
 # public-domain sox-based concatenation From: http://www.boutell.com/scripts/catwav.html
@@ -29,28 +14,17 @@ if ( $execution_path =~ /^\/?cgi-bin\// && $ENV{"IS_DOCKER"}) {
 ## rm /tmp/$$*.raw
 # my $festivalSpeechSynthesis = "/home/jepstein/festival/festival/bin/text2wave";
 # my $festivalOptions = "-scale 3 -o";
-
 my $gttsCli = "/usr/local/bin/gtts-cli";
-$gttsCli = "gtts-cli" if $ENV{"IS_DOCKER"};
-
 my $ffmpeg = "/home/ec2-user/ffmpeg-3.4-64bit-static/ffmpeg";
-$ffmpeg = "ffmpeg" if $ENV{"IS_DOCKER"};
-
 # my $mplayer = "/home/jepstein/mplayerExperiments/MPlayer-1.0rc1/mplayer"; # use for RealAudio->Wav conversion
 my $mp3wrap = "/usr/local/bin/mp3wrap";
 # my $raUrlFormat = "http://bible.ort.org/webmedia/t%d/%s.ra";
 my $mp3UrlFormat = "http://bible.ort.org/webmedia/t%d/%s.mp3";
 # my $spacerShortRaw = "/home/jepstein/mplayerExperiments/spacershort.raw";
 # my $spacerLongRaw = "/home/jepstein/mplayerExperiments/spacerlong.raw";
-
-my $ortMp3BaseDir = "/srv/www/scrollscraper.adatshalom.net/public_html/ORT_MP3s.recoded";
-# The following is a mount point to use with Docker
-$ortMp3BaseDir = "/ort_mp3s" if $ENV{"IS_DOCKER"};
-
-my $spacerShortMp3 = "spacershort.mp3";
-my $spacerLongMp3 = "spacerlong.mp3";
-my $smilBase = "./smil/";
-$smilBase = "/state/smil/" if $ENV{"IS_DOCKER"};
+my $spacerShortMp3 = "./spacershort.mp3";
+my $spacerLongMp3 = "./spacerlong.mp3";
+my $smilbase = "./smil/";
 my $mainURL = "http://scrollscraper.adatshalom.net";
 
 my @englishBookNames = ("Genesis","Exodus","Leviticus","Numbers","Deuteronomy");
@@ -67,8 +41,8 @@ my @versesPerChapter = (
 );
 
 
-my $dayStampFile = "$smilBase/daystampAndLock.txt";
-my $ipDatabase = "$smilBase/ipdatabase";
+my $dayStampFile = "./smil/daystampAndLock.txt";
+my $ipDatabase = "./smil/ipdatabase";
 
 # parameters to be obtained via CGI; @raFiles should be split// from a text string
 my ($book,@raFiles,$audioRepeatCount,$startc,$startv,$endc,$endv,$flags,$httpStyle);
@@ -132,7 +106,7 @@ unless (@raFiles) {
 #        print STDERR "Audiolist: $audioList\n";
 }
 
-my $audioFileName = rangeToFileName($smilBase, $book,$startc,$startv,$endc,$endv,$flags,$audioRepeatCount) . "REC.mp3";
+my $audioFileName = rangeToFileName($smilbase, $book,$startc,$startv,$endc,$endv,$flags,$audioRepeatCount) . "REC.mp3";
 if ( -f $audioFileName && ! -z $audioFileName && -f "$audioFileName.COMPLETED") {
 	#
 	# update the actual MP3 file's timestamp to show this access attempt, but leave the
@@ -181,7 +155,7 @@ EOF
 	exit 1;
 }
 
-my $tmpdir = "/tmp/$$" . "_mp3_scrollscraper";
+my $tmpdir = "/tmp/$$.mp3.scrollscraper";
 
 my $effortRequired = ($#raFiles+1) * $audioRepeatCount;
 my $scriptfname = $ENV{"REMOTE_ADDR"} . "_" . $effortRequired . "_" . "$$.sh";
@@ -205,14 +179,14 @@ if ($startc != $endc) {
 	$tts .= "verses $startv through $endv.";
 }
 
-$tts .= "  The following recorded materials are copyright world-ORT, nineteen ninety-seven, all rights reserved.";
+$tts .= "  The following recorded materials are copyright world-ORT, nineteen-ninety-seven, all rights reserved.";
 my $ttsFileName = "$tmpdir/synthesizedSpeech.mp3";
 
 # Sample gtts-cli usage:
 #   gtts-cli "hello" -o /tmp/hello.mp3
 
 print THESCRIPT "#!/bin/sh\n\nonint ()\n{\n\trm -rf $tmpdir\n\texit 1\n}\n\n";
-print THESCRIPT "trap onint INT\ntrap onint QUIT\ntrap onint TERM\ntrap onint PIPE\n\n";
+print THESCRIPT "trap onint SIGINT\ntrap onint SIGQUIT\ntrap onint SIGTERM\ntrap onint SIGPIPE\n\n";
 print THESCRIPT "/bin/touch $audioFileName.STARTED\n";
 print THESCRIPT "queuedTime=" . `/bin/date +%s` . "\n";
 my $fmtedTime = `/bin/date`;
@@ -223,7 +197,7 @@ print THESCRIPT "startTimeFmted=`/bin/date`\n";
 print THESCRIPT "mkdir $tmpdir\n";
 print THESCRIPT "/bin/echo \"<br>\" `/bin/date` \"Beginning processing of $scriptfname\"\n";
 
-print THESCRIPT "LC_ALL=C.UTF-8 LANG=C.UTF-8 $gttsCli \"$tts\" -o $ttsFileName\n";
+print THESCRIPT "$gttsCli \"$tts\" -o $ttsFileName\n";
 # print THESCRIPT "$sox $ttsFileName -r 44100 -c 2 -s -w $tmpdir/synthesizedSpeech.raw >/dev/null\n";
 
 my $thisDir=`pwd`;
@@ -231,54 +205,27 @@ chomp $thisDir;
 
 
 my $catList = "";
-
-print THESCRIPT "touch $tmpdir/input1.txt\n";
-
 # Historically these were RealAudio ("ra") files, so for backwards compatability let's retain the older parameter name
 foreach my $raFile (@raFiles) {
 	my $url = sprintf $mp3UrlFormat,$book,$raFile;
-	print THESCRIPT "cp $ortMp3BaseDir/t$book/$raFile.mp3 $tmpdir/$raFile.mp3 2>/dev/null\n";
+	print THESCRIPT "cp /srv/www/scrollscraper.adatshalom.net/public_html/ORT_MP3s.recoded/t$book/$raFile.mp3 $tmpdir/$raFile.mp3 2>/dev/null\n";
 #	print THESCRIPT "wget $url -O $tmpdir/$raFile.mp3 2>/dev/null\n";
 # 	print THESCRIPT "$sox $tmpdir/$raFile.wav -r 44100 -c 2 -s -w $tmpdir/$raFile.raw >/dev/null\n";
         if ($catList) {
             $catList .= "|";
         }
 	$catList .= "$tmpdir/$raFile.mp3";
-        print THESCRIPT "echo \"file '$raFile.mp3'\" >>$tmpdir/input1.txt\n";
 }
-
-if ($fileMethod) {
-    print THESCRIPT "cp $thisDir/$spacerShortMp3 $tmpdir/\n";
-    print THESCRIPT "cp $thisDir/$spacerLongMp3 $tmpdir/\n";
-
-    print THESCRIPT "(cd $tmpdir; $ffmpeg -f concat -i input1.txt -c copy reading.mp3)\n";
-} else {
-    print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:$catList\" reading.mp3)\n";
-}
-
-
+print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:$catList\" reading.mp3)\n";
 my $catList2 = "";
-print THESCRIPT "touch $tmpdir/input2.txt\n";
-print THESCRIPT "echo \"file 'synthesizedSpeech.mp3'\" >>$tmpdir/input2.txt\n";
-print THESCRIPT "echo \"file '$spacerShortMp3'\" >>$tmpdir/input2.txt\n";
-
 for (my $i = 0; $i < $audioRepeatCount; $i++) {
-	unless ($i == 0) {
-	    $catList2 .= "|$thisDir/$spacerLongMp3";
-            print THESCRIPT "echo \"file '$spacerLongMp3'\" >>$tmpdir/input2.txt\n";
-	}
+	$catList2 .= "|$thisDir/$spacerLongMp3" unless ($i == 0);
 	$catList2 .= "|$tmpdir/reading.mp3";
-        print THESCRIPT "echo \"file 'reading.mp3'\" >>$tmpdir/input2.txt\n";
 }
 
-if ($fileMethod) {
-    print THESCRIPT "(cd $tmpdir; $ffmpeg -f concat -i input2.txt -c copy aggregate.mp3)\n";
-} else {
-    print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:";
-    print THESCRIPT "$ttsFileName|$thisDir/$spacerShortMp3";
-    print THESCRIPT "$catList2\" aggregate.mp3)\n";
-}
-
+print THESCRIPT "(cd $tmpdir; $ffmpeg -i \"concat:";
+print THESCRIPT "$ttsFileName|$thisDir/$spacerShortMp3";
+print THESCRIPT "$catList2\" aggregate.mp3)\n";
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated raw->wav'\n";
 # print THESCRIPT "$sox -r 44100 -c 2 -s -w $tmpdir/aggregate.raw $tmpdir/aggregate.wav >/dev/null\n";
 # print THESCRIPT "/bin/echo \"<br>\" `/bin/date` 'Preparing conversion of concatenated wav->mp3'\n";
@@ -345,7 +292,7 @@ sub accessPermitted {
 
 	if (-f $ipDatabase) {
 		my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size, $atime,$lastMtime,$ctime,$blksize,$blocks) = stat(_);
-
+		
 		my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($lastMtime);
 		$lastMtimeStamp = $year * 1000 + $yday;
 	}
@@ -371,7 +318,7 @@ sub accessPermitted {
 		$retString .= "Daily global access limit $globalLimit exceeded\n";
 	}
 	if ($newval >= $perIpPerDayLimit) {
-		$retString .= "Daily limit ($perIpPerDayLimit) exceeded for IP $ip\n";
+		$retString .= "Daily limit ($perIpPerDayLimit) exceeded for IP $ip, $newval observed\n";
 	}
 	if (defined($globalDiskUsed) && $globalDiskUsed >= $globalDiskLimit) {
 		$retString .= "Daily global disk space quota $globalDiskLimit exceeded, current usage $globalDiskUsed\n";
@@ -414,5 +361,6 @@ sub recordFileSize {
 	flock (DAYSTAMPFILE,LOCK_UN);
 	close (DAYSTAMPFILE);
 }
+
 
 

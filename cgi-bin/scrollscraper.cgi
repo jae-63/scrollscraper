@@ -24,10 +24,7 @@ use GD;
 use CGI;
 use GD::Text;
 use verse2hebrew;
-use Cwd;
 use Data::Dumper;
-
-my $execution_path = $0;
 
 my $fontFile = "fonts/SILEOTSR.ttf";
 my $GIF_INFO_CSV = "final_outputs/gif_info.csv";
@@ -39,7 +36,7 @@ my $MAP_CSV = "final_outputs/map.csv";
 # $outputVersion should be incremented each time the format is changed in
 # a manner which affects previously cached output files
 #
-my $outputVersion = 11;
+my $outputVersion = 10;
 #
 # Provide a debug mode where outputted cached files (executed in that DEBUG mode) don't
 # impact the Production views, on the live ScrollScraper server
@@ -71,10 +68,6 @@ my $lame =
 
 my $cachebase = "./cache/";
 my $smilBase  = "./smil/";
-if ( $execution_path =~ /^\/?cgi-bin\//) {
-    $cachebase = "../cache/";
-    $smilBase  = "../smil/";
-}
 $smilBase = "/state/smil/" if $ENV{"IS_DOCKER"};
 
 my $usage =
@@ -248,12 +241,12 @@ my @parshaInfo = (
     [ 5, 33, 1,  54, "Vezot HaBerachah" ],
 );
 
+# Derived from bible.ort.org.   Note that both the King James bible and Machon Mamre differ from this!
 my @fontSizeOverrides = (
-    [ 2, 15, 1, 23, 0.65], # Song of the Sea, Exodus 15:1-23
+    [ 2, 15, 1, 22, 0.65], # Song of the Sea, Exodus 15:1-22
     [ 5, 32, 1, 47, 0.85], # Haazinu, Deuteronomy 32:1-47
 );
 
-# Derived from bible.ort.org.   Note that both the King James bible and Machon Mamre differ from this!
 my @versesPerChapter = (
     [
         31, 25, 24, 26, 32, 22, 24, 22, 29, 32, 32, 20, 18, 24,
@@ -305,13 +298,8 @@ foreach my $override (@fontSizeOverrides) {
 my $fileNameNumber   = 0;
 my %fileName2Number;
 
-my $current_dir = getcwd;
-
 my $GIF_INFO_CSV = "final_outputs/gif_info.csv";
 my $MAP_CSV = "final_outputs/map.csv";
-if ( $current_dir =~ /cgi-bin\/?$/) {
-    chdir ("../");
-}
 
 open GIF_INFO_CSV,"<$GIF_INFO_CSV" or die "Unable to open $GIF_INFO_CSV";
 open MAP_CSV,"<$MAP_CSV" or die "Unable to open $MAP_CSV";
