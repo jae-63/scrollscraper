@@ -346,7 +346,6 @@ sub getBookName {
 #
 sub accessPermitted {
 	my ($ip,$dayStampFile,$ipDatabase,$numVerses,$repeatCount) = @_;
-	my $lastMtimeStamp = 0;
 	my %accessesToday;
 
 	my $perIpPerDayLimit = 8;
@@ -362,20 +361,23 @@ sub accessPermitted {
 #	return (0,"MP3 creation temporarily unavailable as of 7 April 2009; sorry for the inconvenience");
 	return (0,"(# verses) * (audio repeat count) = $numVerses * $repeatCount > $maxVerses") if(($numVerses * $repeatCount) > $maxVerses);
 
-	if (-f $ipDatabase) {
-		my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size, $atime,$lastMtime,$ctime,$blksize,$blocks) = stat(_);
-
-		my($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime($lastMtime);
-		$lastMtimeStamp = $year * 1000 + $yday;
-	}
-#	print "lastMtimeStamp: $lastMtimeStamp, file: $dayStampFile\n";
-
 	open DAYSTAMPFILE,"+<",$dayStampFile or return (0,"Unable to open $dayStampFile");
 	flock (DAYSTAMPFILE,LOCK_EX);
 
-	if ($lastMtimeStamp < $dayStamp) { # it's no longer the same day as when the last access was made
-		print STDERR "Removing $ipDatabase, timestamps: ($lastMtimeStamp,$dayStamp)\n";
-		unlink ($ipDatabase); # or maybe just truncate it??
+	# Read the stored day stamp from the lock file (daystampAndLock.txt was always named for this)
+	seek DAYSTAMPFILE, 0, 0;
+	my $lastDayStamp = <DAYSTAMPFILE> // 0;
+	chomp $lastDayStamp;
+
+	if ($lastDayStamp < $dayStamp) { # it's no longer the same day as when the last access was made
+		print STDERR "Removing $ipDatabase, timestamps: ($lastDayStamp,$dayStamp)\n";
+		unlink("$ipDatabase.dir");   # NDBM
+		unlink("$ipDatabase.pag");   # NDBM
+		unlink("$ipDatabase.db");    # GDBM
+		unlink($ipDatabase);         # older DBM
+		seek DAYSTAMPFILE, 0, 0;
+		truncate DAYSTAMPFILE, 0;
+		print DAYSTAMPFILE "$dayStamp\n";
 	}
 
 	dbmopen(%accessesToday,$ipDatabase,0666);
