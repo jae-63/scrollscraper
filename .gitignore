@@ -3,3 +3,9 @@ local_ort_mp3s/
 scrollscraperWorkingDir/
 state/
 download-mp3s
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
