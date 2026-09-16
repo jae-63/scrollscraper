@@ -1,23 +1,31 @@
 BUILDSTAMP_FILE = docker-buildstamp
-IMAGE = scrollscraper
 
-# 1. Dynamically evaluate host architecture and map target container engines
+# 1. Dynamically evaluate host architecture and map container engines
 ARCH := $(shell uname -m)
 DOCKER.x86_64 := docker
 DOCKER.arm64  := podman
 DOCKER        := ${DOCKER.${ARCH}}
 
-# 2. Airtight Portable Flag Solution (No GNU-specific ifeq required)
-# Runs natively inside any POSIX shell across Mac M2, Intel Mac, and AWS EC2 Linux.
-# Force-emulates Intel via QEMU on Apple Silicon by default unless 'FORCE_INTEL=0' is specified.
+# 2. Optimized Portable Default Flag (Native on ARM, Emulation on request)
+# Force-emulates Intel via QEMU on Apple Silicon ONLY if 'FORCE_INTEL=1' is passed.
 DOCKER_FLAG := $(shell \
-	if [ "${ARCH}" = "arm64" ] && [ "${FORCE_INTEL}" != "0" ]; then \
+	if [ "${ARCH}" = "arm64" ] && [ "${FORCE_INTEL}" = "1" ]; then \
 		echo "--arch=amd64"; \
 	else \
 		echo ""; \
 	fi)
 
-$(info "Using ${DOCKER} with flag ${DOCKER_FLAG}")
+# 3. Dynamic Architecture Tagging Solution (Airtight Shell Portability)
+# If FORCE_INTEL=1 is passed, the tag becomes 'amd64'. Otherwise, defaults to host ARCH.
+IMAGE_TAG := $(shell \
+	if [ "${FORCE_INTEL}" = "1" ]; then \
+		echo "amd64"; \
+	else \
+		echo "${ARCH}"; \
+	fi)
+IMAGE = localhost/scrollscraper:${IMAGE_TAG}
+
+$(info "Using ${DOCKER} with flag ${DOCKER_FLAG} targeting ${IMAGE}")
 
 .PHONY: all
 all: $(BUILDSTAMP_FILE)
