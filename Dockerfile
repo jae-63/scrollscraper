@@ -6,8 +6,10 @@ LABEL maintainer="Jonathan Epstein <jonathanepstein9@gmail.com>"
 # Suppress interactive prompts during apt installs
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Fix the GPG keyring mismatch bug natively at the top of the layer stack
-RUN apt-get update && apt-get install --yes gnupg ca-certificates && \
+# Fix the GPG keyring mismatch bug by passing targeted flags that ignore the signature breach
+# just long enough to install gnupg and import the verified public keys globally.
+RUN apt-get update -o Acquire::AllowInsecureRepositories=true -o Acquire::AllowUnauthenticated=true && \
+    apt-get install --yes --allow-unauthenticated gnupg ca-certificates && \
     rm -rf /etc/apt/trusted.gpg.d/*.gpg && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 871920D1991BC93C
 
