@@ -1,4 +1,5 @@
 .env
+docker-buildstamp
 local_ort_mp3s/
 scrollscraperWorkingDir/
 state/

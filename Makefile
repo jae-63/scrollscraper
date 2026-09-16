@@ -1,13 +1,31 @@
 BUILDSTAMP_FILE = docker-buildstamp
-IMAGE = scrollscraper
+
+# 1. Dynamically evaluate host architecture and map container engines
 ARCH := $(shell uname -m)
 DOCKER.x86_64 := docker
-DOCKER.arm64 := podman
-DOCKER := ${DOCKER.${ARCH}}
-DOCKER_FLAG.x86_64 := 
-DOCKER_FLAG.arm64 := --arch=amd64
-DOCKER_FLAG := ${DOCKER_FLAG.${ARCH}}
-$(info "Using ${DOCKER} with flag ${DOCKER_FLAG}")
+DOCKER.arm64  := podman
+DOCKER        := ${DOCKER.${ARCH}}
+
+# 2. Optimized Portable Default Flag (Native on ARM, Emulation on request)
+# Force-emulates Intel via QEMU on Apple Silicon ONLY if 'FORCE_INTEL=1' is passed.
+DOCKER_FLAG := $(shell \
+	if [ "${ARCH}" = "arm64" ] && [ "${FORCE_INTEL}" = "1" ]; then \
+		echo "--arch=amd64"; \
+	else \
+		echo ""; \
+	fi)
+
+# 3. Dynamic Architecture Tagging Solution (Airtight Shell Portability)
+# If FORCE_INTEL=1 is passed, the tag becomes 'amd64'. Otherwise, defaults to host ARCH.
+IMAGE_TAG := $(shell \
+	if [ "${FORCE_INTEL}" = "1" ]; then \
+		echo "amd64"; \
+	else \
+		echo "${ARCH}"; \
+	fi)
+IMAGE = localhost/scrollscraper:${IMAGE_TAG}
+
+$(info "Using ${DOCKER} with flag ${DOCKER_FLAG} targeting ${IMAGE}")
 
 .PHONY: all
 all: $(BUILDSTAMP_FILE)
@@ -18,17 +36,17 @@ run-webserver: download-mp3s $(BUILDSTAMP_FILE)
 	$(DOCKER) run $(DOCKER_FLAG) -p 8080:80 -v `pwd`/local_ort_mp3s:/ort_mp3s -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) python3 -m http.server --cgi 80
 
 test: $(BUILDSTAMP_FILE)
-	$(DOCKER) run -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.html; cat test-scrollscraper.html"
+	$(DOCKER) run $(DOCKER_FLAG) -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper.html; cat test-scrollscraper.html"
 
 test-exodus40: $(BUILDSTAMP_FILE)
-	$(DOCKER) run -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper-exodus40.html; cat test-scrollscraper-exodus40.html"
+	$(DOCKER) run $(DOCKER_FLAG) -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper-exodus40.html; cat test-scrollscraper-exodus40.html"
 
 test-deuteronomy34: $(BUILDSTAMP_FILE)
-	$(DOCKER) run -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make otherComputedPNGs/sampleTorahMapDeut3411.png; cat otherComputedPNGs/sampleTorahMapDeut3411.png | base64"
-	$(DOCKER) run -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper-deuteronomy34.html; cat test-scrollscraper-deuteronomy34.html"
+	$(DOCKER) run $(DOCKER_FLAG) -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make otherComputedPNGs/sampleTorahMapDeut3411.png; cat otherComputedPNGs/sampleTorahMapDeut3411.png | base64"
+	$(DOCKER) run $(DOCKER_FLAG) -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper-deuteronomy34.html; cat test-scrollscraper-deuteronomy34.html"
 
 test-alt-coloring: $(BUILDSTAMP_FILE)
-	$(DOCKER) run -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper-alt-coloring.html; cat test-scrollscraper-alt-coloring.html"
+	$(DOCKER) run $(DOCKER_FLAG) -v `pwd`/state:/state -w /var/opt/scrollscraper -i -t $(IMAGE) /bin/bash -c "make test-scrollscraper-alt-coloring.html; cat test-scrollscraper-alt-coloring.html"
 
 test-mp3: download-mp3s $(BUILDSTAMP_FILE)
 	mkdir -p state/smil
@@ -86,19 +104,16 @@ otherComputedPNGs/sampleTorahMapDeut3411.png: utilities/generateSampleTorahMap.p
 	grep t5/3411C110.gif final_outputs/map.csv | perl utilities/generateSampleTorahMap.pl >$@
 
 test-scrollscraper.html: final_outputs/map.csv final_outputs/gif_info.csv
-	(cd cgi-bin; perl scrollscraper.cgi "book=5&audioRepeatCount=1&coloring=0&doShading=on&startc=32&startv=35&endc=32&endv=45&dontUseCache=1&trueTypeFonts=1" >../$@)
+	cd cgi-bin && perl scrollscraper.cgi "book=5&audioRepeatCount=1&coloring=0&doShading=on&startc=32&startv=35&endc=32&endv=45&dontUseCache=1&trueTypeFonts=1" > ../$@
 
 test-scrollscraper-exodus40.html: final_outputs/map.csv final_outputs/gif_info.csv
-	(cd cgi-bin; perl scrollscraper.cgi "book=2&audioRepeatCount=1&coloring=0&doShading=on&startc=40&startv=5&endc=40&endv=10&dontUseCache=1&trueTypeFonts=1" >../$@)
+	cd cgi-bin && perl scrollscraper.cgi "book=2&audioRepeatCount=1&coloring=0&doShading=on&startc=40&startv=5&endc=40&endv=10&dontUseCache=1&trueTypeFonts=1" > ../$@
 
 test-scrollscraper-deuteronomy34.html: final_outputs/map.csv final_outputs/gif_info.csv
-	(cd cgi-bin; perl scrollscraper.cgi "book=5&audioRepeatCount=1&coloring=0&doShading=on&startc=34&startv=11&endc=34&endv=12&dontUseCache=1&trueTypeFonts=1" >../$@)
+	cd cgi-bin && perl scrollscraper.cgi "book=5&audioRepeatCount=1&coloring=0&doShading=on&startc=34&startv=11&endc=34&endv=12&dontUseCache=1&trueTypeFonts=1" > ../$@
 
 test-scrollscraper-alt-coloring.html: final_outputs/map.csv final_outputs/gif_info.csv
-	(cd cgi-bin; perl scrollscraper.cgi "book=2&audioRepeatCount=1&coloring=25%2C25%2C112%2C25%2C25%2C112&doShading=on&startc=25&startv=1&endc=25&endv=15" >../$@)
-
-
-
+	cd cgi-bin && perl scrollscraper.cgi "book=2&audioRepeatCount=1&coloring=25%2C25%2C112%2C25%2C25%2C112&doShading=on&startc=25&startv=1&endc=25&endv=15" > ../$@
 
 test-scrollscraper.mp3: cgi-bin/buildmp3.cgi
 	mkdir -p scrollscraperWorkingDir smil
@@ -107,4 +122,5 @@ test-scrollscraper.mp3: cgi-bin/buildmp3.cgi
 
 test-sedrot.count.txt: cgi-bin/sedrot.cgi
 	perl cgi-bin/sedrot.cgi MASTER | grep -i scrollscraper | wc -l >$@
-	echo Matched `cat $@` scrollscraper strings by running the fragile sedrot.cgi.   A value greater than 50 is good.
+	@echo "Matched `cat $@` scrollscraper strings by running the fragile sedrot.cgi. A value greater than 50 is good."
+
