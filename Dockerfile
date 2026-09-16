@@ -16,10 +16,14 @@ RUN apt-get update -o Acquire::AllowInsecureRepositories=true -o Acquire::AllowU
 # Install system dependencies in one layer.
 # ffmpeg is available in Ubuntu 22.04 repos with libmp3lame support built in,
 # so we no longer need to compile it from source.
-RUN apt-get update && apt-get install --yes \
+RUN apt-get update && \
+  TARGETARCH=$(dpkg --print-architecture); \
+  if [ "$TARGETARCH" = "amd64" ]; then \
+    apt-get install --yes gcc-multilib; \
+  fi && \
+  apt-get install --yes \
   apt-utils \
   build-essential \
-  gcc-multilib \
   perl \
   cpanminus \
   expat \
