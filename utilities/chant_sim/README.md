@@ -12,7 +12,7 @@ until a skilled chanter records the real thing (PR 2 in the issue's plan).
 |---|---|
 | `from_wayback/` | genuine ORT recordings recovered from web.archive.org: 40:1–4, 6, 15–17, 27–29, 33–36 (`fetch_wayback.sh`) |
 | `from_scrollscraper/` | genuine ORT recordings left on the scrollscraper.adatshalom.net web server: 40:31, 32, 38 |
-| `replacements/` | simulated verses + `PROVENANCE.txt` (where every word came from) |
+| `replacements/` | simulated verses (synth3 / v3): 40:5, 7–14, 18–26, 30, 37 + `PROVENANCE.txt` (where every word came from) |
 
 All MP3s use the `local_ort_mp3s` format: 16 kHz, stereo, 48 kbps.
 
@@ -72,6 +72,9 @@ this reproduces his style; it would only go wrong in a passage he sang different
 
 `synth2.py` is the earlier version (first-match selection, time-warping re-pitch); `synth3.py` builds on it.
 
+Status (Oct 2026): on listening, a few v3 verses (e.g. 40:12) are near human quality; the rest are better than v2
+but not quite usable — mostly at re-pitched and piece-assembled words. A human recording remains the goal.
+
 ## Running
 
 ```sh
@@ -80,7 +83,7 @@ make download-mp3s                                   # populates local_ort_mp3s/
 utilities/chant_sim/fetch_wayback.sh                 # recover Wayback verses
 ~/venvs/chant_sim/bin/python utilities/chant_sim/synth3.py 5,7,8,9       # simulate verses (comma list)
 ~/venvs/chant_sim/bin/python utilities/chant_sim/synth3.py 16,27 _loo    # blind tests of verses we have
-~/venvs/chant_sim/bin/python utilities/chant_sim/make_listen_page.py /tmp/ex40listen --loo <dir-with-_loo.mp3>
+~/venvs/chant_sim/bin/python utilities/chant_sim/make_listen_page.py /tmp/ex40listen --loo <dir-with-_loo.mp3> [--prev <older-sim-dir>]
 python3 -m http.server --directory /tmp/ex40listen --bind 127.0.0.1 0
 ```
 
