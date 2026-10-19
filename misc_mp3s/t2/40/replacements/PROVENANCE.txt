@@ -1,0 +1,185 @@
+40:5 -> 4005.mp3
+  repitched venatata                               phonetics<-2:28:27; melody<-2:29:21 (contour diff 1.3st)
+  splice  et                                       <- 2:39:7
+  splice  mizbah                                   <- 2:35:15
+  splice  hazahav                                  <- 3:8:9
+  repitched liktoret                               phonetics<-pieces likt<2:16:16> + oret<2:40:27>; melody<-2:1:15 (contour diff 4.5st)
+  splice  lifne                                    <- 2:14:9
+  splice  aron haedut                              <- 2:26:34
+  repitched vesamta                                phonetics<-2:29:24; melody<-2:3:11 (contour diff 1.4st)
+  splice  et masah hapetah lamishkan               <- 2:40:28 (wayback)
+40:7 -> 4007.mp3
+  splice  venatata et                              <- 2:26:34
+  repitched hakiyor                                phonetics<-2:39:39; melody<-2:5:21 (contour diff 1.3st)
+  splice  ben                                      <- 3:20:25
+  splice  ohel moed                                <- 3:10:9
+  splice  uven                                     <- 2:14:2
+  splice  hamizbeah                                <- 3:8:15
+  splice  venatata                                 <- 2:29:17
+  splice  sham                                     <- 2:34:2
+  splice  mayim                                    <- 2:30:18
+40:8 -> 4008.mp3
+  splice  vesamta et                               <- 2:4:15
+  splice  hehatser                                 <- 2:35:18
+  splice  saviv                                    <- 3:14:41
+  repitched venatata                               phonetics<-2:29:3; melody<-2:28:9 (contour diff 1.2st)
+  splice  et masah                                 <- 2:40:33 (wayback)
+  splice  shaar hehatser                           <- 2:35:17
+40:9 -> 4009.mp3
+  splice  velakahta et shemen hamishha             <- 2:29:7
+  splice  umashahta                                <- 2:30:26
+  splice  et hamishkan veet kal asher bo           <- 3:8:10
+  splice  vekidashta                               <- 2:30:30
+  splice  oto veet kal                             <- 5:3:2
+  splice  kelayv                                   <- 2:27:3
+  splice  vehaya                                   <- 3:27:15
+  splice  kodesh                                   <- 2:30:35
+40:10 -> 4010.mp3
+  repitched umashahta                              phonetics<-2:29:36; melody<-2:29:34 (contour diff 1.2st)
+  splice  et mizbah haola                          <- 2:38:1
+  splice  veet kal kelayv                          <- 2:31:9
+  repitched vekidashta                             phonetics<-2:29:27; melody<-2:1:16 (contour diff 2.3st)
+  splice  et hamizbeah                             <- 1:22:9
+  splice  vehaya                                   <- 2:26:11
+  splice  hamizbeah                                <- 2:27:1
+  splice  kodesh                                   <- 2:31:14
+  repitched kadashim                               phonetics<-2:30:10; melody<-2:1:12 (contour diff 1.7st)
+40:11 -> 4011.mp3
+  splice  umashahta                                <- 2:30:26
+  splice  et hakiyor veet                          <- 2:35:16
+  repitched kano                                   phonetics<-3:8:11; melody<-2:12:29 (contour diff 1.1st)
+  splice  vekidashta                               <- 2:29:37
+  splice  oto                                      <- 2:22:30
+40:12 -> 4012.mp3
+  repitched vehikravta                             phonetics<-4:8:9; melody<-2:29:5 (contour diff 2.1st)
+  splice  et aharon veet                           <- 3:6:2
+  splice  banayv                                   <- 5:21:16
+  splice  el petah ohel moed verahatsta otam bamayim <- 2:29:4
+40:13 -> 4013.mp3
+  repitched vehilbashta                            phonetics<-2:29:5; melody<-2:20:22 (contour diff 2.8st)
+  splice  et aharon                                <- 4:20:25
+  splice  et                                       <- 2:27:9
+  splice  bigde                                    <- 2:31:10
+  splice  hakodesh                                 <- 2:30:13
+  splice  umashahta                                <- 2:30:26
+  splice  oto                                      <- 1:50:3
+  splice  vekidashta                               <- 2:30:30
+  splice  oto                                      <- 2:31:3
+  repitched vehihen                                phonetics<-pieces vehihe<3:5:21> + n<2:40:16>; melody<-2:1:5 (contour diff 5.1st)
+  splice  li                                       <- 2:30:30
+40:14 -> 4014.mp3
+  splice  veet banayv takriv                       <- 2:29:8
+  repitched vehilbashta                            phonetics<-2:29:5; melody<-2:2:13 (contour diff 3.0st)
+  splice  otam                                     <- 2:32:19
+  splice  kutonot                                  <- 2:29:8
+40:18 -> 4018.mp3
+  repitched vayakem                                phonetics<-2:40:33; melody<-2:7:19 (contour diff 2.4st)
+  splice  moshe et                                 <- 4:11:10
+  splice  hamishkan                                <- 4:1:51
+  splice  vayiten et                               <- 4:21:3
+  repitched adanayv                                phonetics<-2:35:11; melody<-1:14:24 (contour diff 2.4st)
+  splice  vayasem                                  <- 1:22:6
+  splice  et                                       <- 2:39:1
+  splice  kerashayv                                <- 2:39:33
+  splice  vayiten                                  <- 1:18:8
+  splice  et                                       <- 2:39:7
+  repitched berihayv                               phonetics<-pieces berihayv<2:39:33>; melody<-2:1:18 (contour diff 2.0st)
+  repitched vayakem                                phonetics<-2:40:33; melody<-2:3:7 (contour diff 1.1st)
+  splice  et                                       <- 2:39:1
+  repitched amudayv                                phonetics<-2:36:38; melody<-2:1:3 (contour diff 3.4st)
+40:19 -> 4019.mp3
+  repitched vayifros                               phonetics<-2:9:33; melody<-2:12:22 (contour diff 4.3st)
+  splice  et                                       <- 2:39:1
+  splice  haohel                                   <- 4:19:18
+  splice  al                                       <- 2:39:17
+  splice  hamishkan                                <- 2:36:32
+  repitched vayasem                                phonetics<-1:4:15; melody<-2:28:1 (contour diff 1.3st)
+  splice  et                                       <- 2:39:1
+  repitched mihse                                  phonetics<-2:39:34; melody<-2:6:8 (contour diff 1.1st)
+  repitched haohel                                 phonetics<-2:33:9; melody<-2:9:9 (contour diff 1.1st)
+  splice  alayv                                    <- 3:14:29
+  splice  milmala kaasher tsiva adonai et moshe    <- 2:39:31
+40:20 -> 4020.mp3
+  splice  vayikah                                  <- 2:32:20
+  splice  vayiten                                  <- 4:32:40
+  splice  et                                       <- 2:39:7
+  splice  haedut                                   <- 2:30:36
+  splice  el                                       <- 2:38:14
+  splice  haaron                                   <- 2:25:21
+  splice  vayasem                                  <- 1:31:21
+  splice  et habadim                               <- 2:37:28
+  splice  al                                       <- 2:39:6
+  splice  haaron                                   <- 2:37:5
+  splice  vayiten                                  <- 2:11:3
+  splice  et hakaporet al haaron                   <- 2:25:21
+  splice  milmala                                  <- 2:36:19
+40:21 -> 4021.mp3
+  splice  vayave                                   <- 1:30:14
+  splice  et                                       <- 2:39:1
+  repitched haaron                                 phonetics<-2:37:5; melody<-2:14:11 (contour diff 1.3st)
+  splice  el                                       <- 2:39:18
+  repitched hamishkan                              phonetics<-2:36:25; melody<-2:14:2 (contour diff 2.9st)
+  splice  vayasem                                  <- 1:30:36
+  splice  et                                       <- 2:34:28
+  splice  parohet                                  <- 4:4:5
+  repitched hamasah                                phonetics<-2:35:12; melody<-1:23:8 (contour diff 2.4st)
+  repitched vayaseh                                phonetics<-pieces vayaseh<1:35:14>; melody<-2:9:6 (contour diff 1.5st)
+  splice  al aron                                  <- 2:26:34
+  splice  haedut                                   <- 2:26:33
+  splice  kaasher tsiva adonai et moshe            <- 3:8:9
+40:22 -> 4022.mp3
+  splice  vayiten                                  <- 1:29:24
+  splice  et hashulhan                             <- 2:39:36
+  splice  beohel moed                              <- 4:14:10
+  splice  al yereh hamishkan                       <- 4:3:29
+  repitched tsafona                                phonetics<-4:2:25; melody<-2:1:17 (contour diff 1.3st)
+  splice  mihuts                                   <- 3:17:3
+  splice  laparohet                                <- 3:16:12
+40:23 -> 4023.mp3
+  repitched vayaaroh                               phonetics<-1:22:9; melody<-1:39:18 (contour diff 1.5st)
+  splice  alayv                                    <- 2:30:7
+  repitched ereh                                   phonetics<-pieces ereh<2:34:6>; melody<-2:1:10 (contour diff 4.5st)
+  splice  lehem                                    <- 1:47:12
+  splice  lifne adonai                             <- 2:6:30
+  splice  kaasher tsiva adonai et moshe            <- 2:39:31
+40:24 -> 4024.mp3
+  splice  vayasem                                  <- 1:24:9
+  splice  et hamnora                               <- 2:37:17
+  splice  beohel moed                              <- 4:3:25
+  repitched nohah                                  phonetics<-2:26:35; melody<-2:4:1 (contour diff 1.4st)
+  repitched hashulhan                              phonetics<-2:35:13; melody<-2:7:20 (contour diff 1.6st)
+  splice  al yereh hamishkan                       <- 4:3:29
+  repitched negba                                  phonetics<-2:26:18; melody<-2:2:12 (contour diff 2.4st)
+40:25 -> 4025.mp3
+  splice  vayaal                                   <- 2:19:20
+  splice  hanerot                                  <- 2:30:7
+  splice  lifne adonai                             <- 2:29:11
+  splice  kaasher tsiva adonai et moshe            <- 2:39:31
+40:26 -> 4026.mp3
+  splice  vayasem et                               <- 2:40:28 (wayback)
+  splice  mizbah                                   <- 3:4:25
+  splice  hazahav                                  <- 2:32:3
+  splice  beohel moed                              <- 4:4:28
+  splice  lifne                                    <- 1:23:12
+  splice  haparohet                                <- 3:4:17
+40:30 -> 4030.mp3
+  splice  vayasem                                  <- 1:22:6
+  splice  et                                       <- 2:39:1
+  repitched hakiyor                                phonetics<-2:39:39; melody<-2:5:21 (contour diff 1.3st)
+  splice  ben                                      <- 4:30:17
+  splice  ohel moed                                <- 3:16:20
+  splice  uven                                     <- 1:1:7
+  splice  hamizbeah                                <- 3:5:9
+  splice  vayiten                                  <- 1:45:21
+  splice  shama                                    <- 1:25:10
+  splice  mayim                                    <- 1:1:6
+  repitched lerahtsa                               phonetics<-2:30:18; melody<-2:1:15 (contour diff 2.0st)
+40:37 -> 4037.mp3
+  splice  veim lo                                  <- 4:5:19
+  repitched yeale                                  phonetics<-pieces yea<2:31:15> + le<2:40:34>; melody<-2:1:1 (contour diff 4.4st)
+  splice  heanan                                   <- 4:17:7
+  splice  velo                                     <- 2:23:24
+  repitched yisu                                   phonetics<-4:9:17; melody<-2:26:24 (contour diff 1.4st)
+  splice  ad                                       <- 2:33:22
+  splice  yom                                      <- 2:12:6
+  repitched healoto                                phonetics<-pieces healot<4:9:17> + o<2:40:16>; melody<-2:2:9 (contour diff 2.5st)
