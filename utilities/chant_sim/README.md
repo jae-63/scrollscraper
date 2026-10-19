@@ -1,7 +1,8 @@
 # chant_sim — simulated Exodus 40 recordings (issue #7)
 
 Most of Exodus 40 was never captured from bible.ort.org. This directory holds the tooling used to
-(a) recover what the Wayback Machine kept [ and detritus from the scrollscraper.adatshalom.net web server ] and (b) *simulate* the remaining verses in the same Hazzan's
+(a) recover what survives elsewhere — the Wayback Machine's captures, plus leftover files on the
+scrollscraper.adatshalom.net web server — and (b) *simulate* the remaining verses in the same Hazzan's
 voice, by splicing and re-pitching his recordings of other verses. The simulations are placeholders
 until a skilled chanter records the real thing (PR 2 in the issue's plan).
 
@@ -10,14 +11,14 @@ until a skilled chanter records the real thing (PR 2 in the issue's plan).
 | dir | contents |
 |---|---|
 | `from_wayback/` | genuine ORT recordings recovered from web.archive.org: 40:1–4, 6, 15–17, 27–29, 33–36 (`fetch_wayback.sh`) |
-| `from_scrollscraper/` | genuine ORT recordings from an earlier ScrollScraper capture: 40:31, 32 |
+| `from_scrollscraper/` | genuine ORT recordings left on the scrollscraper.adatshalom.net web server: 40:31, 32 |
 | `replacements/` | simulated verses + `PROVENANCE.txt` (where every word came from) |
 
 All MP3s use the `local_ort_mp3s` format: 16 kHz, stereo, 48 kbps.
 
-Notes on the hand-collected files (`/tmp/miscExodus40`, from the web server, checked with `misc_check.py`):
-40:33 and 40:34 [ from web server ] are the same takes as the Wayback copies (≈1.1 s extra leading silence).
-40:38 there is *not* the ORT Hazzan (voice-profile outlier, 24 kHz mono, ~40 s), so it isn't used.
+Notes on the web-server files (copied to `/tmp/miscExodus40`, checked with `misc_check.py`):
+its 40:31 and 40:32 are the ones kept above; its 40:33 and 40:34 are the same takes as the Wayback copies (≈1.1 s extra leading silence).
+its 40:38 is *not* the ORT Hazzan (voice-profile outlier, 24 kHz mono, ~40 s), so it isn't used.
 
 ## How the simulation works
 
