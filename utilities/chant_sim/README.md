@@ -11,14 +11,21 @@ until a skilled chanter records the real thing (PR 2 in the issue's plan).
 | dir | contents |
 |---|---|
 | `from_wayback/` | genuine ORT recordings recovered from web.archive.org: 40:1–4, 6, 15–17, 27–29, 33–36 (`fetch_wayback.sh`) |
-| `from_scrollscraper/` | genuine ORT recordings left on the scrollscraper.adatshalom.net web server: 40:31, 32 |
+| `from_scrollscraper/` | genuine ORT recordings left on the scrollscraper.adatshalom.net web server: 40:31, 32, 38 |
 | `replacements/` | simulated verses + `PROVENANCE.txt` (where every word came from) |
 
 All MP3s use the `local_ort_mp3s` format: 16 kHz, stereo, 48 kbps.
 
 Notes on the web-server files (copied to `/tmp/miscExodus40`, checked with `misc_check.py`):
 Its 40:31 and 40:32 are the ones kept above; its 40:33 and 40:34 are the same takes as the Wayback copies (≈1.1 s extra leading silence).
-Its 40:38 is *not* the ORT Hazzan (voice-profile outlier, 24 kHz mono, ~40 s), so it isn't used.
+Its 40:38 is a ScrollScraper-built MP3 (`buildmp3.cgi`: gTTS "This is an excerpt…copyright World ORT" + spacer +
+verse), 24 kHz mono. The genuine verse starts at 16.3 s; `from_scrollscraper/4038.mp3` is that portion only.
+It ends with the Hazzan's "חֲזַק חֲזַק וְנִתְחַזֵּק", as do all his book-ending verses (Gen 50:26, Lev 27:34,
+Num 36:13, Deut 34:12): the melody of its final phrase is within ~0.4 semitone of those four.
+
+The Wayback `.ra` files each have a corrupt final packet; it is one AC3 frame (0.135 s) of digital silence,
+so nothing audible is lost. The 2018–19 web-server decodes and today's decodes of the same takes are
+spectrally identical (both limited to ~4–5 kHz by the original 11 kHz RealAudio).
 
 ## How the simulation works
 
@@ -38,8 +45,9 @@ Its 40:38 is *not* the ORT Hazzan (voice-profile outlier, 24 kHz mono, ~40 s), s
    it is used untouched.
 5. **Assembly from pieces** — the few words that never occur at all (e.g. לִקְטֹ֔רֶת, וּבְקָרְבָתָ֛ם, הֵעָלֹתֽוֹ)
    are stitched from sub-word pieces using per-letter alignment, then re-pitched. These are the weakest spots.
-6. **End of book (40:38)** — modelled on Deut 34:12: verse raised ~2 semitones, the tipcha word re-sung on
-   Deut's "לְעֵינֵ֖י" contour, and "בְּכָל־מַסְעֵיהֶֽם" on Deut's "כָּל־יִשְׂרָאֵֽל" contour with its long final melisma.
+6. **End of book** — `apply_bookend` imitates Deut 34:12 (verse raised ~2 semitones, tipcha word and silluq
+   phrase re-sung on Deut's contours). It was written for 40:38 before the genuine recording turned up, and
+   does not add the Chazak phrase.
 
 ## How the ta'amim are used
 
@@ -54,7 +62,8 @@ The cantillation marks drive the melody choices; the plain consonants and vowels
   stressed syllable (where the mark sits), syllable count, the mark on the *following* word (similar
   conjunctive→disjunctive context), and whether it is the verse-final silluq.
 - **Verse endings** must come from a verse-final occurrence, so the sof pasuk cadence is genuine.
-- **The 40:38 book ending** maps tipcha onto Deut 34:12's tipcha word and the silluq phrase onto Deut's silluq phrase.
+- **Book endings** (`apply_bookend`, now unused since the genuine 40:38 was found) map the tipcha word onto
+  Deut 34:12's tipcha word and the silluq phrase onto Deut's silluq phrase.
 - **Not used by the aligner**: forced alignment only needs the sounds, so it uses romanized letters and vowels.
 
 Matching is against the *printed* marks. Where the Hazzan's rendering is non-standard, the splice
