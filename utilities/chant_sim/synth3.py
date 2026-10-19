@@ -1,4 +1,5 @@
-"""v3: Viterbi unit selection with join costs (pitch continuity, tempo, timbre), gentle re-pitching (no time warp)."""
+"""v3: Viterbi unit selection with join costs (pitch continuity, tempo, timbre), gentle re-pitching (no time warp).
+Units must match letters, vowels and trope marks exactly; see README, "How the ta'amim are used"."""
 import os, sys, json, numpy as np
 sys.path.insert(0, os.path.dirname(__file__))
 from synth2 import (avail, audio, word_span, clip, norm, pref, Bk, ORDER, words, lv, accent_sig, nsyl, groups_of,

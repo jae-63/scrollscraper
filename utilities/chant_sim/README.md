@@ -40,6 +40,26 @@ Notes on the hand-collected files (`/tmp/miscExodus40`, checked with `misc_check
 6. **End of book (40:38)** — modelled on Deut 34:12: verse raised ~2 semitones, the tipcha word re-sung on
    Deut's "לְעֵינֵ֖י" contour, and "בְּכָל־מַסְעֵיהֶֽם" on Deut's "כָּל־יִשְׂרָאֵֽל" contour with its long final melisma.
 
+## How the ta'amim are used
+
+The cantillation marks drive the melody choices; the plain consonants and vowels alone would not.
+
+- **Splice matching** requires letters, vowels *and* every trope mark to match exactly; the only mark allowed
+  to differ is meteg/ga'ya, and only as a second-best fallback. So "וַיַּקְטֵ֥ר" (mercha) matches only other
+  mercha occurrences, never "וַיַּקְטֵ֖ר" (tipcha).
+- **Longer matches are preferred** because a conjunctive's tune depends on the disjunctive that follows it. A span
+  like "כַּאֲשֶׁ֛ר צִוָּ֥ה יְהוָ֖ה אֶת־מֹשֶֽׁה" carries the whole tevir–mercha–tipcha–silluq phrase as he sang it.
+- **Re-pitching** takes the melody from a word carrying the correct mark, chosen by: the accent itself, the
+  stressed syllable (where the mark sits), syllable count, the mark on the *following* word (similar
+  conjunctive→disjunctive context), and whether it is the verse-final silluq.
+- **Verse endings** must come from a verse-final occurrence, so the sof pasuk cadence is genuine.
+- **The 40:38 book ending** maps tipcha onto Deut 34:12's tipcha word and the silluq phrase onto Deut's silluq phrase.
+- **Not used by the aligner**: forced alignment only needs the sounds, so it uses romanized letters and vowels.
+
+Matching is against the *printed* marks. Where the Hazzan's rendering is non-standard, the splice
+inherits his own rendering of that printed mark from another verse. In practice he is very consistent, so
+this reproduces his style; it would only go wrong in a passage he sang differently from the marks.
+
 `synth2.py` is the earlier version (first-match selection, time-warping re-pitch); `synth3.py` builds on it.
 
 ## Running

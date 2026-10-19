@@ -1,3 +1,5 @@
+"""Pointed-Hebrew helpers: romanization for the aligner (letters+vowels only) and ta'amim/accent
+signatures used for trope-exact matching and melody-donor selection (see README, "How the ta'amim are used")."""
 import re, json, unicodedata
 import os
 REPO=os.path.abspath(os.path.join(os.path.dirname(__file__),'..','..'))
