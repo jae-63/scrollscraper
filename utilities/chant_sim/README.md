@@ -17,8 +17,8 @@ until a skilled chanter records the real thing (PR 2 in the issue's plan).
 All MP3s use the `local_ort_mp3s` format: 16 kHz, stereo, 48 kbps.
 
 Notes on the web-server files (copied to `/tmp/miscExodus40`, checked with `misc_check.py`):
-its 40:31 and 40:32 are the ones kept above; its 40:33 and 40:34 are the same takes as the Wayback copies (≈1.1 s extra leading silence).
-its 40:38 is *not* the ORT Hazzan (voice-profile outlier, 24 kHz mono, ~40 s), so it isn't used.
+Its 40:31 and 40:32 are the ones kept above; its 40:33 and 40:34 are the same takes as the Wayback copies (≈1.1 s extra leading silence).
+Its 40:38 is *not* the ORT Hazzan (voice-profile outlier, 24 kHz mono, ~40 s), so it isn't used.
 
 ## How the simulation works
 
